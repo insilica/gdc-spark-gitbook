@@ -6,5 +6,5 @@
 * [biospecimen supplements](1_gdc/biospecimen_supplements.md)
 * [Tumor Similarity](2_tumor_similarity/README.md)
 * [Relative Tumor Distance](2_tumor_similarity/relative_distance.md)
-* drugs and methylation
+* Drugs and Methylation
 
