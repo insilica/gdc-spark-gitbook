@@ -10,4 +10,4 @@
 
 ### Tumor Similarity
 * [Tumor Similarity](2_tumor_similarity/README.md)
-* [Relative Tumor Distance](2_tumor_similarity/README.md)
+* [Relative Tumor Distance](2_tumor_similarity/relative_distance.md)
