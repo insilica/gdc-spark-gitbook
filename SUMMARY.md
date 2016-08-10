@@ -7,5 +7,5 @@
 * [Clinical Supplements](1_gdc/clinical_supplements.md)
 * [Tumor Similarity](2_tumor_similarity/README.md)
 * [Relative Tumor Distance](2_tumor_similarity/relative_distance.md)
-* [Drugs and Methylation](drugs_and_methylation.md)
+* [Drugs and Methylation](3_drugs_and_methylation/README.md)
 
