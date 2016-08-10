@@ -1,0 +1,2 @@
+# Relative Tumor Distances
+Bioinformatics is full of careful considerations of statistical biases hidden in biological experiments. RNA sequencing is no exception.  RNA sequencing results in counts of biological entities, in our case ensembl genes.  Our apriori assumption is that 
