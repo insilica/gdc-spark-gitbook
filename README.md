@@ -20,4 +20,4 @@ Read the book at [localhost:4000](localhost:4000).  Changes made to the reposito
 ## Commands
 
 ###[bibtex-cite](https://plugins.gitbook.com/plugin/bibtex-cite)
-I'm still experimenting with this.  It's not hard to write these plugins so maybe we just need to rewrite some of them.  This plugin and similar ones were written for earlier versions of gitbook.
+I'm still experimenting with this.  It's not hard to write these plugins so maybe we just need to rewrite some of them.  This plugin and similar ones use earlier versions of gitbook.
