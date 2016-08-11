@@ -14,7 +14,7 @@ The GDC-core client is in active development.  Much of the more advanced capabil
   import co.insilica.gdc.GDCContext
   
   object example{
-    implicit val gdcContext = GDCContext.default
+    val gdcContext = GDCContext.default
   }
   ```
 
