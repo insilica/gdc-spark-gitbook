@@ -17,5 +17,9 @@ The GDC-core client is in active development.  Much of the more advanced capabil
     implicit val gdcContext = GDCContext.default
   }
   ```
-  
-  GDCContext makes two functions available that will be our focus.
+
+GDCContext makes the functions **streamfiles** and **rawfind** available. Creating input streams from the GDC-API is possible with **streamfiles**.  Querying the GDC meta data is possible via **rawfind**.
+
+### GDC Streaming
+
+### GDC Queries
