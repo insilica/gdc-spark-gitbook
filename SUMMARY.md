@@ -10,6 +10,7 @@
 * [biospecimen supplements](1_gdc/biospecimen_supplements.md)
 
 #### A client
+* [gdc-core](1_gdc/a client.md)
 
 #### A spark
 
