@@ -11,7 +11,6 @@
 
 #### A client
 
-
 #### A spark
 
 ### GDC Examples
