@@ -5,14 +5,9 @@
 
 ### GDC, a client and a spark
 * [GDC](1_gdc/README.md)
-
-#### File types
-* [biospecimen supplements](1_gdc/biospecimen_supplements.md)
-
-#### A client
-* [gdc-core](1_gdc/a client.md)
-
-#### A spark
+  * [biospecimen supplements](1_gdc/biospecimen_supplements.md)
+  * [gdc-core](1_gdc/a client.md)
+  * spark
 
 ### GDC Examples
 * [Tumor Similarity](2_tumor_similarity/README.md)
