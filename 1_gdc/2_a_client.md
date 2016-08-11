@@ -4,7 +4,7 @@
 
 `librarydependencies += "co.insilica" %% "gdc-core" % "0.1.3"`
 
-The GDC-core client is in active development.  Much of the more advanced capabilities is incomplete and we will be focusing on two main functions. 
+
 
 ## A GDC Context
   GDC-Core allows developers to create a gdc context. To create the default gdc context we call `co.insilica.gdc.GDCContext.default`
@@ -14,12 +14,14 @@ The GDC-core client is in active development.  Much of the more advanced capabil
   import co.insilica.gdc.GDCContext
   
   object example{
-    val gdcContext = GDCContext.default
+    val gdc = GDCContext.default
   }
   ```
-
-GDCContext makes the functions **streamfiles** and **rawfind** available. Creating input streams from the GDC-API is possible with **streamfiles**.  Querying the GDC meta data is possible via **rawfind**.
+The GDC-core client is in active development.  Much of the more advanced capabilities are incomplete. We will be focusing on two functions **gdc.streamfiles** and **gdc.rawfind**. Creating input streams from the GDC-API is possible with **streamfiles**.  Querying the GDC meta data is possible via **rawfind**.
 
 ### GDC Streaming
+  In [GDC](gdc/0_gdc.md) we reviewed the 6 `endpoints` defined by the genomic data commons. The `data` endpoint allows users to download files through the gdc-api.  When users provide a single uuid they streamed a gzipped version of the file.
+
+
 
 ### GDC Queries
