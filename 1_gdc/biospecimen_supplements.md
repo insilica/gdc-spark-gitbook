@@ -1,5 +1,5 @@
 # GDC Biospecimen Supplement Parsing
-Biospecimen samples are one of the major entities within the Genomic Data Commons.  Biospecimens represent samples and **Biospecimen Supplements** (a GDC **data_type** {cite GDC concepts|todo}) provide structured descriptions.  
+Biospecimen samples are one of the major entities within the Genomic Data Commons.  Biospecimens are physical samples derived from patient tissue.  **Biospecimen Supplements** (a GDC **data_type**) provide structured descriptions of these samples.  
 
 Like **Clinical Supplements** {should have a chapter on parsing these|todo} (another GDC **data_type**), **Biospecimen Supplements** are xml files.   
 
