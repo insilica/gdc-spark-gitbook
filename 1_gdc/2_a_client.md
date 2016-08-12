@@ -137,7 +137,7 @@ This application prints:
 ### GDC Filters
   Please read the GDC-API [documentation on filters](https://gdc-docs.nci.nih.gov/API/Users_Guide/Search_and_Retrieval/#filters). Filters let us reduce the number of documents returned by the GDC-API to those meeting some criteria. There are two types of *filters*. **Content filters** let us define constraints directly on the returned documents. **Nested filters** let us combine operator filters.
   
-  Insilica.gdc-core supports both filter types.  Below we show how you can find all files that are open access and refer to a case with age at diagnosis less than 20.  You can find a catalogue keys for each GDC endpoint at [GDC Search Appendix A](https://gdc-docs.nci.nih.gov/API/Users_Guide/Appendix_A_Available_Fields/).
+  Insilica.gdc-core supports both filter types. Below we show how you can find all files that are open access and refer to a case with age at diagnosis less than 20.  You can find a catalogue keys for each GDC endpoint at [GDC Search Appendix A](https://gdc-docs.nci.nih.gov/API/Users_Guide/Appendix_A_Available_Fields/). 
   
   ```scala
 object example extends App{
@@ -176,14 +176,14 @@ object example extends App{
 }
   ```
   
-You are now armed with the ability to download tissue data from the GDC and search for files relevant to your needs.  
+  You are now armed with the ability to download tissue data from the GDC and search for files relevant to your needs.  
   
   #### Legacy API
   On a file note, the Genomic Data Commons is in the business of data harmonization. GDC supports distinct genetics projects.  Project data needs modification to fit standards.  If, for example, you know that some TCGA exists but cannot find it on GDC you may be able to access it via the `legacy` api.  
 
 ```scala
 val legacyApi : GDCContext = GDCContext.legacy
-val it = legacyApi.rawFind("files")(Query()) //setting size=10 forces 4 queries
+val it = legacyApi.rawFind("files")(Query())
 val fileMeta : JObject = it.next()
 println(JsonMethods.pretty(fileMeta))
 ```
