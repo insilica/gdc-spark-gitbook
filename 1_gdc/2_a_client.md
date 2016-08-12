@@ -1,6 +1,6 @@
-# Co.Insilica.GDC-Core
+# co.insilica.gdc-core
 
-  To use the GDC-api from code we need a GDC-client.  One simple java client is available at co.insilica.gdc-core.  To include it in a scala project we can add the following dependency to the `build.sbt` file.  
+  To use the GDC-API from code we need a GDC-client.  One simple java client is available at co.insilica.gdc-core.  To include it in a scala project we can add the following dependency to the `build.sbt` file.  
 
 `librarydependencies += "co.insilica" %% "gdc-core" % "0.1.3"`
 
@@ -10,11 +10,8 @@
   GDC-Core allows developers to create a gdc context. To create the default gdc context we call `co.insilica.gdc.GDCContext.default`
   
   ```scala
-  package somepackage
-  import co.insilica.gdc.GDCContext
-  
   object example{
-    val gdc = GDCContext.default
+    val gdc = co.insilica.gdc.GDCContext.default
   }
   ```
 The GDC-core client is in active development.  Much of the more advanced capabilities are incomplete. We will be focusing on two functions **gdc.streamfiles** and **gdc.rawfind**. Creating input streams from the GDC-API is possible with **streamfiles**.  Querying the GDC meta data is possible via **rawfind**.
@@ -25,7 +22,6 @@ The GDC-core client is in active development.  Much of the more advanced capabil
   <center>
   <a href=https://gdc-api.nci.nih.gov/data?733d8229-03d2-4237-8f41-1a5fbea4f1f7>https://gdc-api.nci.nih.gov/data?733d8229-03d2-4237-8f41-1a5fbea4f1f7</a><br/>
   https://gdc-api.nci.nih.gov/data?{uuid}<br/>
-  or<br/>
   https://gdc-api.nci.nih.gov/data?{uuid,uuid,uuid,...}
   </center>
   <br/>
@@ -33,18 +29,12 @@ The GDC-core client is in active development.  Much of the more advanced capabil
 The same query in scala using a gdcContext is shown below:
   
   ```scala
-  package somepackage
-  import co.insilica.gdc.GDCContext
-  import java.io.InputStream
-  
   object example{
-    val gdc = GDCContext.default
-    
+    val gdc = co.insilica.gdc.GDCContext.default    
     // xml is an inputstream of one xml file
-    val xml : InputStream = gdc.streamFiles("733d8229-03d2-4237-8f41-1a5fbea4f1f7")
-    
+    val xml : java.io.InputStream = gdc.streamFiles("733d8229-03d2-4237-8f41-1a5fbea4f1f7")
     //zip is an inputstream for a zip file containing multiple files
-    val zip : InputStream = gdc.streamFiles(
+    val zip : java.io.InputStream = gdc.streamFiles(
       "733d8229-03d2-4237-8f41-1a5fbea4f1f7",
       "77e73cc4-ff31-449e-8e3c-7ae5ce57838c"
     )
@@ -60,9 +50,9 @@ The same query in scala using a gdcContext is shown below:
   Putting this url into your browser returns a json object with the below basic skeleton:
   
   ```json
-  {"data":
-    {"hits": [ <json_objects> ] },
-    {"pagination": {
+  { "data":
+    { "hits": [ <json_objects> ] },
+    { "pagination": {
       "count": <number of objects shown>, 
       "sort": "", 
       "from": 1, 
@@ -78,45 +68,43 @@ The same query in scala using a gdcContext is shown below:
   
   A GDCContext can reproduce this query as follows:
   ```scala
-  
   object example{
     val gdc = GDCContext.default
-    gdc.rawFind("files")()
+    val filesQueryBuilder : (Query => Iterator[JObject]) = gdc.rawFind("files")
+    filesQueryBuilder(Query())
   }
   ```
+  The function `gdc.rawFind("files")` returns a function that takes a `Query` object to an iterator of `JObject`s. We discuss `Query` objects in the next section.
+
+### co.insilica.gdc.Query
   
-  We can show a full example response by adding size and field parameters to the endpoint url. In the below url, we ask the GDC-API to return the "file_id", and "access" fields for 2 files. 
+  The GDC-API allows users to add parameters to an endpoint query.  **insilica.gdc-core** supports the below parameters:
+
+| Parameter | Default | Description        |
+|--------|------|----------------------------------------------------|
+| fields | null | Query option to specify which fields to include in the response |
+| size   | 10   | Specifies the number of results to return |
+| from   | 1    | Skips all records before from |
+| filters| null | Query option filters specify criteria for the returned response |
+summarized from GDC-API [documentation](https://gdc-docs.nci.nih.gov/API/Users_Guide/Search_and_Retrieval/#query-parameters)
+
+We can show a full example response by adding size and field parameters to the endpoint url. In the below url, we ask the GDC-API to return the "file_id", and "access" fields for 2 files. 
   
   https://gdc-api.nci.nih.gov/files?fields=file_id,access&size=2&pretty=true 
   
-  The full response is:
+  The response (with pagination and warnings omitted):
   
   ```json
   {
   "data": {
     "hits": [
-      {
-        "access": "controlled", 
-        "file_id": "84a9c5a8-94f4-4680-b74b-3e743ff6c42d"
-      }, 
-      {
-        "access": "open", 
-        "file_id": "97948aac-64c0-411e-853f-e5b208b13565"
-      }
-    ], 
-    "pagination": {
-      "count": 2, 
-      "sort": "", 
-      "from": 1, 
-      "page": 1, 
-      "total": 262293, 
-      "pages": 131147, 
-      "size": 2
-    }
-  }, 
-  "warnings": {}
+      { "access": "controlled", "file_id": "84a9c5a8-94f4-4680-b74b-3e743ff6c42d" }, 
+      { "access": "open", "file_id": "97948aac-64c0-411e-853f-e5b208b13565" }
+    ],...
 }
 ```
-  GDCContext provides `gdc.rawfFind(endpoint:String)(query:Query)`.  We will discuss what a `Query` object is in a moment but the above 
+<center><a>https://gdc-api.nci.nih.gov/files?fields=file_id,access&size=2&pretty=true</a></center><br/>
+  The below example describes how to reproduce the above example with a `GDCContext`
   
-test test
+  ```scala
+  ```
