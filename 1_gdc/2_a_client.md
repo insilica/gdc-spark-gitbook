@@ -4,17 +4,18 @@
 
 `librarydependencies += "co.insilica" %% "gdc-core" % "0.1.3"`
 
-
-
 ## A GDC Context
   GDC-Core allows developers to create a gdc context. To create the default gdc context we call `co.insilica.gdc.GDCContext.default`
   
   ```scala
   object example{
+    import scala.concurrent.ExecutionContext.Implicits.global
     val gdc = co.insilica.gdc.GDCContext.default
   }
   ```
 The GDC-core client is in active development.  Much of the more advanced capabilities are incomplete. We will be focusing on two functions **gdc.streamfiles** and **gdc.rawfind**. Creating input streams from the GDC-API is possible with **streamfiles**.  Querying the GDC meta data is possible via **rawfind**.
+
+insilica.gdc-core makes use of scala futures and needs an implicit ExecutionContext in scope.  `import scala.concurrent.ExecutionContext.Implicits.global` is a global execution context.  Documentation about futures is at http://docs.scala-lang.org/overviews/core/futures.html.
 
 ### GDC InputStreams
   In [GDC](gdc/0_gdc.md) we reviewed the 6 endpoints defined by the genomic data commons. The `data` endpoint allows users to download files through the gdc-api.  When users provide a single uuid receive the referenced the file. We can use the **data** endpoint in the browser to download one or more files by providing a single uuid or comma separated uuids. 
@@ -30,6 +31,7 @@ The same query in scala using a gdcContext is shown below:
   
   ```scala
   object example{
+    import scala.concurrent.ExecutionContext.Implicits.global
     val gdc = co.insilica.gdc.GDCContext.default    
     // xml is an inputstream of one xml file
     val xml : java.io.InputStream = gdc.streamFiles("733d8229-03d2-4237-8f41-1a5fbea4f1f7")
@@ -69,6 +71,7 @@ The same query in scala using a gdcContext is shown below:
   A GDCContext can reproduce this query as follows:
   ```scala
   object example{
+    import scala.concurrent.ExecutionContext.Implicits.global
     val gdc = GDCContext.default
     val filesQueryBuilder : (Query => Iterator[JObject]) = gdc.rawFind("files")
     filesQueryBuilder(Query())
@@ -106,14 +109,33 @@ We can show a full example response by adding size and field parameters to the e
 <center><a>https://gdc-api.nci.nih.gov/files?fields=file_id,access&size=2&pretty=true</a></center><br/>
   The below example describes how to reproduce the above example with a `GDCContext`
   
-  ```scala
-  object example{
+ ```scala  
+ object example{
+   import scala.concurrent.ExecutionContext.Implicits.global
    val gdc = co.insilica.gdc.GDCContext.default
-   val query = Query()
-     .withFields("file_id","access")
-     
-   val jsonValues : Seq[JSONObject] = gdc.rawFind("files")(query).take(2).toSeq
-  }
-  ```
+   val query = Query().withFields("file_id","access")     
+   val jsonValues : Seq[org.json4s.JsonAST.JObject] = gdc.rawFind("files")(query).take(2).toSeq
+ }
+ ```
   
   Note that we don't give the query a limit. The iterator created by gdc-core lets us select any number of `JObject`s (until `hasNext == false`). 
+  
+### GDC Filters
+  Please read the GDC-API documentation on filters. Filters let us reduce the number of documents returned by the GDC-API to those meeting some criteria. There are two types of *filters*. **Operator filters** let us define constraints directly on the returned documents. **Nested filters** let us combine operator filters.
+  
+  ####Operator filters
+  Suppose you don't have access to the controlled data in GDC (see [obtain access to controlled data](https://gdc.nci.nih.gov/access-data/obtaining-access-controlled-data)).  You may want to restrict your gdc queries to those files that are 'open' access.  
+  
+  ```scala
+  import org.json4s.jackson.JsonMethods
+ object example extends App{
+   import scala.concurrent.ExecutionContext.Implicits.global
+   val gdc = co.insilica.gdc.GDCContext.default
+   val query = Query().withFields("file_id","access")     
+   val jsonValues : Seq[org.json4s.JsonAST.JObject] = gdc.rawFind("files")(query).take(2).toSeq
+   //we can print the resulting two json objects with jackson.JsonMethods.pretty
+   jsonValues.foreach(JsonMethods.pretty)
+ }
+  ```
+  
+  ####Nested filters
