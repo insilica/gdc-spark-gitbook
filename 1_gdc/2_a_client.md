@@ -109,33 +109,76 @@ We can show a full example response by adding size and field parameters to the e
 <center><a>https://gdc-api.nci.nih.gov/files?fields=file_id,access&size=2&pretty=true</a></center><br/>
   The below example describes how to reproduce the above example with a `GDCContext`
   
- ```scala  
- object example{
-   import scala.concurrent.ExecutionContext.Implicits.global
-   val gdc = co.insilica.gdc.GDCContext.default
-   val query = Query().withFields("file_id","access")     
-   val jsonValues : Seq[org.json4s.JsonAST.JObject] = gdc.rawFind("files")(query).take(2).toSeq
- }
- ```
+```scala 
+import org.json4s.jackson.JsonMethods
+object example extends App{
+  import scala.concurrent.ExecutionContext.Implicits.global
+  val gdc = co.insilica.gdc.GDCContext.default
+  val query = Query().withFields("file_id","access")
+  val jsonValues : Iterator[org.json4s.JsonAST.JObject] = gdc.rawFind("files")(query).take(2)
+  jsonValues.foreach{ fileMetaData => println(JsonMethods.pretty(fileMetaData)) }
+  sys.exit(0)
+}
+```
+This application prints:
+```
+{
+  "access" : "controlled",
+  "file_id" : "84a9c5a8-94f4-4680-b74b-3e743ff6c42d"
+}
+{
+  "access" : "open",
+  "file_id" : "97948aac-64c0-411e-853f-e5b208b13565"
+}
+```
   
   Note that we don't give the query a limit. The iterator created by gdc-core lets us select any number of `JObject`s (until `hasNext == false`). 
   
 ### GDC Filters
-  Please read the GDC-API documentation on filters. Filters let us reduce the number of documents returned by the GDC-API to those meeting some criteria. There are two types of *filters*. **Operator filters** let us define constraints directly on the returned documents. **Nested filters** let us combine operator filters.
+  Please read the GDC-API [documentation on filters](https://gdc-docs.nci.nih.gov/API/Users_Guide/Search_and_Retrieval/#filters). Filters let us reduce the number of documents returned by the GDC-API to those meeting some criteria. There are two types of *filters*. **Content filters** let us define constraints directly on the returned documents. **Nested filters** let us combine operator filters.
   
-  ####Operator filters
-  Suppose you don't have access to the controlled data in GDC (see [obtain access to controlled data](https://gdc.nci.nih.gov/access-data/obtaining-access-controlled-data)).  You may want to restrict your gdc queries to those files that are 'open' access.  
+  Insilica.gdc-core supports both filter types. Suppose we were intersested in files that were open access and 
   
   ```scala
-  import org.json4s.jackson.JsonMethods
- object example extends App{
-   import scala.concurrent.ExecutionContext.Implicits.global
-   val gdc = co.insilica.gdc.GDCContext.default
-   val query = Query().withFields("file_id","access")     
-   val jsonValues : Seq[org.json4s.JsonAST.JObject] = gdc.rawFind("files")(query).take(2).toSeq
-   //we can print the resulting two json objects with jackson.JsonMethods.pretty
-   jsonValues.foreach(JsonMethods.pretty)
- }
+object example extends App{
+
+  import scala.concurrent.ExecutionContext.Implicits.global
+  val gdc = co.insilica.gdc.GDCContext.default
+
+  //content filters
+  val accessFilter = Filter(Operators.eq,ValueContent("access",JString("open")))
+  val ageFilter = Filter(Operators.lt,ValueContent("cases.diagnoses.age_at_diagnosis",JInt(20)))
+
+  //nested filters
+  val manualNested = Filter(Operators.and,FilterContent(accessFilter,ageFilter))
+  val orFilters = accessFilter or ageFilter //open access or file size > 100000
+  val andFilter = Filter.and(accessFilter,ageFilter) //open access and file size > 100000
+
+  //print andFilter
+  gdc.rawFind("files")(
+      Query()
+        .withFields("access","cases.diagnoses.age_at_diagnosis")
+        .withFilter(andFilter)
+    )
+    .take(2)
+    .foreach{ jobj : JObject => println(JsonMethods.pretty(jobj)) }
+}
+  ```
+  This results in
+  ```json
+{
+  "access" : "open",
+  "cases" : [ { "diagnoses" : [ { "age_at_diagnosis" : 18 } ] } ]
+}
+{
+  "access" : "open",
+  "cases" : [ { "diagnoses" : [ { "age_at_diagnosis" : 18 } ] } ]
+}
   ```
   
+  We demonstrated a few ways to make content and nested filters above.  
+  ####Content filters
+  Suppose you don't have access to the controlled data in GDC (see [obtain access to controlled data](https://gdc.nci.nih.gov/access-data/obtaining-access-controlled-data)).  You may want to restrict your gdc queries to those files that are 'open' access. 
+  
+
   ####Nested filters
