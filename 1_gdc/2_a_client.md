@@ -176,9 +176,4 @@ object example extends App{
 }
   ```
   
-  We demonstrated a few ways to make content and nested filters above.  
-  ####Content filters
-  Suppose you don't have access to the controlled data in GDC (see [obtain access to controlled data](https://gdc.nci.nih.gov/access-data/obtaining-access-controlled-data)).  You may want to restrict your gdc queries to those files that are 'open' access. 
-  
-
-  ####Nested filters
+We addressed how to create a `GDCContext` for access to the GDC-API.  Now that you can stream GDC files and make queries for fields catalogued in [GDC Appendix-A](https://gdc-docs.nci.nih.gov/API/Users_Guide/Appendix_A_Available_Fields/) you should be prepared to do more complex analyses of GDC results.
