@@ -107,4 +107,13 @@ We can show a full example response by adding size and field parameters to the e
   The below example describes how to reproduce the above example with a `GDCContext`
   
   ```scala
+  object example{
+   val gdc = co.insilica.gdc.GDCContext.default
+   val query = Query()
+     .withFields("file_id","access")
+     
+   val jsonValues : Seq[JSONObject] = gdc.rawFind("files")(query).take(2).toSeq
+  }
   ```
+  
+  Note that we don't give the query a limit. The iterator created by gdc-core lets us select any number of `JObject`s (until `hasNext == false`). 
