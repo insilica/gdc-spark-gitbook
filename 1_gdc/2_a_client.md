@@ -183,9 +183,10 @@ object example extends App{
 
 ```scala
 val legacyApi : GDCContext = GDCContext.legacy
+val methylationFilter = 
 val it = legacyApi.rawFind("files")(Query())
 val fileMeta : JObject = it.next()
 println(JsonMethods.pretty(fileMeta))
 ```
 
-The above shows how you can access TCGA methylation data. Methylation data had exclusive access through the legacy API at the time of this writing.
+The above shows how to access TCGA methylation data. At the time of this writing, Methylation data had exclusive access through the legacy API.
