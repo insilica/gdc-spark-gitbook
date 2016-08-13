@@ -98,12 +98,13 @@ We can show a full example response by adding size and field parameters to the e
   The response (with pagination and warnings omitted):
   
   ```json
-  {
+{
   "data": {
     "hits": [
       { "access": "controlled", "file_id": "84a9c5a8-94f4-4680-b74b-3e743ff6c42d" }, 
-      { "access": "open", "file_id": "97948aac-64c0-411e-853f-e5b208b13565" }
-    ],...
+      { "access": "open", "file_id": "97948aac-64c0-411e-853f-e5b208b13565" } 
+     ]
+  }
 }
 ```
 <center><a>https://gdc-api.nci.nih.gov/files?fields=file_id,access&size=2&pretty=true</a></center><br/>
