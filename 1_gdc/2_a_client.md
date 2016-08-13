@@ -179,7 +179,7 @@ object example extends App{
   You are now armed with the ability to download tissue data from the GDC and search for files relevant to your needs.  
   
   #### Legacy API
-  On a file note, the Genomic Data Commons is in the business of data harmonization. GDC supports distinct genetics projects.  Project data needs modification to fit standards.  If, for example, you know that some TCGA exists but cannot find it on GDC you may be able to access it via the `legacy` api.  
+  On a final note, the Genomic Data Commons is in the business of data harmonization. GDC supports distinct genetics projects.  Project data needs modification to fit standards.  If, for example, you know that some TCGA exists but cannot find it on GDC you may be able to access it via the `legacy` api.  
 
 ```scala
 val legacyApi : GDCContext = GDCContext.legacy
