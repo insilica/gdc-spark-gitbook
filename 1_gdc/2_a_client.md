@@ -2,7 +2,7 @@
 
   To use the GDC-API from code we need a GDC-client.  One simple java client is available at co.insilica.gdc-core.  To include it in a scala project we can add the following dependency to the `build.sbt` file.  
 
-`librarydependencies += "co.insilica" %% "gdc-core" % "0.1.3"`
+`librarydependencies += "co.insilica" %% "gdc-core" % "0.1.4"`
 
 ## A GDC Context
   GDC-Core allows developers to create a gdc context. To create the default gdc context we call `co.insilica.gdc.GDCContext.default`
