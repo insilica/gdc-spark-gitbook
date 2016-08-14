@@ -33,21 +33,27 @@ Sometimes it can be helpful to start development using sparks `standalone` clust
   `CaseFileEntityBuilder` builds a spark `dataset` from a `co.insilica.gdc.query`. We build a `dataset` for all RNA-Seq files for Colon Adenocarcinoma[^facet_search] that are open access[^gdc_access].
 
 ```scala
+"CaseFileEntityBuilder" should "build openColonRNASeq dataset" in {
+  import co.insilica.gdc.query.{Filter, Operators, Query}
+  import co.insilica.gdcSpark.builders.CaseFileEntityBuilder
+  import org.json4s.JString
 
-object example extends App{
-  import co.insilica.spark.SparkEnvironment.local
-  import co.insilica.gdc-spark.builders.CaseFileEntityBuilder
+  implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
+  implicit val sparkEnvironment = co.insilica.spark.SparkEnvironment.local
+  implicit val gdcContext = co.insilica.gdc.GDCContext.default
 
   //build a query for 'Colon Adenocarcinoma' RNA-Seq files that are open access
   val query = Query().withFilter {
     Filter.and(
-      Filter(Operators.eq, ValueContent("cases.project.disease_type", JString("Colon Adenocarcinoma")))
-      ,Filter(Operators.eq, ValueContent("experimental_strategy", JString("RNA-Seq")))
-      ,Filter(Operators.eq, ValueContent("access", JString("open")))
+      Filter(Operators.eq, key="cases.project.disease_type", value=JString("Colon Adenocarcinoma")),
+      Filter(Operators.eq, key="experimental_strategy", value=JString("RNA-Seq")),
+      Filter(Operators.eq, key="access", value=JString("open"))
     )
   }
-  
+
   val openColonRNASeq = CaseFileEntityBuilder(query).build()
+
+  openColonRNASeq.show(10)
 }
 ```
 ##
