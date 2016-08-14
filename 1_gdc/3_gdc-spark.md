@@ -30,7 +30,7 @@ Sometimes it can be helpful to start development using sparks `standalone` clust
   
   [TODO need to write more about this]
 ## CaseFileEntityBuilder
-  The `CaseFileEntityBuilder` takes a `co.insilica.gdc.query` object and returns a spark `dataset`. We build a `dataset` for all RNA-Seq files for Colon Adenocarcinoma[^facet_search] that are open access[^gdc_access].
+  `CaseFileEntityBuilder` builds a spark `dataset` from a `co.insilica.gdc.query`. We build a `dataset` for all RNA-Seq files for Colon Adenocarcinoma[^facet_search] that are open access[^gdc_access].
 
 ```scala
 
