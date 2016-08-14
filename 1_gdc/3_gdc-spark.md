@@ -1,5 +1,5 @@
 # co.insilica.gdc-spark
-  We use spark to build models on gdc data. `co.insilica.gdc-spark` provides some basic utilities to get started with gdc analyses. 
+  We use spark to build models on gdc data. `co.insilica.gdcSpark` provides some basic utilities to get started with gdc analyses. 
 
 ## Getting Started
   `co.insilica.gdc-spark` provides utilities for building models and datasets from gdc data.  To rely on gdc-spark you must provide apache spark dependencies yourself.  Your own `build.sbt` can rely on the gdc-spark by including the below dependencies:
