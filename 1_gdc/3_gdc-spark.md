@@ -51,4 +51,4 @@ import co.insilica.gdc-spark.builders.CaseFileEntityBuilder
 ```
 ##
 [^gdc_access]: https://gdc.nci.nih.gov/access-data/data-access-processes-and-tools.
-[^facet_search]: https://gdc-api.nci.nih.gov/files?facets=cases.project.disease_type&pretty=true shows all disease_types
+[^facet_search]: https://gdc-api.nci.nih.gov/files?facets=cases.project.disease_type&pretty=true shows disease_types
