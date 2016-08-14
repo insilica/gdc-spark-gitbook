@@ -29,6 +29,7 @@ Sometimes it can be helpful to start development using sparks `standalone` clust
     4. Applying machine learning or statistics to a dataset and storing the result
   
   [TODO need to write more about this]
+  
 ## CaseFileEntityBuilder
   `CaseFileEntityBuilder` builds a spark `dataset` from a `co.insilica.gdc.query`. We build a `dataset` for all RNA-Seq files for Colon Adenocarcinoma[^facet_search] that are open access[^gdc_access].
 
