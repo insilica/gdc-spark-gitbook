@@ -71,7 +71,7 @@ Running this test results in:
 | c113808a-773f-4179-82d6-9083518404b5 | f4f589af-6e3c-4eb5-92cc-1169a54fbe8d | aliquot    | ae0b0540-fcb6-4c9e-8835-2cb24933a01f |
 | 7a481097-14a3-4916-9632-d899c25fd284 | dc4bba2d-8d49-4dcc-aa3c-17688fe73479 | aliquot    | 52c17edc-35f9-484c-949d-62694cfc797a |
 | 64bd568d-0509-48fe-8d0a-aef2a85d5c57 | 615ba967-3ca9-42ef-a114-19043ede6ae0 | aliquot    | f9410d08-1525-4bf7-9c7c-939a2abe60ae |
-<center><a name=CaseFileBuilderTable></a> Table of cases, files, and aliquots for colon cancer rna-seq files</center>
+<center><a name="CaseFileBuilderTable"></a> Table of cases, files, and aliquots for colon cancer rna-seq files</center>
 
 Other posts go into more details about these columns but briefly:
 * **caseId**: identifies a specific patient
