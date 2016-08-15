@@ -1,4 +1,4 @@
-# co.insilica.gdc-spark
+# co.insilica.gdcSpark
   We use spark to build models on gdc data. `co.insilica.gdcSpark` provides some basic utilities to get started with gdc analyses. 
 
 ## Getting Started
@@ -20,15 +20,13 @@ We mark "provided" on the `org.apache.spark` dependencies. Spark expects users t
 
 Sometimes it can be helpful to start development using sparks `standalone` cluster. The `standalone` cluster uses your local machine as a cluster.  This allows you to bypass the jar creation/submission process. 
 
+Spark analyses often involve two main steps:
+  
+  1. **Base** dataset creation from data sources. 
+  2. **Transformations** of base datasets. This may involve applying mathematical models or changing the shape of the data.
+  
 ## DatasetBuilder
-  Spark analyses often involve two main steps:
-  
-  1. Munge existing data sources into a **base** spark dataset.
-  2. Transform spark datasets which may involve
-    3. Joining spark datasets
-    4. Applying machine learning or statistics to a dataset and storing the result
-  
-  [TODO need to write more about this]
+Complex biological modeling builds upon **base** `dataset`s. `co.insilica.spark`'s `DatasetBuilder` trait helps to identify  build **base** spark `dataset`s
   
 ## CaseFileEntityBuilder
   `CaseFileEntityBuilder` builds a spark `dataset` from a `co.insilica.gdc.query`. We build a `dataset` for all RNA-Seq files for Colon Adenocarcinoma[^facet_search] that are open access[^gdc_access].
@@ -66,6 +64,11 @@ Running this test results in:
 | 64bd568d-0509-48fe-8d0a-aef2a85d5c57 | 615ba967-3ca9-42ef-a114-19043ede6ae0 | aliquot    | f9410d08-1525-4bf7-9c7c-939a2abe60ae |
 <center>Table of cases, files, and aliquots for colon cancer rna-seq files</center>
 
+In earlier sections we reviewed the different entities in a **Biospecimen Supplement**. Aliquots are entities that are not composed of any other entities.  Every RNA-Sequencing file represents an analysis done on a single aliquot.
+
+##Aliquot Transformer
+
+Now you can create GDC queries and build datasets. With this knowledge you can start imagining exciting data analysis pipelines.  In the next sections we will explore some simple analyses made possible by  `CaseFileEntityBuilder`.
 ##
 [^gdc_access]: https://gdc.nci.nih.gov/access-data/data-access-processes-and-tools.
 [^facet_search]: https://gdc-api.nci.nih.gov/files?facets=cases.project.disease_type&pretty=true shows disease_types
