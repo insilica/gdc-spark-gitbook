@@ -137,7 +137,7 @@ Model design requires knowledge of the origin of data. The aliquot transformer i
 Of particular importance is the **sampleType** feature.  Users must know sample types before creation of models. The most common sample types are "Primary Tumor" and "Blood Derived Normal". See all sample types at https://gdc-api.nci.nih.gov/cases?pretty=true&facets=samples.sample_type. 
 
 ## CaseClinicalTransformer
-Our CaseFileEntityBuilder provides information on **fileId** and **caseId**.  We can use **caseId**s to derive information from patient clinical supplements.  
+Our CaseFileEntityBuilder provides information on **fileId** and **caseId**.  We can use **caseId**s to derive information from patient clinical supplements.  We review clinical supplement files in []()
 
 [^gdc_access]: https://gdc.nci.nih.gov/access-data/data-access-processes-and-tools.
 [^facet_search]: https://gdc-api.nci.nih.gov/files?facets=cases.project.disease_type&pretty=true shows disease_types
