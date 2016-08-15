@@ -130,7 +130,14 @@ which results in
 |52c17edc-35f9-484...|9ef79e62-54d7-406...|Primary Tumor|2016-05-02T14:42:...|77e17dc2-fe35-4a9...|2016-05-02T14:42:...|2016-05-02T14:42:...|
 +--------------------+--------------------+-------------+--------------------+--------------------+--------------------+--------------------+
 ```
+The aliquot transformer uses the gdc-api to generate these results.  
 
-##
+Model design requires knowledge of the origin of data. The aliquot transformer is our first attempt at providing the important aliquot origin features. 
+
+Of particular importance is the **sampleType** feature.  Users must know sample types before creation of models. The most common sample types are "Primary Tumor" and "Blood Derived Normal". See all sample types at https://gdc-api.nci.nih.gov/cases?pretty=true&facets=samples.sample_type. 
+
+## CaseClinicalTransformer
+Our CaseFileEntityBuilder provides information on **fileId** and **caseId**.  We can use **caseId**s to derive information from patient clinical supplements.  
+
 [^gdc_access]: https://gdc.nci.nih.gov/access-data/data-access-processes-and-tools.
 [^facet_search]: https://gdc-api.nci.nih.gov/files?facets=cases.project.disease_type&pretty=true shows disease_types
