@@ -72,7 +72,7 @@ Running this test results in:
 | 7a481097-14a3-4916-9632-d899c25fd284 | dc4bba2d-8d49-4dcc-aa3c-17688fe73479 | aliquot    | 52c17edc-35f9-484c-949d-62694cfc797a |
 | 64bd568d-0509-48fe-8d0a-aef2a85d5c57 | 615ba967-3ca9-42ef-a114-19043ede6ae0 | aliquot    | f9410d08-1525-4bf7-9c7c-939a2abe60ae |
 <center>Table of cases, files, and aliquots for colon cancer rna-seq files</center>
-<a name="CaseFileBuilderTable"></a>
+
 
 Other posts go into more details about these columns but briefly:
 * **caseId**: identifies a specific patient
@@ -92,10 +92,43 @@ patients have samples which have portions which have analytes which have aliquot
 
 `co.insilica.gdcSpark.transformers.AliquotTransformer` identifies patient, sample, and portion ids for a dataset with a column of aliquot_ids. It also collects sample types.  This is useful for discerning normal tissue from tumor tissue. RNA-Seq files are always associated with the aliquot used for sequencing.
 
-Below we run the Aliquot Transformer on aliquot ids formed in the [CaseFileBuilder Table](#CaseFileBuilderTable) [TODO get reference links working]
+Below Aliquot Transformer runs on aliquot ids created in the [CaseFileBuilder Table](#CaseFileBuilderTable) [TODO get reference links working]
 
 ```scala
+"AliquotTransformer" should "find aliquot information" in {
+  import co.insilica.gdcSpark.transformers.AliquotTransformer
+  import org.apache.spark.sql.Row
+  import org.apache.spark.sql.types.{StringType, StructField, StructType}
 
+  implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
+  implicit val sparkEnvironment = co.insilica.spark.SparkEnvironment.local
+  implicit val gdcContext = co.insilica.gdc.GDCContext.default
+
+  val ids : org.apache.spark.rdd.RDD[Row] = sparkEnvironment
+    .sparkSession
+    .sparkContext
+    .parallelize( List(
+      Row("ae0b0540-fcb6-4c9e-8835-2cb24933a01f"),
+      Row("52c17edc-35f9-484c-949d-62694cfc797a"),
+      Row("f9410d08-1525-4bf7-9c7c-939a2abe60ae")))
+
+  val schema = StructType(List(StructField("aliquotId",StringType,nullable=false)))
+  val aliquotDS = sparkEnvironment.sparkSession.createDataFrame(ids,schema)
+
+  AliquotTransformer(aliquotColumn = "aliquotId")
+    .transform(aliquotDS)
+    .show()
+}
+```
+which results in
+```
++--------------------+--------------------+-------------+--------------------+--------------------+--------------------+--------------------+
+|           aliquotId|            sampleId|   sampleType|          sampleDate|           portionId|         portionDate|         aliquotDate|
++--------------------+--------------------+-------------+--------------------+--------------------+--------------------+--------------------+
+|f9410d08-1525-4bf...|b481fc53-5b7e-4e2...|Primary Tumor|2016-05-02T14:29:...|3ea9927f-1280-419...|2016-05-02T14:29:...|2016-05-02T14:29:...|
+|ae0b0540-fcb6-4c9...|dad24abd-0eb7-453...|Primary Tumor|2016-05-02T14:25:...|43a36de8-d938-411...|2016-05-02T14:25:...|2016-05-02T14:25:...|
+|52c17edc-35f9-484...|9ef79e62-54d7-406...|Primary Tumor|2016-05-02T14:42:...|77e17dc2-fe35-4a9...|2016-05-02T14:42:...|2016-05-02T14:42:...|
++--------------------+--------------------+-------------+--------------------+--------------------+--------------------+--------------------+
 ```
 
 ##
