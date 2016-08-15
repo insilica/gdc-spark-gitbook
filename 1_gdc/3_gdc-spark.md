@@ -38,7 +38,7 @@ trait DatasetBuilder {
 ```
   
 ## CaseFileEntityBuilder
-  `CaseFileEntityBuilder` builds a spark `dataset` from a `co.insilica.gdc.query`. We build a `dataset` for all RNA-Seq files for Colon Adenocarcinoma[^facet_search] that are open access[^gdc_access].
+  `CaseFileEntityBuilder extends DatasetBuilder` builds a spark `dataset` from a `co.insilica.gdc.query`. Below, we build a `dataset` for all Colon Adenocarcinoma RNA-Seq files [^facet_search] that are open access[^gdc_access].
 
 ```scala
 "CaseFileEntityBuilder" should "build openColonRNASeq dataset" in {
@@ -73,11 +73,19 @@ Running this test results in:
 | 64bd568d-0509-48fe-8d0a-aef2a85d5c57 | 615ba967-3ca9-42ef-a114-19043ede6ae0 | aliquot    | f9410d08-1525-4bf7-9c7c-939a2abe60ae |
 <center>Table of cases, files, and aliquots for colon cancer rna-seq files</center>
 
-In earlier sections we reviewed the different entities in a **Biospecimen Supplement**. Aliquots are entities that are not composed of any other entities.  Every RNA-Sequencing file represents an analysis done on a single aliquot.
+Other posts go into more details about these columns but briefly:
+* **caseId**: identifies a specific patient
+* **fileId**: identifies a specific file (rna-seq file in this case)
+* **entityType**: entities associated with a file.  (case or Aliquot)
+* **entityId**: universal unique identifier for the entity associated with a file.
+
+In earlier posts we reviewed the different entities in a **Biospecimen Supplement**. Aliquots are leaf entities in the GDC. They are not composed of any other entities. **Aliquots** belong to a biological **portion**. Biological **portions** belong to biological samples. Biological **samples** belong to **patients** (**case ids** identify **patients**). Every RNA-Sequencing file represents an analysis done on a single aliquot.
+
+Now you can create GDC queries and build datasets. With this knowledge you can start imagining exciting data analysis pipelines.  In the next sections we will explore some simple analyses made possible by  `CaseFileEntityBuilder`.
 
 ##Aliquot Transformer
 
-Now you can create GDC queries and build datasets. With this knowledge you can start imagining exciting data analysis pipelines.  In the next sections we will explore some simple analyses made possible by  `CaseFileEntityBuilder`.
+
 ##
 [^gdc_access]: https://gdc.nci.nih.gov/access-data/data-access-processes-and-tools.
 [^facet_search]: https://gdc-api.nci.nih.gov/files?facets=cases.project.disease_type&pretty=true shows disease_types
