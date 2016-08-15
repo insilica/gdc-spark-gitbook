@@ -18,15 +18,24 @@ libraryDependencies ++= Seq(
 ```
 We mark "provided" on the `org.apache.spark` dependencies. Spark expects users to submit jobs to an existing spark cluster.  Job submission involves sending a `jar` to an existing cluster. The cluster will provide its own spark dependencies. 
 
-Sometimes it can be helpful to start development using sparks `standalone` cluster. The `standalone` cluster uses your local machine as a cluster.  This allows you to bypass the jar creation/submission process. 
+Sometimes it can be helpful to start development using sparks `standalone` cluster. The `standalone` cluster uses your local machine as a cluster.  This allows you to bypass the jar creation/submission process. To use the standalone cluster include spark dependencies as shown above. Follow the [spark documentation](http://spark.apache.org/docs/2.0.0/) for next steps.
 
+## DatasetBuilder
 Spark analyses often involve two main steps:
   
   1. **Base** dataset creation from data sources. 
   2. **Transformations** of base datasets. This may involve applying mathematical models or changing the shape of the data.
   
-## DatasetBuilder
-Complex biological modeling builds upon **base** `dataset`s. `co.insilica.spark`'s `DatasetBuilder` trait helps to identify  build **base** spark `dataset`s
+`co.insilica.spark`'s `DatasetBuilder` trait, shown below, identifies classes that build datasets.
+
+```spark
+package co.insilica.spark
+
+import org.apache.spark.sql.Dataset
+trait DatasetBuilder {
+  def build()(implicit se: SparkEnvironment): Dataset[_]
+}
+```
   
 ## CaseFileEntityBuilder
   `CaseFileEntityBuilder` builds a spark `dataset` from a `co.insilica.gdc.query`. We build a `dataset` for all RNA-Seq files for Colon Adenocarcinoma[^facet_search] that are open access[^gdc_access].
