@@ -98,12 +98,13 @@ We can show a full example response by adding size and field parameters to the e
   The response (with pagination and warnings omitted):
   
   ```json
-  {
+{
   "data": {
     "hits": [
       { "access": "controlled", "file_id": "84a9c5a8-94f4-4680-b74b-3e743ff6c42d" }, 
-      { "access": "open", "file_id": "97948aac-64c0-411e-853f-e5b208b13565" }
-    ],...
+      { "access": "open", "file_id": "97948aac-64c0-411e-853f-e5b208b13565" } 
+     ]
+  }
 }
 ```
 <center><a>https://gdc-api.nci.nih.gov/files?fields=file_id,access&size=2&pretty=true</a></center><br/>
@@ -179,7 +180,7 @@ object example extends App{
   You are now armed with the ability to download tissue data from the GDC and search for files relevant to your needs.  
   
   #### Legacy API
-  On a file note, the Genomic Data Commons is in the business of data harmonization. GDC supports distinct genetics projects.  Project data needs modification to fit standards.  If, for example, you know that some TCGA exists but cannot find it on GDC you may be able to access it via the `legacy` api.  
+  On a final note, the Genomic Data Commons is in the business of data harmonization. GDC supports distinct genetics projects.  Project data needs modification to fit standards.  If, for example, you know that some TCGA exists but cannot find it on GDC you may be able to access it via the `legacy` api.  
 
 ```scala
 val legacyApi : GDCContext = GDCContext.legacy
