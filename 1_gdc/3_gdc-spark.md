@@ -92,7 +92,7 @@ patients have samples which have portions which have analytes which have aliquot
 
 `co.insilica.gdcSpark.transformers.AliquotTransformer` identifies patient, sample, and portion ids for a dataset with a column of aliquot_ids. It also collects sample types.  This is useful for discerning normal tissue from tumor tissue. RNA-Seq files are always associated with the aliquot used for sequencing.
 
-Below we run the Aliquot Transformer on a aliquot ids formed in the [CaseFileBuilder Table](#CaseFileBuilderTable)
+Below we run the Aliquot Transformer on aliquot ids formed in the [CaseFileBuilder Table](#CaseFileBuilderTable) [TODO get reference links working]
 
 ```scala
 
