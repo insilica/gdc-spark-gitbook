@@ -72,7 +72,7 @@ Running this test results in:
 | 7a481097-14a3-4916-9632-d899c25fd284 | dc4bba2d-8d49-4dcc-aa3c-17688fe73479 | aliquot    | 52c17edc-35f9-484c-949d-62694cfc797a |
 | 64bd568d-0509-48fe-8d0a-aef2a85d5c57 | 615ba967-3ca9-42ef-a114-19043ede6ae0 | aliquot    | f9410d08-1525-4bf7-9c7c-939a2abe60ae |
 <center>Table of cases, files, and aliquots for colon cancer rna-seq files</center>
-<a id="CaseFileBuilderTable"></a>
+<a id="CaseFileBuilderTable">test</a>
 Other posts go into more details about these columns but briefly:
 * **caseId**: identifies a specific patient
 * **fileId**: identifies a specific file (rna-seq file in this case)
