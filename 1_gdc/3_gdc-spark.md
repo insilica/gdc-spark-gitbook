@@ -71,7 +71,7 @@ Running this test results in:
 | c113808a-773f-4179-82d6-9083518404b5 | f4f589af-6e3c-4eb5-92cc-1169a54fbe8d | aliquot    | ae0b0540-fcb6-4c9e-8835-2cb24933a01f |
 | 7a481097-14a3-4916-9632-d899c25fd284 | dc4bba2d-8d49-4dcc-aa3c-17688fe73479 | aliquot    | 52c17edc-35f9-484c-949d-62694cfc797a |
 | 64bd568d-0509-48fe-8d0a-aef2a85d5c57 | 615ba967-3ca9-42ef-a114-19043ede6ae0 | aliquot    | f9410d08-1525-4bf7-9c7c-939a2abe60ae |
-<center>Table of cases, files, and aliquots for colon cancer rna-seq files</center>
+<center><a name=CaseFileBuilderTable/> Table of cases, files, and aliquots for colon cancer rna-seq files</center>
 
 Other posts go into more details about these columns but briefly:
 * **caseId**: identifies a specific patient
@@ -79,12 +79,23 @@ Other posts go into more details about these columns but briefly:
 * **entityType**: entities associated with a file.  (case or Aliquot)
 * **entityId**: universal unique identifier for the entity associated with a file.
 
-In earlier posts we reviewed the different entities in a **Biospecimen Supplement**. Aliquots are leaf entities in the GDC. They are not composed of any other entities. **Aliquots** belong to a biological **portion**. Biological **portions** belong to biological samples. Biological **samples** belong to **patients** (**case ids** identify **patients**). Every RNA-Sequencing file represents an analysis done on a single aliquot.
-
 Now you can create GDC queries and build datasets. With this knowledge you can start imagining exciting data analysis pipelines.  In the next sections we will explore some simple analyses made possible by  `CaseFileEntityBuilder`.
 
 ##Aliquot Transformer
+In earlier posts we reviewed the different entities in a **Biospecimen Supplement**. Aliquots are leaf entities in the GDC. They are not composed of any other entities. **Aliquots** are part of **analytes** the full container relationship is below:
 
+<center>
+<b>aliquot</b> < <b>analyte</b> < <b>portion</b> < <b>sample</b> < <b>patient</b><br/>
+patients have samples which have portions which have analytes which have aliquots.
+</center>
+
+`co.insilica.gdcSpark.transformers.AliquotTransformer` identifies patient, sample, and portion ids for a dataset with a column of aliquot_ids. It also collects sample types.  This is useful for discerning normal tissue from tumor tissue. RNA-Seq files are always associated with the aliquot used for sequencing.
+
+Below we run the Aliquot Transformer on a aliquot ids formed in the [CaseFileBuilder Table](#CaseFileBuilderTable)
+
+```scala
+
+```
 
 ##
 [^gdc_access]: https://gdc.nci.nih.gov/access-data/data-access-processes-and-tools.
