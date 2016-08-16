@@ -2,9 +2,9 @@
   Tumor similarity is an important method to enable data exploration and model creation. Similarity models rely on two components **fingerprinting** and **similarity metric**
   
   ## Tumor Fingerprinting
-  We define **tumor fingerprinting** to be the creation of numeric vectors from tumor samples. Biological assays exist to measure diverse tumor and normal tissue features.  Here we will focus on rna-sequencing as a method to estimate protein expression.
+ **Tumor fingerprinting** is the creation of numeric vectors from tumor samples. Biological assays exist to measure diverse tumor and normal tissue features.  Here we will focus on rna-sequencing as a method to estimate protein expression.
   
-  In this example we represent a tumor as a vector of gene expression values. Each  Genes are identified via ensembl identifiers and expression given as FPKM
+  In this example we represent a tumor as a vector of gene expression values. Genes are identified via ensembl identifiers and expression given as FPKM
   
 | Tumor_Sample | ENSG | 2:0 | 3:0 | 4:0 |
  | -- | -- | -- | -- | -- |
