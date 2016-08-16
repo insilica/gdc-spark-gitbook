@@ -172,10 +172,8 @@ The `CaseClinicalTransformer` works through a two pass system:
 ```algorithm
 1. read caseIds from input dataset
 2. download all case clinical supplement xml files from gdc-api
-3. First Pass
-  1. Record all CDEs used in all xml files
-4. Second Pass
-  1. Record value of each cde in each xml file   
+3. First Pass - Record Set of CDEs used in any file
+4. Second Pass - Record value of each CDE for each case xml file
 ```
 <center style="color:#800000">CaseClinicalTransformer recipe</center>
 The transformer handles nested CDEs by prepending the nested node name and recording an array of values. In the above example the recorded column name is "stage_event_3203222" with value ["Stage I"] if there are no siblings.
