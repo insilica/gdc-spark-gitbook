@@ -170,8 +170,8 @@ Nested xml nodes contain information such as clinical follow-ups and treatment r
 
 The `CaseClinicalTransformer` works through a two pass system:
 ```algorithm
-1. read caseIds from input dataset
-2. download all case clinical supplement xml files from gdc-api
+1. Read caseIds from input dataset
+2. Download all case clinical supplement xml files from gdc-api
 3. First Pass - Record Set of CDEs used in any file
 4. Second Pass - Record value of each CDE for each case xml file
 ```
