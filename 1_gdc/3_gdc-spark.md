@@ -178,11 +178,6 @@ The `CaseClinicalTransformer` works through a two pass system:
 <center style="color:#800000">CaseClinicalTransformer recipe</center>
 The transformer handles nested CDEs by prepending the nested node name and recording an array of values. In the above example the recorded column name is "stage_event_3203222" with value ["Stage I"] if there are no siblings.
 
-Hi Alan,
-
-I am taking a 3 day vacation and will be in SC this Friday.  I would still like to do a call, or we can meet up the weekend after.  I started recording my progress in a book which you can read at gitbook.  I also attached a pdf.  Though its obviously still in the very early stages.  Basically I've started created a project direction with Jeff and Zak.  Ideally we can think about how to combine all the packages we are building into some publications / examples. 
-
-I'm trying to get them to start writing like this while they are programming.  I think it will help a few things:
 
 1. Writing while programming forces you to program in a way that you can communicate clearly to others.  
 2. Notes make it easier for others to start working with your code.
