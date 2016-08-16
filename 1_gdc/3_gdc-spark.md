@@ -155,7 +155,7 @@ Most fields in the xml file have the special attributes "cde" which refers to NI
 ```xml
 <clin_shared:icd_o_3_site cde="3226281">C18.5</clin_shared:icd_o_3_site>
 ```
-<center>Example clinical supplement field with cde but no preferred name. <a href="https://cdebrowser.nci.nih.gov/CDEBrowser/">cdebrowser.nci.nih.gov/CDEBrowser/</a> provides a catalogue of cdes. <a href="https://cdebrowser.nci.nih.gov/CDEBrowser/search?elementDetails=9&FirstTimer=0&PageId=ElementDetailsGroup&publicId=3226281&version=1.0">CDE 3226281</a></center>
+<center style="color:#800000">Example clinical supplement field with cde but no preferred name. <a href="https://cdebrowser.nci.nih.gov/CDEBrowser/">cdebrowser.nci.nih.gov/CDEBrowser/</a> provides a catalogue of cdes. <a href="https://cdebrowser.nci.nih.gov/CDEBrowser/search?elementDetails=9&FirstTimer=0&PageId=ElementDetailsGroup&publicId=3226281&version=1.0">CDE 3226281</a></center>
 
 Nested xml nodes contain information such as clinical follow-ups and treatment response data:
 
