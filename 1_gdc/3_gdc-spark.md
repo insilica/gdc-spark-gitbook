@@ -137,7 +137,47 @@ Model design requires knowledge of the origin of data. The aliquot transformer i
 Of particular importance is the **sampleType** feature.  Users must know sample types before creation of models. The most common sample types are "Primary Tumor" and "Blood Derived Normal". See all sample types at https://gdc-api.nci.nih.gov/cases?pretty=true&facets=samples.sample_type. 
 
 ## CaseClinicalTransformer
-Our CaseFileEntityBuilder provides information on **fileId** and **caseId**.  We can use **caseId**s to derive information from patient clinical supplements.  We review clinical supplement files in [clinical supplements](https://tomlue.gitbooks.io/gdc-spark-gitbook/content/1_gdc/clinical_supplements.html)
+CaseFileEntityBuilder provides information on **fileId** and **caseId**.  We can use **caseId**s to derive information from patient clinical supplements.  We review clinical supplement files in depth in [clinical supplements](https://tomlue.gitbooks.io/gdc-spark-gitbook/content/1_gdc/clinical_supplements.html). 
+
+Clinical supplements are xml files that describe patient disease, treatment, and disease progression.  These xml files generally break down as follows:
+
+```xml
+<admin:admin>administrative data</admin:admin>
+<coad:patient>
+  <??? preferred_name="some_name" cde="some_number">some value</???>
+  ...
+  <some_nested_fields></some_nested_fields>
+</coad:patient>
+```
+<center>Summarized COAD patient clinical supplement xml file</center>
+
+Most fields in the xml file have the special attributes "cde" which refers to NIH [common data elements](https://www.nlm.nih.gov/cde/). Fields with the "cde" attribute sometimes carry a "preferred_name" attribute which eases interpretation. 
+```xml
+<clin_shared:icd_o_3_site cde="3226281">C18.5</clin_shared:icd_o_3_site>
+```
+<center>Example clinical supplement field with cde but no preferred name. <a href="https://cdebrowser.nci.nih.gov/CDEBrowser/">cdebrowser.nci.nih.gov/CDEBrowser/</a> provides a catalogue of cdes. <a href="https://cdebrowser.nci.nih.gov/CDEBrowser/search?elementDetails=9&FirstTimer=0&PageId=ElementDetailsGroup&publicId=3226281&version=1.0">CDE 3226281</a></center>
+
+Nested xml nodes contain information such as clinical follow-ups and treatment response data:
+
+```xml
+<shared_stage:stage_event system="AJCC">
+  <shared_stage:pathologic_stage 
+  preferred_name="ajcc_pathologic_tumor_stage" 
+  cde="3203222">Stage I</shared_stage:pathologic_stage>
+</shared_stage:stage_event>
+```
+<center>Clinical supplements record stage events in nested nodes</center>
+
+The `CaseClinicalTransformer` works through a two pass system:
+```algorithm
+1. read caseIds from input dataset
+2. download all case clinical supplement xml files from gdc-api
+3. First Pass
+  1. Record all CDEs used in all xml files
+4. Second Pass
+  1. Record value of each cde in each xml file   
+```
+The transformer handles nested CDEs by prepending the nested node name ("stage_event" in the above example). 
 
 [^gdc_access]: https://gdc.nci.nih.gov/access-data/data-access-processes-and-tools.
 [^facet_search]: https://gdc-api.nci.nih.gov/files?facets=cases.project.disease_type&pretty=true shows disease_types
