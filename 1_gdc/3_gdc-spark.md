@@ -166,7 +166,7 @@ Nested xml nodes contain information such as clinical follow-ups and treatment r
   cde="3203222">Stage I</shared_stage:pathologic_stage>
 </shared_stage:stage_event>
 ```
-<center>Clinical supplements record stage events in nested nodes</center>
+<center style="color:#800000">Clinical supplements record stage events in nested nodes</center>
 
 The `CaseClinicalTransformer` works through a two pass system:
 ```algorithm
@@ -177,7 +177,8 @@ The `CaseClinicalTransformer` works through a two pass system:
 4. Second Pass
   1. Record value of each cde in each xml file   
 ```
-The transformer handles nested CDEs by prepending the nested node name ("stage_event" in the above example). 
+<center style="color:#800000">CaseClinicalTransformer recipe</center>
+The transformer handles nested CDEs by prepending the nested node name and recording an array of values. In the above example the recorded column name is "stage_event_3203222" with value ["Stage I"] if there are no siblings.
 
 [^gdc_access]: https://gdc.nci.nih.gov/access-data/data-access-processes-and-tools.
 [^facet_search]: https://gdc-api.nci.nih.gov/files?facets=cases.project.disease_type&pretty=true shows disease_types
