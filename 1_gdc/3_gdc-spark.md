@@ -175,8 +175,8 @@ The `CaseClinicalTransformer` works through a two pass system:
 3. First Pass - Record Set of CDEs used in any file
 4. Second Pass - Record value of each CDE for each case xml file
 ```
-<center style="color:#800000">CaseClinicalTransformer recipe</center>
-The transformer handles nested CDEs by prepending the nested node name and recording an array of values. In the above example the recorded column name is "stage_event_3203222" with value ["Stage I"] if there are no siblings.
+<center style="color:#800000">CaseClinicalTransformer steps</center>
+  The transformer handles nested CDEs by prepending the nested node name and recording an array of values. The recorded column name in the above example is "stage_event@pathologic_stage@3203222". This column takes on the array value ["Stage I"] if there are no siblings.
 
 ```scala
 "CaseClinicalTransformer" should "find clinical data for cases" in {
