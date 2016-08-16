@@ -179,8 +179,5 @@ The `CaseClinicalTransformer` works through a two pass system:
 The transformer handles nested CDEs by prepending the nested node name and recording an array of values. In the above example the recorded column name is "stage_event_3203222" with value ["Stage I"] if there are no siblings.
 
 
-1. Writing while programming forces you to program in a way that you can communicate clearly to others.  
-2. Notes make it easier for others to start working with your code.
-
 [^gdc_access]: https://gdc.nci.nih.gov/access-data/data-access-processes-and-tools.
 [^facet_search]: https://gdc-api.nci.nih.gov/files?facets=cases.project.disease_type&pretty=true shows disease_types
