@@ -2,10 +2,10 @@
   The Genomic Data Commons provides an API for accessing many aspects of the underlying cancer data files.  The GDC API documentation is at https://gdc-docs.nci.nih.gov/API/Users_Guide/Getting_Started/. 
   
 # A Simple API
-  In this book we will be making use of the Insilica scala client for the Genomic Data Commons REST API.  To include the Insilica in scala api `co.insilica.gdc-core.0.1.3-SNAPSHOT` in a scala project via:
+  In this book we will be making use of the Insilica scala client for the Genomic Data Commons REST API.  To include the Insilica in scala api `co.insilica.gdc-core.0.1.4-SNAPSHOT` in a scala project via:
 
 ```scala
-libraryDependencies ++= "co.insilica" %% "gdc-core" % "0.1.3-SNAPSHOT"
+libraryDependencies ++= "co.insilica" %% "gdc-core" % "0.1.4-SNAPSHOT"
 ```
 {include in build.sbt | caption}
 
