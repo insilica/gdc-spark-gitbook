@@ -217,7 +217,7 @@ The `CaseClinicalTransformer` works through a two pass system:
 <center style="color:#800000">Example of CaseClinicalTransformer usage on 3 sample case ids</center>
   Look through the produced column names and case values.  Clinical supplements and the transformer output make good model building targets.  One could build models evaluating the drug effects.  Cancer aggression information on tumor stage and invasion is present. Survival data make strong analysis targets alone or in combination with drug data. These examples are just the tip of what is possible.
   
-## All Together 
+## Next Steps
 Here we presented the basics of how GDCSpark utilities enable spark object building from the GDC-API.  In some of our examples we go into greater depth into the possibilities gained from integrating this data:
 
 // TODO make these links and describe
