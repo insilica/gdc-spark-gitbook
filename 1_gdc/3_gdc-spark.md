@@ -202,10 +202,28 @@ The `CaseClinicalTransformer` works through a two pass system:
     .withCaseId("caseId")
     .transform(caseDS)
     .show()
+  
+/** Results in (with many columns omitted):
+* +------------------------------------+----------------------------+----------------------------------+-------------------------------------------------+---+
+* |caseId                              |drugs@drug@drug_name@2975232|drugs@drug@therapy_ongoing@3103479|tissue_retrospective_collection_indicator@3088528|...|
+* +------------------------------------+----------------------------+----------------------------------+-------------------------------------------------+...|
+* |c113808a-773f-4179-82d6-9083518404b5|[]                          |[]                                |NO                                               |...|
+* |7a481097-14a3-4916-9632-d899c25fd284|[]                          |[]                                |YES                                              |...|
+* |64bd568d-0509-48fe-8d0a-aef2a85d5c57|[Leucovorin, 5-Fluorouracil]|[NO, NO]                          |NO                                               |...|
+* +------------------------------------+----------------------------+----------------------------------+-------------------------------------------------+---+
+*/ 
 }
 ```
-<center style="color:#800000">test</center>
-asdf
+<center style="color:#800000">Example of CaseClinicalTransformer usage on 3 sample case ids</center>
+  Look through the produced column names and case values.  Clinical supplements and the transformer output make good model building targets.  One could build models evaluating the drug effects.  Cancer aggression information on tumor stage and invasion is present. Survival data make strong analysis targets alone or in combination with drug data. These examples are just the tip of what is possible.
+  
+## All Together 
+Here we presented the basics of how GDCSpark utilities enable spark object building from the GDC-API.  In some of our examples we go into greater depth into the possibilities gained from integrating this data:
+
+// TODO make these links and describe
+1. **Tumor Similarity**: 
+2. **Drugs and Methylation**:
+3. **Hypothesis generation**:
 
 [^gdc_access]: https://gdc.nci.nih.gov/access-data/data-access-processes-and-tools.
 [^facet_search]: https://gdc-api.nci.nih.gov/files?facets=cases.project.disease_type&pretty=true shows disease_types
