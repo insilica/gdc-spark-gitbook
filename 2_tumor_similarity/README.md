@@ -11,7 +11,7 @@
 | Tumor_1 | 1:2 | 2:2 | 3:2 | 4:2 |
 | Tumor_2 | 1:3 | 2:3 | 3:3 | 4:3 |
 
-The below code shows how to build an RNA Dataset like the above:
+The below code shows how to build an RNA Dataset like the above for ten tumor aliquots:
 ```scala
 "RNA Datasets" should "build from GDC-Core" in {
 
