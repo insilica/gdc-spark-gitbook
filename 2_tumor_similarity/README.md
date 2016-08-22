@@ -6,10 +6,10 @@
   
   In this example we represent a tumor as a vector of gene expression values. Ensembl identifiers identify genes and FPKM {cite this | todo} encodes numeric expression values.
   
-| Tumor_Sample | ENSG | 2:0 | 3:0 | 4:0 |
+| Tumor_Sample | ENSG | FPKM |
 | -- | -- | -- | -- | -- |
-| Tumor_1 | 1:2 | 2:2 | 3:2 | 4:2 |
-| Tumor_2 | 1:3 | 2:3 | 3:3 | 4:3 |
+| c30ce88d-5dff-450... | ENSG00000200842.1 | 0.0 | 
+| c30ce88d-5dff-450... | ENSG00000240097.1 | 0.23133 | 
 
 The below code shows how to build an RNA Dataset like the above for ten tumor aliquots:
 ```scala
