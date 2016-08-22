@@ -17,6 +17,8 @@ The below code shows how to build an RNA Dataset like the above for ten tumor al
 
 }
 ```
+{entityRNATransformer needs to take a cache directory | todo}
+
  ###RNA-Sequencing
  The central dogma of molecular biology states 
  ####method
