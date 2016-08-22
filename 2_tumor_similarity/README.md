@@ -7,10 +7,14 @@
   In this example we represent a tumor as a vector of gene expression values. Ensembl identifiers identify genes and FPKM {cite this | todo} encodes numeric expression values.
   
 | Tumor_Sample | ENSG | 2:0 | 3:0 | 4:0 |
- | -- | -- | -- | -- | -- |
- | Tumor_1 | 1:2 | 2:2 | 3:2 | 4:2 |
- | Tumor_2 | 1:3 | 2:3 | 3:3 | 4:3 |
- 
+| -- | -- | -- | -- | -- |
+| Tumor_1 | 1:2 | 2:2 | 3:2 | 4:2 |
+| Tumor_2 | 1:3 | 2:3 | 3:3 | 4:3 |
+
+The below code shows how to build an RNA Dataset like the above:
+```scala
+
+```
  ###RNA-Sequencing
  The central dogma of molecular biology states 
  ####method
