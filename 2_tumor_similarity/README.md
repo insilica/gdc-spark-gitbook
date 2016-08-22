@@ -13,11 +13,49 @@
 
 The below code shows how to build an RNA Dataset like the above for ten tumor aliquots:
 ```scala
-"RNA Datasets" should "build from GDC-Core" in {
+"RNA Datasets" should "build from gdc-core" in {
+  import co.insilica.gdc.query.{Filter, Operators, Query}
+  import co.insilica.gdcSpark.builders.{CaseFileEntityBuilder,CaseFileEntity}
+  import co.insilica.gdcSpark.transformers.rna.EntityRNATransformer
+  import org.json4s.JString
 
+  implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
+  implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
+  implicit val gdcContext = co.insilica.gdc.GDCContext.default
+
+  //build a query for open access RNA-Seq files
+  val query = Query().withFilter {
+    Filter.and(
+      Filter(Operators.eq, key="experimental_strategy", value=JString("RNA-Seq")),
+      Filter(Operators.eq, key="access", value=JString("open"))
+    )
+  }
+
+  val caseFileEntities: org.apache.spark.sql.Dataset[CaseFileEntity] = CaseFileEntityBuilder(query)
+    .withLimit(10)
+    .build()
+
+  val df = EntityRNATransformer()
+    .withEntityId(CaseFileEntityBuilder.columns.entityId)
+    .withFileId(CaseFileEntityBuilder.columns.fileId)
+    .transform(caseFileEntities)
+
+  //lets save this dataframe for later. You can use any other file name you like
+  df.write.parquet("resources/RNA Datasets should build from gdc-core")
+  df.show(10)
+
+/** results in 
+* |            entityId|              caseId|              fileId|entityType|       ensembl_id|     expression|
+* +--------------------+--------------------+--------------------+----------+-----------------+---------------+
+* |8b1695b3-8abd-4bf...|9fcdccae-676e-407...|e1f2cb27-b78b-43b...|   aliquot|ENSG00000225215.1|            0.0|
+* |8b1695b3-8abd-4bf...|9fcdccae-676e-407...|e1f2cb27-b78b-43b...|   aliquot|ENSG00000275261.1|            0.0|
+* |8b1695b3-8abd-4bf...|9fcdccae-676e-407...|e1f2cb27-b78b-43b...|   aliquot|ENSG00000269680.1|  4.74034915892|
+*/
 }
 ```
 {entityRNATransformer needs to take a cache directory | todo}
+
+We now have gene variant expression data for 10 aliquots.  This expression data makes our tumor fingerprints.  We will come back and use these fingerprints in the next example {link next example | todo}.
 
  ###RNA-Sequencing
  The central dogma of molecular biology states 
@@ -41,4 +79,20 @@ The below code shows how to build an RNA Dataset like the above for ten tumor al
   4. **non-negativity**  
   $$\forall A,B : f(A,B) \ge 0 $$
 
-We end our discussion of similarity metrics here but encourage the reader to read further. Wikipedia provides good introductory material and references to more detailed research.{add more similarity references | todo}
+We end our discussion of similarity metrics here but encourage the reader to read further.
+
+## Pulling it together
+  We discussed how to build tumor fingerprints and how to calculate cosine similarity. The below example calculates aliquot-aliquot cosine similarity using fingerprints generated in {link this| todo}.
+
+```scala
+  "RNA Datasets" should "allow tumor tumor similarity" in {
+    implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
+    implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
+    implicit val gdcContext = co.insilica.gdc.GDCContext.default
+
+    //load the dataset created in last example
+    val rnaDS = sparkSession.read.parquet("resources/RNA Datasets should build from gdc-core")
+
+    //reshape
+  }
+```
