@@ -13,7 +13,9 @@
 
 The below code shows how to build an RNA Dataset like the above:
 ```scala
+"RNA Datasets" should "build from GDC-Core" in {
 
+}
 ```
  ###RNA-Sequencing
  The central dogma of molecular biology states 
