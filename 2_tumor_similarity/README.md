@@ -18,7 +18,7 @@
 
   
   ## Similarity Metrics
-  Similarity metrics compare vectors. Specifically a similarity metric is a function $$f:R^n \times R^n \rightarrow R$$.  Similarity metrics generate large values for dissimilar vectors and small values for similar vectors.  There is a rich literature around similarity metrics {citation for similarity literature | todo} for this example we will use cosine similarity:
+  Similarity metrics compare vectors. Specifically a similarity metric is a function $$f:R^n \times R^n \rightarrow R$$.  Similarity metrics generate large values for dissimilar vectors and small values for similar vectors.  There is rich literature around similarity metrics {citation for similarity literature | todo}. We use cosine similarity in this example:
   
   <center> $$\text{cosineSimilarity}(\vec{A},\vec{B}) = cos(\theta) = \dfrac{\vec{A} \cdot \vec{B}}{\lVert \vec{A} \rVert \lVert \vec{B} \rVert}$$ </center>
   
