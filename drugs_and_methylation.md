@@ -53,6 +53,13 @@ Epigenetics affect drug toxicity and efficacy.  In some cases, specific epigenet
 | f31c21b6-0f7f-435b-9e24-97c909755c36 | c766fcc4-76d6-4460-9fce-5575089fbb72 | aliquot | 247b89d7-05c2-49ca-8f96-08786b03a511 |
 | 75dbc8fb-4db8-4764-824c-eccf3a223884 | 686d00b2-2bf0-4560-9fc8-923934e556b9 | aliquot | bea6a21c-a9ce-464d-b4fa-4a93afdc18f6 |
 
+We can build a spark `Dataset` from the fileIds associated with each methylation experiment. To download one of these files we use the **GDC-API Data** endpoint (<a href=>gdc-api.nci.nih.gov/legacy/data?**fileId**</a>):
+
+```
+asdf
+```
+<center style="color:#00000F">asdf</center>
+
 With this code we can find methylation files and their associated aliquots and cases. The next steps will use these identifiers to:
 1. Find patient treatment data
 2. Download methylation data
