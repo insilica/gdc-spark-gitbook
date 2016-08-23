@@ -16,7 +16,7 @@ Epigenetics affect drug toxicity and efficacy.  In some cases, specific epigenet
 ###Downloading TCGA methylation data
   At the time of writing, the GDC had not completed harmonizing methylation data. When the GDC incorporates a new data type it undergoes a harmonization procedure.  Different  projects must conform to the same standards for harmonized data.
   
-  The `legacy` gdc-api provides access to unharmonized data. An example of this kind of legacy data is available at https://gdc-api.nci.nih.gov/legacy/files?pretty=true. To perform a legacy query one can prepend `/legacy/` the GDC-API endpoint. GDC-Core provides a client for the legacy api as well:
+  The `legacy` gdc-api provides access to unharmonized data. An example of this kind of legacy data is available at https://gdc-api.nci.nih.gov/legacy/files?pretty=true. To perform a legacy query one can prepend `legacy` as in `.../legacy/files?...` to the GDC-API endpoint. GDC-Core provides a client for the legacy api which we use below to access illumina 450k methylation data:
   
 ```scala
 "Methylation data" should "be downloadable from GDC" in {
@@ -28,14 +28,13 @@ Epigenetics affect drug toxicity and efficacy.  In some cases, specific epigenet
   implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
   implicit val gdcContext = co.insilica.gdc.GDCContext.legacy //legacy api
 
-  //query will find all methylation files that are open access
+  //query will find all illumina human methylation 450 files that are open access
   val query = Query()
-    .withFilter(Filter(Operators.eq, "data_type", JString("Methylation beta value")))
+    .withFilter(Filter(Operators.eq, "platform", JString("Illumina Human Methylation 450")))
     .withFilter(Filter(Operators.eq, "access", JString("open")))
 
   val df = CaseFileEntityBuilder()
     .withQuery(query)
-    .withLimit(1000)
     .build()
 
   //save for later
@@ -43,6 +42,7 @@ Epigenetics affect drug toxicity and efficacy.  In some cases, specific epigenet
 
   //print results
   df.show(3,truncate=false)
+  println(s"${df.count()} files") //39055 files
 }
 ```
   The above code prints the below table:
@@ -60,13 +60,26 @@ We can build a spark `Dataset` from the fileIds associated with each methylation
 | cg00000029            | 0.466309829264718            | RBL2                         | 16                           | 53468112                     |
 | cg00000108            | NA                           | C3orf35                      | 3                            | 37459206                     |
 | cg00000109            | NA                           | FNDC3B                       | 3                            | 171916037                    |
-| cg00000165            | 0.210775440416015            | 1                            | 91194674                     |                              |
+| cg00000165            | 0.210775440416015|  | 1 | 91194674 |
 | cg00000236            | 0.910532917344955            | VDAC3                        | 8                            | 42263294                     |
 | cg00000289            | 0.663497467565074            | ACTN1                        | 14                           | 69341139                     |
 | cg00000292            | 0.772453089249052            | ATP2A1                       | 16                           | 28890100                     |
 | cg00000321            | 0.331188919383951            | SFRP1                        | 8                            | 41167802                     |
 <center style="color:#800000">Excerpt from file at <a href=>http://gdc-api.nci.nih.gov/legacy/data/4e19c35d-2ec7-444c-ac1d-d71b4ea7d4ce</a>. First line removed and line 2-10 shown </center>
+  Column Descriptions:
+  * **Composite Element REF**
+  * **Beta_value**
+  * **Gene_Symbol**
+  * **Chromosome**
+  * **Genomic_Coordinate**
 
+Illumina provides some [videos describing methylation array analysis](http://www.illumina.com/techniques/microarrays/methylation-arrays/methylation-array-data-analysis-tips.html). Methylation array normalization is of particular importance and we will come back to it later. 
+
+In the below step we use the `co.insilica.gdcSpark.transformers.FileMethylationTransformer` to create a methylation dataset from a dataset containing fileIds. 
+
+```scala
+
+```
 
 With this code we can find methylation files and their associated aliquots and cases. The next steps will use these identifiers to:
 1. Find patient treatment data
