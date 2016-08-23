@@ -58,7 +58,7 @@ We can build a spark `Dataset` from the fileIds associated with each methylation
 ```
 asdf
 ```
-<center style="color:#00000F">asdf</center>
+<center style="color:#800000">Excert from file at <a href=>gdc-api.nci.nih.gov/legacy/data/4e19c35d-2ec7-444c-ac1d-d71b4ea7d4ce</a> </center>
 
 With this code we can find methylation files and their associated aliquots and cases. The next steps will use these identifiers to:
 1. Find patient treatment data
