@@ -53,12 +53,20 @@ Epigenetics affect drug toxicity and efficacy.  In some cases, specific epigenet
 | f31c21b6-0f7f-435b-9e24-97c909755c36 | c766fcc4-76d6-4460-9fce-5575089fbb72 | aliquot | 247b89d7-05c2-49ca-8f96-08786b03a511 |
 | 75dbc8fb-4db8-4764-824c-eccf3a223884 | 686d00b2-2bf0-4560-9fc8-923934e556b9 | aliquot | bea6a21c-a9ce-464d-b4fa-4a93afdc18f6 |
 
-We can build a spark `Dataset` from the fileIds associated with each methylation experiment. To download one of these files we use the **GDC-API Data** endpoint (<a href=>gdc-api.nci.nih.gov/legacy/data?**fileId**</a>):
+We can build a spark `Dataset` from the fileIds associated with each methylation experiment. To download one of these files we use the **GDC-API Data** endpoint (<a href=>gdc-api.nci.nih.gov/legacy/data/**fileId**</a>):
 
-```
-asdf
-```
-<center style="color:#800000">Excert from file at <a href=>gdc-api.nci.nih.gov/legacy/data/4e19c35d-2ec7-444c-ac1d-d71b4ea7d4ce</a> </center>
+| Composite Element REF | Beta_value                   | Gene_Symbol                  | Chromosome                   | Genomic_Coordinate           |
+|-----------------------|------------------------------|------------------------------|------------------------------|------------------------------|
+| cg00000029            | 0.466309829264718            | RBL2                         | 16                           | 53468112                     |
+| cg00000108            | NA                           | C3orf35                      | 3                            | 37459206                     |
+| cg00000109            | NA                           | FNDC3B                       | 3                            | 171916037                    |
+| cg00000165            | 0.210775440416015            | 1                            | 91194674                     |                              |
+| cg00000236            | 0.910532917344955            | VDAC3                        | 8                            | 42263294                     |
+| cg00000289            | 0.663497467565074            | ACTN1                        | 14                           | 69341139                     |
+| cg00000292            | 0.772453089249052            | ATP2A1                       | 16                           | 28890100                     |
+| cg00000321            | 0.331188919383951            | SFRP1                        | 8                            | 41167802                     |
+<center style="color:#800000">Excerpt from file at <a href=>http://gdc-api.nci.nih.gov/legacy/data/4e19c35d-2ec7-444c-ac1d-d71b4ea7d4ce</a>. First line removed and line 2-10 shown </center>
+
 
 With this code we can find methylation files and their associated aliquots and cases. The next steps will use these identifiers to:
 1. Find patient treatment data
