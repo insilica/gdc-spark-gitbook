@@ -8,12 +8,12 @@
 ##Getting Started
 Epigenetics affect drug toxicity and efficacy.  In some cases, specific epigenetic marks  make a good prognostic biomarker for cancer treatment. {Need a citation |todo}. In this example we will:
 
-1. Use gdc-core to download TCGA methylation data
+1. Use gdc-core to download [TCGA methylation data](#abcd)
 2. Find patient treatments
 3. Find patient adverse events
 4. Search for relationships between methylation and adverse events in the context of drug treatment.
 
-###Downloading TCGA methylation data
+###Downloading TCGA methylation data<a name="abcd"></a>
   At the time of writing, the GDC had not completed harmonizing methylation data. When the GDC incorporates a new data type it undergoes a harmonization procedure.  Different  projects must conform to the same standards for harmonized data.
   
   The `legacy` gdc-api provides access to unharmonized data. An example of this kind of legacy data is available at https://gdc-api.nci.nih.gov/legacy/files?pretty=true. To perform a legacy query one can prepend `legacy` as in `.../legacy/files?...` to the GDC-API endpoint. GDC-Core provides a client for the legacy api which we use below to access illumina 450k methylation data:
@@ -58,9 +58,6 @@ We can build a spark `Dataset` from the fileIds associated with each methylation
 | Composite Element REF | Beta_value                   | Gene_Symbol                  | Chromosome                   | Genomic_Coordinate           |
 |-----------------------|------------------------------|------------------------------|------------------------------|------------------------------|
 | cg00000029            | 0.466309829264718            | RBL2                         | 16                           | 53468112                     |
-| cg00000108            | NA                           | C3orf35                      | 3                            | 37459206                     |
-| cg00000109            | NA                           | FNDC3B                       | 3                            | 171916037                    |
-| cg00000165            | 0.210775440416015|  | 1 | 91194674 |
 | cg00000236            | 0.910532917344955            | VDAC3                        | 8                            | 42263294                     |
 | cg00000289            | 0.663497467565074            | ACTN1                        | 14                           | 69341139                     |
 | cg00000292            | 0.772453089249052            | ATP2A1                       | 16                           | 28890100                     |
@@ -109,10 +106,7 @@ Now that we have file identifiers and caseIds we should build a large `Dataset` 
   }
 ```
 <center style="color:#800000">Downloading methylation data for all files. Uses dataset derived by CaseFileEntityBuilder in last example { need link | TODO }</center>
-With this code we can find methylation files and their associated aliquots and cases. The next steps will use these identifiers to:
-1. Find patient treatment data
-2. Download methylation data
-3. Derive experimental properties.  
+With this code we can find methylation files and their associated aliquots and cases.
 
 ###Finding Patient Treatments
   The last section demonstrates how to find patients whose biological samples have methylation data.  It is straightforward to build a table of patient clinical data from caseIds.  We provide the code below, but there is a more complete discussion in {add link to other section |todo}.
