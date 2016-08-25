@@ -75,12 +75,40 @@ We can build a spark `Dataset` from the fileIds associated with each methylation
 
 Illumina provides some [videos describing methylation array analysis](http://www.illumina.com/techniques/microarrays/methylation-arrays/methylation-array-data-analysis-tips.html). Methylation array normalization is of particular importance and we will come back to it later. 
 
-In the below step we use the `co.insilica.gdcSpark.transformers.FileMethylationTransformer` to create a methylation dataset from a dataset containing fileIds. 
+Now that we have file identifiers and caseIds we should build a large `Dataset` of all the Methylation data for our cases:
 
 ```scala
+  "FileMethylationTransformer" should "transform fileIds into methylation data" in {
+    import co.insilica.gdcSpark.builders.CaseFileEntityBuilder
 
+    implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
+    implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
+    implicit val gdcContext = co.insilica.gdc.GDCContext.legacy //legacy api
+
+    //Note that we are using the same filepath used in the last test to load our data
+    val caseFilesPath = new java.io.File("resources/methylation data should be downloadable from gdc")
+    if(!caseFilesPath.exists()) throw new Exception("run 'Methylation data should be downloadable from GDC' test")
+
+    //just read a few fileIds for testing
+    val methylationFiles = sparkSession.read.parquet(caseFilesPath.getPath).limit(5)
+
+    co.insilica.gdcSpark.transformers.FileMethylationTransformer()
+      .withFileIdColumn(CaseFileEntityBuilder.columns.fileId)
+      .transform(methylationFiles)
+      .show(10)
+
+    /** output is
+      * +------+---------------------+----------+-----------+----------+------------------+------+----------+--------+
+      * |fileId|composite_element_ref|beta_value|gene_symbol|chromosome|genomic_coordinate|caseId|entityType|entityId|
+      * +------+---------------------+----------+-----------+----------+------------------+------+----------+--------+
+      * |498...|           cg00000029| 0.4356648|       RBL2|        16|          53468112|490...|   aliquot|f-49e...|
+      * |498...|           cg00000108|        NA|    C3orf35|         3|          37459206|490...|   aliquot|f-49e...|
+      * |498...|           cg00000109|        NA|     FNDC3B|         3|         171916037|490...|   aliquot|f-49e...|
+      * |498...|           cg00000165| 0.0631504|           |         1|          91194674|490...|   aliquot|f-49e...|
+      */
+  }
 ```
-
+<center style="color:#800000">Downloading methylation data for all files. Uses dataset derived by CaseFileEntityBuilder in last example { need link | TODO }</center>
 With this code we can find methylation files and their associated aliquots and cases. The next steps will use these identifiers to:
 1. Find patient treatment data
 2. Download methylation data
