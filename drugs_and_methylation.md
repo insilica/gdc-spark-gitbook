@@ -112,4 +112,39 @@ With this code we can find methylation files and their associated aliquots and c
   The last section demonstrates how to find patients whose biological samples have methylation data.  It is straightforward to build a table of patient clinical data from caseIds.  We provide the code below, but there is a more complete discussion in {add link to other section |todo}.
   
   ```scala
+  "Patient drug data" should "derive from methylation case files" in {
+    import co.insilica.gdcSpark.builders.CaseFileEntityBuilder
+
+    implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
+    implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
+    implicit val gdcContext = co.insilica.gdc.GDCContext.legacy //legacy api
+
+    //Note that we are using the same filepath used in the last test to load our data
+    val caseFilesPath = new java.io.File("resources/methylation data should be downloadable from gdc")
+    if(!caseFilesPath.exists()) throw new Exception("run 'Methylation data should be downloadable from GDC' test")
+
+    //just read a few fileIds for testing
+    val methylationFiles = sparkSession.read.parquet(caseFilesPath.getPath).limit(100)
+
+    val df = co.insilica.gdcSpark.transformers.clinical.CaseClinicalTransformer()
+      .withCaseId(CaseFileEntityBuilder.columns.caseId)
+      .transform(methylationFiles)
+
+    //all drug treatments are embedded under the 'drugs' field in clinical trials
+    val drugColumns = List("drugs@drug@drug_name@2975232","drugs@drug@measure_of_response@2857291")
+
+    df
+      .select(CaseFileEntityBuilder.columns.caseId, drugColumns:_*)
+      .show(10)
+  }
   ```
+  <center style="color:#800000">folding out drug use and response for patients </center>
+  asdf
+  
+| caseId | drugName | response | fileId | entityType | entityId |
+|----------------------|-------------|-------------------|----------------------|------------|----------------------|
+| ac0d7a82-82cb-4ae... | Taxol | Complete Response | 44d4a138-b76e-489... | aliquot | dc48f578-193c-474... |
+| ac0d7a82-82cb-4ae... | Carboplatin | Complete Response | 44d4a138-b76e-489... | aliquot | dc48f578-193c-474... |
+| 23f438bd-1dbb-4d4... | Adriamycin | Stable Disease | a1e710d7-6ec1-430... | aliquot | 14c87534-87eb-472... |
+
+asdf
