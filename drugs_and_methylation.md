@@ -161,6 +161,9 @@ With this code we can find methylation files and their associated aliquots and c
       .where(drugResponse("caseResponse").isNotNull)
       .join(methylationFiles,CaseFileEntityBuilder.columns.caseId)
       .show(3)
+      
+    //save for future use
+    drugResponse.write.parquet("/resources/patient drug data should derive from methylation case files")
   }
   ```
   <center style="color:#800000">folding out drug use and response for patients </center>
