@@ -170,4 +170,4 @@ With this code we can find methylation files and their associated aliquots and c
 | ac0d7a82-82cb-4ae... | Carboplatin | Complete Response | 44d4a138-b76e-489... | aliquot | dc48f578-193c-474... |
 | 23f438bd-1dbb-4d4... | Adriamycin | Stable Disease | a1e710d7-6ec1-430... | aliquot | 14c87534-87eb-472... |
 <center style="color:#800000">drug responses for cases with methylation data </center>
-asdf
+In the above example we chose `"drugs@drug@drug_name@2975232"` and `"drugs@drug@measure_of_response@2857291"` to create our drug response table. You can recall the structure of these column names from our section on parsing clinical supplements {link section | TODO}.  There are other drug common data elements 
