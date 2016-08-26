@@ -124,8 +124,7 @@ With this code we can find methylation files and their associated aliquots and c
     val caseFilesPath = new java.io.File("resources/methylation data should be downloadable from gdc")
     if(!caseFilesPath.exists()) throw new Exception("run 'Methylation data should be downloadable from GDC' test")
 
-    //just read a few fileIds for testing
-    val methylationFiles = sparkSession.read.parquet(caseFilesPath.getPath).limit(20)
+    val methylationFiles = sparkSession.read.parquet(caseFilesPath.getPath)
 
     val df = co.insilica.gdcSpark.transformers.clinical.CaseClinicalTransformer()
       .withCaseId(CaseFileEntityBuilder.columns.caseId)
