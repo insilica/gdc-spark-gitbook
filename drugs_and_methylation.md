@@ -131,14 +131,17 @@ With this code we can find methylation files and their associated aliquots and c
       .withCaseId(CaseFileEntityBuilder.columns.caseId)
       .transform(methylationFiles)
       .toDF()
-
-    //all drug treatments are embedded under the 'drugs' field in clinical trials
-    val drugColumns = List("drugs@drug@drug_name@2975232","drugs@drug@measure_of_response@2857291")
-
+      
     //patient drugs are listed in an array i.e. drugs = [Taxol,Carboplatin,...]
     //we copy the patient and make one row per drug
-    val rdd = df
-      .select(CaseFileEntityBuilder.columns.caseId, drugColumns:_*)
+    val rdd = co.insilica.gdcSpark.transformers.clinical.CaseClinicalTransformer()
+      .withCaseId(CaseFileEntityBuilder.columns.caseId)
+      .transform(methylationFiles)
+      .toDF()
+      .select(CaseFileEntityBuilder.columns.caseId,
+        "drugs@drug@drug_name@2975232", //drugs are embedded under the 'drugs' field in clinical supplements
+        "drugs@drug@measure_of_response@2857291"
+      )
       .rdd
       .flatMap{ (row: Row) =>
         val drugNames = row.getAs[mutable.WrappedArray[String]]("drugs@drug@drug_name@2975232")
@@ -150,12 +153,12 @@ With this code we can find methylation files and their associated aliquots and c
 
     val drugResponse = sparkSession.createDataFrame(rdd,StructType(Array(
       StructField("caseId",StringType,nullable=false),
-      StructField("drugName",StringType,nullable=true),
-      StructField("response",StringType,nullable=true)
+      StructField("caseDrugName",StringType,nullable=true),
+      StructField("caseResponse",StringType,nullable=true)
     )))
 
     drugResponse
-      .where(drugResponse("response").isNotNull)
+      .where(drugResponse("caseResponse").isNotNull)
       .join(methylationFiles,CaseFileEntityBuilder.columns.caseId)
       .show(3)
   }
@@ -163,7 +166,7 @@ With this code we can find methylation files and their associated aliquots and c
   <center style="color:#800000">folding out drug use and response for patients </center>
   This code results in a drug response table.
   
-| caseId | drugName | response | fileId | entityType | entityId |
+| caseId | caseDrugName | caseResponse | fileId | entityType | entityId |
 |----------------------|-------------|-------------------|----------------------|------------|----------------------|
 | ac0d7a82-82cb-4ae... | Taxol | Complete Response | 44d4a138-b76e-489... | aliquot | dc48f578-193c-474... |
 | ac0d7a82-82cb-4ae... | Carboplatin | Complete Response | 44d4a138-b76e-489... | aliquot | dc48f578-193c-474... |
