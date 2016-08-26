@@ -171,6 +171,16 @@ With this code we can find methylation files and their associated aliquots and c
 <center style="color:#800000">drug responses for cases with methylation data </center>
 In the above example we chose `"drugs@drug@drug_name@2975232"` and `"drugs@drug@measure_of_response@2857291"` to create our drug response table. You can recall the structure of these column names from our section on parsing clinical supplements. {link section | TODO}.  There are other drug common data elements which we list at the bottom of the page. {section links | TODO}.
 
+Now that we have drug response data we should check what the possible drugNames are:
+```scala
+//following from last example
+
+```
+
+| drugName | count |
+|----------------------|---------------|
+| asdf | asdf |
+
 ### Appendix Drug data elements
 * route_of_administrations
 * therapy_ongoing
