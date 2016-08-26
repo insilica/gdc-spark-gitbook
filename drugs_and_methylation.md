@@ -9,9 +9,8 @@
 Epigenetics affect drug toxicity and efficacy.  In some cases, specific epigenetic marks  make a good prognostic biomarker for cancer treatment. {Need a citation |todo}. In this example we will:
 
 1. Use gdc-core to download [TCGA methylation data](#abcd)
-2. Find patient treatments
-3. Find patient adverse events
-4. Search for relationships between methylation and adverse events in the context of drug treatment.
+2. Find patient treatments / response
+4. Search for relationships between methylation and response in the context of drug treatment.
 
 ###Downloading TCGA methylation data<a name="abcd"></a>
   At the time of writing, the GDC had not completed harmonizing methylation data. When the GDC incorporates a new data type it undergoes a harmonization procedure.  Different  projects must conform to the same standards for harmonized data.
@@ -170,4 +169,32 @@ With this code we can find methylation files and their associated aliquots and c
 | ac0d7a82-82cb-4ae... | Carboplatin | Complete Response | 44d4a138-b76e-489... | aliquot | dc48f578-193c-474... |
 | 23f438bd-1dbb-4d4... | Adriamycin | Stable Disease | a1e710d7-6ec1-430... | aliquot | 14c87534-87eb-472... |
 <center style="color:#800000">drug responses for cases with methylation data </center>
-In the above example we chose `"drugs@drug@drug_name@2975232"` and `"drugs@drug@measure_of_response@2857291"` to create our drug response table. You can recall the structure of these column names from our section on parsing clinical supplements {link section | TODO}.  There are other drug common data elements 
+In the above example we chose `"drugs@drug@drug_name@2975232"` and `"drugs@drug@measure_of_response@2857291"` to create our drug response table. You can recall the structure of these column names from our section on parsing clinical supplements. {link section | TODO}.  There are other drug common data elements which we list at the bottom of the page. {section links | TODO}.
+
+### Appendix Drug data elements
+* route_of_administrations
+* therapy_ongoing
+* days_to_stem_cell_transplantation
+* regimen_number
+* number_cycles
+* day_of_form_completion
+* total_dose_units
+* prescribed_dose
+* total_dose
+* therapy_types
+* month_of_form_completion
+* days_to_drug_therapy_start
+* therapy_types
+* drug_name
+* pharm_regimen_other
+* year_of_form_completion
+* regimen_indication
+* stem_cell_transplantation
+* measure_of_response
+* days_to_drug_therapy_end
+* tx_on_clinical_trial
+* stem_cell_transplantation_type
+* clinical_trail_drug_classification
+* prescribed_dose_units
+* regimen_indication_notes
+* pharm_regimen
