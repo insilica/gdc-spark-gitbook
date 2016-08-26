@@ -12,6 +12,7 @@ Epigenetics affect drug toxicity and efficacy.  In some cases, specific epigenet
 2. Find patient treatments / response
 3. Search for relationships between methylation and response in the context of drug treatment.
 
+These steps use example data on a standalone spark cluster.  In the next section we build a functioning spark application that performs all of these steps.
 
   
 ###Downloading TCGA methylation data<a name="abcd"></a>
