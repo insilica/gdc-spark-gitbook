@@ -114,7 +114,9 @@ With this code we can find methylation files and their associated aliquots and c
   ```scala
   "Patient drug data" should "derive from methylation case files" in {
     import co.insilica.gdcSpark.builders.CaseFileEntityBuilder
-
+    import org.apache.spark.sql.types.{StringType, StructField, StructType}
+    import org.apache.spark.sql.Row
+    
     implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
     implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
     implicit val gdcContext = co.insilica.gdc.GDCContext.legacy //legacy api
@@ -124,18 +126,39 @@ With this code we can find methylation files and their associated aliquots and c
     if(!caseFilesPath.exists()) throw new Exception("run 'Methylation data should be downloadable from GDC' test")
 
     //just read a few fileIds for testing
-    val methylationFiles = sparkSession.read.parquet(caseFilesPath.getPath).limit(100)
+    val methylationFiles = sparkSession.read.parquet(caseFilesPath.getPath).limit(20)
 
     val df = co.insilica.gdcSpark.transformers.clinical.CaseClinicalTransformer()
       .withCaseId(CaseFileEntityBuilder.columns.caseId)
       .transform(methylationFiles)
+      .toDF()
 
     //all drug treatments are embedded under the 'drugs' field in clinical trials
     val drugColumns = List("drugs@drug@drug_name@2975232","drugs@drug@measure_of_response@2857291")
 
-    df
+    //patient drugs are listed in an array i.e. drugs = [Taxol,Carboplatin,...]
+    //we copy the patient and make one row per drug
+    val rdd = df
       .select(CaseFileEntityBuilder.columns.caseId, drugColumns:_*)
-      .show(10)
+      .rdd
+      .flatMap{ (row: Row) =>
+        val drugNames = row.getAs[mutable.WrappedArray[String]]("drugs@drug@drug_name@2975232")
+        val responses = row.getAs[mutable.WrappedArray[String]]("drugs@drug@measure_of_response@2857291")
+        drugNames.zip(responses).map{ case (name,response) =>
+            Row(row(0),name,response)
+        }
+      }
+
+    val drugResponse = sparkSession.createDataFrame(rdd,StructType(Array(
+      StructField("caseId",StringType,nullable=false),
+      StructField("drugName",StringType,nullable=true),
+      StructField("response",StringType,nullable=true)
+    )))
+
+    drugResponse
+      .where(drugResponse("response").isNotNull)
+      .join(methylationFiles,CaseFileEntityBuilder.columns.caseId)
+      .show(3)
   }
   ```
   <center style="color:#800000">folding out drug use and response for patients </center>
