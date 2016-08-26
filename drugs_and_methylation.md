@@ -42,6 +42,8 @@ These steps use example data on a standalone spark cluster.  In the next section
   df.show(3,truncate=false)
 }
 ```
+<center style="color:#800000">Methylation data should be downloadable from GDC</center>  
+
   The above code prints the below table:
   
 | caseId | fileId | entityType | entityId |
@@ -50,16 +52,13 @@ These steps use example data on a standalone spark cluster.  In the next section
 | f31c21b6-0f7f-435b-9e24-97c909755c36 | c766fcc4-76d6-4460-9fce-5575089fbb72 | aliquot | 247b89d7-05c2-49ca-8f96-08786b03a511 |
 | 75dbc8fb-4db8-4764-824c-eccf3a223884 | 686d00b2-2bf0-4560-9fc8-923934e556b9 | aliquot | bea6a21c-a9ce-464d-b4fa-4a93afdc18f6 |
 
-The **GDC-API Data** endpoint (<a href=>gdc-api.nci.nih.gov/legacy/data/**fileId**</a>) allows us to inspect one of these files:
+The **GDC-API Data** endpoint [gdc-api.nci.nih.gov/legacy/data/**fileId**](gdc-api.nci.nih.gov/legacy/data/) allows us to inspect one of these files:
 
 | Composite Element REF | Beta_value                   | Gene_Symbol                  | Chromosome                   | Genomic_Coordinate           |
 |-----------------------|------------------------------|------------------------------|------------------------------|------------------------------|
 | cg00000029            | 0.466309829264718            | RBL2                         | 16                           | 53468112                     |
 | cg00000236            | 0.910532917344955            | VDAC3                        | 8                            | 42263294                     |
-| cg00000289            | 0.663497467565074            | ACTN1                        | 14                           | 69341139                     |
-| cg00000292            | 0.772453089249052            | ATP2A1                       | 16                           | 28890100                     |
-| cg00000321            | 0.331188919383951            | SFRP1                        | 8                            | 41167802                     |
-<center style="color:#800000">Excerpt from file at <a href=>http://gdc-api.nci.nih.gov/legacy/data/4e19c35d-2ec7-444c-ac1d-d71b4ea7d4ce</a>. First line removed and line 2-10 shown </center>
+<center style="color:#800000">Excerpt from file at <a href=>http://gdc-api.nci.nih.gov/legacy/data/4e19c35d-2ec7-444c-ac1d-d71b4ea7d4ce</a>. First line removed and line 2-4 shown </center>
   Column Descriptions:
   * **Composite Element REF**
   * **Beta_value**
@@ -69,44 +68,47 @@ The **GDC-API Data** endpoint (<a href=>gdc-api.nci.nih.gov/legacy/data/**fileId
 
 Illumina provides some [videos describing methylation array analysis](http://www.illumina.com/techniques/microarrays/methylation-arrays/methylation-array-data-analysis-tips.html). Methylation array normalization is of particular importance and we will come back to it later. 
 
-Now that we have file identifiers and caseIds we should build a large `Dataset` of all the Methylation data for our cases:
+Now that we have file identifiers we can build a large spark `Dataset` of all the methylation data for our cases:
 
 ```scala
-  "FileMethylationTransformer" should "transform fileIds into methylation data" in {
-    import co.insilica.gdcSpark.builders.CaseFileEntityBuilder
+"FileMethylationTransformer" should "transform fileIds into methylation data" in {
+  implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
+  implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
+  implicit val gdcContext = co.insilica.gdc.GDCContext.legacy //legacy api
 
-    implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
-    implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
-    implicit val gdcContext = co.insilica.gdc.GDCContext.legacy //legacy api
+  //files derived from last test "Methylation data" should "be downloadable from GDC"
+  val methylationFiles = List("4e19c35d-2ec7-444c-ac1d-d71b4ea7d4ce",
+    "c766fcc4-76d6-4460-9fce-5575089fbb72", "686d00b2-2bf0-4560-9fc8-923934e556b9")
 
-    //Note that we are using the same filepath used in the last test to load our data
-    val caseFilesPath = new java.io.File("resources/methylation data should be downloadable from gdc")
-    if(!caseFilesPath.exists()) throw new Exception("run 'Methylation data should be downloadable from GDC' test")
+  import sparkSession.sqlContext.implicits._
+  val files = sparkSession.sparkContext.parallelize(methylationFiles).toDF("fileId")
 
-    //just read a few fileIds for testing
-    val methylationFiles = sparkSession.read.parquet(caseFilesPath.getPath).limit(5)
-
-    co.insilica.gdcSpark.transformers.FileMethylationTransformer()
-      .withFileIdColumn(CaseFileEntityBuilder.columns.fileId)
-      .transform(methylationFiles)
-      .show(10)
-
-    /** output is
-      * +------+---------------------+----------+-----------+----------+------------------+------+----------+--------+
-      * |fileId|composite_element_ref|beta_value|gene_symbol|chromosome|genomic_coordinate|caseId|entityType|entityId|
-      * +------+---------------------+----------+-----------+----------+------------------+------+----------+--------+
-      * |498...|           cg00000029| 0.4356648|       RBL2|        16|          53468112|490...|   aliquot|f-49e...|
-      * |498...|           cg00000108|        NA|    C3orf35|         3|          37459206|490...|   aliquot|f-49e...|
-      * |498...|           cg00000109|        NA|     FNDC3B|         3|         171916037|490...|   aliquot|f-49e...|
-      * |498...|           cg00000165| 0.0631504|           |         1|          91194674|490...|   aliquot|f-49e...|
-      */
-  }
+  co.insilica.gdcSpark.transformers.FileMethylationTransformer()
+    .withFileIdColumn("fileId")
+    .transform(files)
+    .show(10)
+}
 ```
-<center style="color:#800000">Downloading methylation data for all files. Uses dataset derived by CaseFileEntityBuilder in last example { need link | TODO }</center>
-With this code we can find methylation files and their associated aliquots and cases.
+**FileMethylationTransformer transforms fileIds into methylation data**
+
+This code creates the dataset below:
+
+|fileId|composite_element_ref|beta_value|gene_symbol|chromosome|genomic_coordinate|
+|---------------------------------------------|
+|4e19c3...|cg00000029|0.435|RBL2|16|53468112
+|4e19c3...|cg00000108|0.903|C3orf35|3|37459206
+|4e19c3...|cg00000109|0.69| |3|171916037
+|4e19c3...|cg00000165|NA|VDAC3|8|91194674
+This dataset matches our structure expectations from the inspected methylation file. 
+
+We demonstrated how to:
+  1. Find methylation files (with associated cases and biospecimens)
+  2. Build a methylation dataset from those files.  
+
+Next we find patient treatments and responses. You could stop here to apply these approaches to different analyses.
 
 ###Finding Patient Treatments
-  The last section demonstrates how to find patients whose biological samples have methylation data.  It is straightforward to build a table of patient clinical data from caseIds.  We provide the code below, but there is a more complete discussion in {add link to other section |todo}.
+  The `CaseClinicalTransformer` can extract clinical supplement data for each **caseId**.  We provide the code below, but there is a more complete discussion in {add link to other section |todo}.
   
   ```scala
   "Patient drug data" should "derive from methylation case files" in {
