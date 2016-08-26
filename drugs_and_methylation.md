@@ -16,7 +16,12 @@ Epigenetics affect drug toxicity and efficacy.  In some cases, specific epigenet
   All the code for this post in included in the test that begins below. The next code sections begin where this code section ends:
   
   ```scala
-  "DrugsAndMethylation" should "report relationships between drugs, methylation and patient response"
+  "DrugsAndMethylation" should "report relationships between drugs, methylation and patient response" in {
+    val ds = DrugsAndMethylation.build()
+    ds.show(5)
+    
+    //dataset should have drug, gene, importance columns
+  }
   
   object DrugsAndMethylation extends App{
   
