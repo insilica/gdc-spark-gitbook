@@ -162,12 +162,12 @@ With this code we can find methylation files and their associated aliquots and c
   }
   ```
   <center style="color:#800000">folding out drug use and response for patients </center>
-  asdf
+  This code results in a drug response table.
   
 | caseId | drugName | response | fileId | entityType | entityId |
 |----------------------|-------------|-------------------|----------------------|------------|----------------------|
 | ac0d7a82-82cb-4ae... | Taxol | Complete Response | 44d4a138-b76e-489... | aliquot | dc48f578-193c-474... |
 | ac0d7a82-82cb-4ae... | Carboplatin | Complete Response | 44d4a138-b76e-489... | aliquot | dc48f578-193c-474... |
 | 23f438bd-1dbb-4d4... | Adriamycin | Stable Disease | a1e710d7-6ec1-430... | aliquot | 14c87534-87eb-472... |
-
+<center style="color:#800000">drug responses for cases with methylation data </center>
 asdf
