@@ -12,22 +12,7 @@ Epigenetics affect drug toxicity and efficacy.  In some cases, specific epigenet
 2. Find patient treatments / response
 4. Search for relationships between methylation and response in the context of drug treatment.
 
-###The Test
-  All the code for this post in included in the test that begins below. The next code sections begin where this code section ends:
-  
-  ```scala
-  "DrugsAndMethylation" should "report relationships between drugs, methylation and patient response" in {
-    val ds = DrugsAndMethylation.build()
-    val responseEstimator = ResponseEstimator()
-    
-    //dataset should have drug, gene, response and importance columns
-  }
-  
-  object DrugsAndMethylation extends App{
-  
-  }
-  ```
-  <center style="color:#800000>DrugsAndMethylation Application Initialization</center>  
+
   
 ###Downloading TCGA methylation data<a name="abcd"></a>
   At the time of writing, the GDC had not completed harmonizing methylation data. When the GDC incorporates a new data type it undergoes a harmonization procedure.  Different  projects must conform to the same standards for harmonized data.
