@@ -10,7 +10,7 @@ Epigenetics affect drug toxicity and efficacy.  In some cases, specific epigenet
 
 1. Use gdc-core to download [TCGA methylation data](#abcd)
 2. Find patient treatments / response
-4. Search for relationships between methylation and response in the context of drug treatment.
+3. Search for relationships between methylation and response in the context of drug treatment.
 
 
   
