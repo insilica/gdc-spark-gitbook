@@ -18,33 +18,28 @@ These steps use example data on a standalone spark cluster.  In the next section
 ###Downloading TCGA methylation data<a name="abcd"></a>
   At the time of writing, the GDC had not completed harmonizing methylation data. When the GDC incorporates a new data type it undergoes a harmonization procedure.  Different  projects must conform to the same standards for harmonized data.
   
-  The `legacy` gdc-api provides access to unharmonized data. An example of this kind of legacy data is available at https://gdc-api.nci.nih.gov/legacy/files?pretty=true. To perform a legacy query one can prepend `legacy` as in `.../legacy/files?...` to the GDC-API endpoint. GDC-Core provides a client for the legacy api which we use below to access illumina 450k methylation data:
+  The `legacy` gdc-api provides access to unharmonized data. An example of this kind of legacy data is available at https://gdc-api.nci.nih.gov/legacy/files?pretty=true. To perform a legacy query one can prepend `legacy` to a url as in `gdc-api.nci.nih.gov/legacy/files?...` to the GDC-API endpoint. GDC-Core provides a client for the legacy api which we use below to access Illumina 450k methylation data:
   
 ```scala
 "Methylation data" should "be downloadable from GDC" in {
-  import co.insilica.gdc.query.{Query,Operators}
-  import co.insilica.gdcSpark.builders.CaseFileEntityBuilder
-  import org.json4s.JString
+  import co.insilica.gdc.query.{Filter,Query,Operators} //gdc queries
 
-  implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
+  implicit val executionContext = scala.concurrent.ExecutionContext.Implicits.global
   implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
   implicit val gdcContext = co.insilica.gdc.GDCContext.legacy //legacy api
 
-  //query will find all illumina human methylation 450 files that are open access
+  //query will find all methylation files that are open access
   val query = Query()
-    .withFilter(Filter(Operators.eq, "platform", JString("Illumina Human Methylation 450")))
-    .withFilter(Filter(Operators.eq, "access", JString("open")))
+    .withFilter(Filter(Operators.eq, "platform", "Illumina Human Methylation 450"))
+    .withFilter(Filter(Operators.eq, "access", "open"))
 
-  val df = CaseFileEntityBuilder()
+  val df = co.insilica.gdcSpark.builders.CaseFileEntityBuilder()
     .withQuery(query)
+    .withLimit(10)
     .build()
-
-  //save for later
-  df.write.parquet("resources/methylation data should be downloadable from gdc")
 
   //print results
   df.show(3,truncate=false)
-  println(s"${df.count()} files") //39055 files
 }
 ```
   The above code prints the below table:
