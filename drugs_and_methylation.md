@@ -20,7 +20,7 @@ Epigenetics affect drug toxicity and efficacy.  In some cases, specific epigenet
     val ds = DrugsAndMethylation.build()
     ds.show(5)
     
-    //dataset should have drug, gene, importance columns
+    //dataset should have drug, gene, response and importance columns
   }
   
   object DrugsAndMethylation extends App{
