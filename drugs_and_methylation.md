@@ -16,11 +16,13 @@ Epigenetics affect drug toxicity and efficacy.  In some cases, specific epigenet
   All the code for this post in included in the test that begins below. The next code sections begin where this code section ends:
   
   ```scala
+  "DrugsAndMethylation" should "report relationships between drugs, methylation and patient response"
+  
   object DrugsAndMethylation extends App{
   
   }
   ```
-  <center style="color:#800000>DrugsAndMethylation Application</center>
+  <center style="color:#800000>DrugsAndMethylation Application Initialization</center>
 
 ###Downloading TCGA methylation data<a name="abcd"></a>
   At the time of writing, the GDC had not completed harmonizing methylation data. When the GDC incorporates a new data type it undergoes a harmonization procedure.  Different  projects must conform to the same standards for harmonized data.
