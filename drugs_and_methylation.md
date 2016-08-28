@@ -21,9 +21,8 @@ These steps use example data on a standalone spark cluster.  In the next section
   The `legacy` gdc-api provides access to unharmonized data. An example of this kind of legacy data is available at https://gdc-api.nci.nih.gov/legacy/files?pretty=true. To perform a legacy query one can prepend `legacy` to a url as in `gdc-api.nci.nih.gov/legacy/files?...` to the GDC-API endpoint. GDC-Core provides a client for the legacy api which we use below to access Illumina 450k methylation data:
   
 ```scala
-"Methylation data" should "be downloadable from GDC" in {
+"Drugs and Methylation" should "find methylation files on GDC" in {
   import co.insilica.gdc.query.{Filter,Query,Operators} //gdc queries
-
   implicit val executionContext = scala.concurrent.ExecutionContext.Implicits.global
   implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
   implicit val gdcContext = co.insilica.gdc.GDCContext.legacy //legacy api
@@ -33,13 +32,11 @@ These steps use example data on a standalone spark cluster.  In the next section
     .withFilter(Filter(Operators.eq, "platform", "Illumina Human Methylation 450"))
     .withFilter(Filter(Operators.eq, "access", "open"))
 
-  val df = co.insilica.gdcSpark.builders.CaseFileEntityBuilder()
+  co.insilica.gdcSpark.builders.CaseFileEntityBuilder()
     .withQuery(query)
     .withLimit(10)
     .build()
-
-  //print results
-  df.show(3,truncate=false)
+    .show(3,truncate=false)
 }
 ```
 <center style="color:#800000">Methylation data should be downloadable from GDC</center>  
@@ -71,21 +68,23 @@ Illumina provides some [videos describing methylation array analysis](http://www
 Now that we have file identifiers we can build a large spark `Dataset` of all the methylation data for our cases:
 
 ```scala
-"FileMethylationTransformer" should "transform fileIds into methylation data" in {
+"Drugs and Methylation" should "transform fileIds into methylation data" in {
+  import co.insilica.functional._ //scalaz |> pipe
   implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
   implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
   implicit val gdcContext = co.insilica.gdc.GDCContext.legacy //legacy api
 
-  //files derived from last test "Methylation data" should "be downloadable from GDC"
-  val methylationFiles = List("4e19c35d-2ec7-444c-ac1d-d71b4ea7d4ce",
-    "c766fcc4-76d6-4460-9fce-5575089fbb72", "686d00b2-2bf0-4560-9fc8-923934e556b9")
-
   import sparkSession.sqlContext.implicits._
-  val files = sparkSession.sparkContext.parallelize(methylationFiles).toDF("fileId")
-
-  co.insilica.gdcSpark.transformers.FileMethylationTransformer()
-    .withFileIdColumn("fileId")
-    .transform(files)
+  //files derived from last test "Methylation data" should "be downloadable from GDC"
+  List("4e19c35d-2ec7-444c-ac1d-d71b4ea7d4ce",
+    "c766fcc4-76d6-4460-9fce-5575089fbb72",
+    "686d00b2-2bf0-4560-9fc8-923934e556b9")
+    .|>{sparkSession.sparkContext.parallelize(_).toDF("fileId") }
+    .transform {
+      co.insilica.gdcSpark.transformers.FileMethylationTransformer()
+        .withFileIdColumn("fileId")
+        .transform
+    }
     .show(10)
 }
 ```
@@ -156,7 +155,7 @@ Next we find patient treatments and responses. You could stop here to apply thes
 |75dbc8fb-4db8-4764-824c-eccf3a223884|CCNU    |Stable Disease              |
 |75dbc8fb-4db8-4764-824c-eccf3a223884|Temodar |Clinical Progressive Disease|
 
-<center style="color:#800000">drug responses for cases with methylation data </center>
+<center style="color:#800000">drug responses for cases with methylation data </center>+
 In the above example we chose `"drugs@drug@drug_name@2975232"` and `"drugs@drug@measure_of_response@2857291"` to create our drug response table. You can recall the structure of these column names from our section on parsing clinical supplements. {link section | TODO}.  There are other drug common data elements which we list at the bottom of the page [Appendix Drug Data Elements](#Appendix Drug Data elements).
 
 ### Tissue Type
@@ -165,12 +164,10 @@ In the above example we chose `"drugs@drug@drug_name@2975232"` and `"drugs@drug@
 ```scala
 "Drugs and Methylation" should "find aliquot information for files" in {
   import co.insilica.gdcSpark.transformers.AliquotTransformer
-  import co.insilica.functional._ //used for scalaZ .|> pipe
 
   implicit val executionContext = scala.concurrent.ExecutionContext.Implicits.global
   implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
   implicit val gdcContext = co.insilica.gdc.GDCContext.default
-
   import sparkSession.implicits._
 
   sparkSession
@@ -180,7 +177,7 @@ In the above example we chose `"drugs@drug@drug_name@2975232"` and `"drugs@drug@
       "247b89d7-05c2-49ca-8f96-08786b03a511",
       "bea6a21c-a9ce-464d-b4fa-4a93afdc18f6"))
     .toDF("aliquotId")
-    .|>{ AliquotTransformer(aliquotColumn = "aliquotId").transform }
+    .transform{ AliquotTransformer(aliquotColumn = "aliquotId").transform }
     .select("aliquotId",AliquotTransformer.columns.sampleType)
     .show()
 }
