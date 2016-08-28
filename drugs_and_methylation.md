@@ -174,7 +174,7 @@ Next we find patient treatments and responses. You could stop here to apply thes
 | ac0d7a82-82cb-4ae... | Carboplatin | Complete Response | 44d4a138-b76e-489... | aliquot | dc48f578-193c-474... |
 | 23f438bd-1dbb-4d4... | Adriamycin | Stable Disease | a1e710d7-6ec1-430... | aliquot | 14c87534-87eb-472... |
 <center style="color:#800000">drug responses for cases with methylation data </center>
-In the above example we chose `"drugs@drug@drug_name@2975232"` and `"drugs@drug@measure_of_response@2857291"` to create our drug response table. You can recall the structure of these column names from our section on parsing clinical supplements. {link section | TODO}.  There are other drug common data elements which we list at the bottom of the page. {section links | TODO}.
+In the above example we chose `"drugs@drug@drug_name@2975232"` and `"drugs@drug@measure_of_response@2857291"` to create our drug response table. You can recall the structure of these column names from our section on parsing clinical supplements. {link section | TODO}.  There are other drug common data elements which we list at the bottom of the page [Appendix Drug Data Elements](#Appendix Drug Data elements).
 
 Now that we have drug response data we should check what the possible drugNames are:
 ```scala
@@ -186,7 +186,7 @@ Now that we have drug response data we should check what the possible drugNames 
 |----------------------|---------------|
 | asdf | asdf |
 
-### Appendix Drug data elements
+### Appendix Drug Data Elements
 * route_of_administrations
 * therapy_ongoing
 * days_to_stem_cell_transplantation
