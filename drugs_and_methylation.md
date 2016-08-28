@@ -112,57 +112,41 @@ Next we find patient treatments and responses. You could stop here to apply thes
   
   ```scala
   "Patient drug data" should "derive from methylation case files" in {
-    import co.insilica.gdcSpark.builders.CaseFileEntityBuilder
-    import org.apache.spark.sql.types.{StringType, StructField, StructType}
-    import org.apache.spark.sql.Row
-    
+    import co.insilica.functional._ //used for |> which is the scalaZ pipe
+    import co.insilica.gdcSpark.transformers.clinical.CaseClinicalTransformer //extracts clinical supplement data
+
     implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
     implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
     implicit val gdcContext = co.insilica.gdc.GDCContext.legacy //legacy api
 
-    //Note that we are using the same filepath used in the last test to load our data
-    val caseFilesPath = new java.io.File("resources/methylation data should be downloadable from gdc")
-    if(!caseFilesPath.exists()) throw new Exception("run 'Methylation data should be downloadable from GDC' test")
+    import sparkSession.implicits._ //allows rdd.toDF()
 
-    val methylationFiles = sparkSession.read.parquet(caseFilesPath.getPath)
-
-    val df = co.insilica.gdcSpark.transformers.clinical.CaseClinicalTransformer()
-      .withCaseId(CaseFileEntityBuilder.columns.caseId)
-      .transform(methylationFiles)
-      .toDF()
-      
-    //patient drugs are listed in an array i.e. drugs = [Taxol,Carboplatin,...]
-    //we copy the patient and make one row per drug
-    val rdd = co.insilica.gdcSpark.transformers.clinical.CaseClinicalTransformer()
-      .withCaseId(CaseFileEntityBuilder.columns.caseId)
-      .transform(methylationFiles)
-      .toDF()
-      .select(CaseFileEntityBuilder.columns.caseId,
-        "drugs@drug@drug_name@2975232", //drugs are embedded under the 'drugs' field in clinical supplements
-        "drugs@drug@measure_of_response@2857291"
-      )
-      .rdd
-      .flatMap{ (row: Row) =>
-        val drugNames = row.getAs[mutable.WrappedArray[String]]("drugs@drug@drug_name@2975232")
-        val responses = row.getAs[mutable.WrappedArray[String]]("drugs@drug@measure_of_response@2857291")
-        drugNames.zip(responses).map{ case (name,response) =>
-            Row(row(0),name,response)
-        }
-      }
-
-    val drugResponse = sparkSession.createDataFrame(rdd,StructType(Array(
-      StructField("caseId",StringType,nullable=false),
-      StructField("caseDrugName",StringType,nullable=true),
-      StructField("caseResponse",StringType,nullable=true)
-    )))
-
-    drugResponse
-      .where(drugResponse("caseResponse").isNotNull)
-      .join(methylationFiles,CaseFileEntityBuilder.columns.caseId)
-      .show(3)
-      
-    //save for future use
-    drugResponse.write.parquet("/resources/patient drug data should derive from methylation case files")
+    //files derived from last test "Methylation data" should "be downloadable from GDC"
+    List("abaf757b-f79f-40bd-96e3-e2c0f63061f0",
+      "f31c21b6-0f7f-435b-9e24-97c909755c36",
+      "75dbc8fb-4db8-4764-824c-eccf3a223884"
+    )
+    .|>{ caseList : List[String] => //transform the above list into a single column DataFrame
+      sparkSession.sparkContext.parallelize(caseList).toDF("caseId")
+    }
+    .|> { caseDF: org.apache.spark.sql.DataFrame => //extract clinical supplement data from cases
+      CaseClinicalTransformer()
+        .withCaseId("caseId")
+        .transform(caseDF)
+    }
+    .select( //select just the columns with drugnames and drugresponses
+      "caseId",
+      "drugs@drug@drug_name@2975232", //drugs are embedded under the 'drugs' field in clinical supplements
+      "drugs@drug@measure_of_response@2857291"
+    )
+    .flatMap{ (row: org.apache.spark.sql.Row) => //drugNames / responses stored in arrays. Make a new row for each.
+      val caseId : String = row.getAs[String](0)
+      val drugNames = row.getAs[mutable.WrappedArray[String]]("drugs@drug@drug_name@2975232")
+      val responses = row.getAs[mutable.WrappedArray[String]]("drugs@drug@measure_of_response@2857291")
+      drugNames.zip(responses).map{ case (name,response) => CaseDrugResponse(caseId,name,response) }
+    }
+    .|>{ df => df.where(df("response").isNotNull) } //filter out those rows where patient response wasn't recorded.
+    .show(truncate=false)
   }
   ```
   <center style="color:#800000">folding out drug use and response for patients </center>
@@ -176,15 +160,40 @@ Next we find patient treatments and responses. You could stop here to apply thes
 <center style="color:#800000">drug responses for cases with methylation data </center>
 In the above example we chose `"drugs@drug@drug_name@2975232"` and `"drugs@drug@measure_of_response@2857291"` to create our drug response table. You can recall the structure of these column names from our section on parsing clinical supplements. {link section | TODO}.  There are other drug common data elements which we list at the bottom of the page [Appendix Drug Data Elements](#Appendix Drug Data elements).
 
-Now that we have drug response data we should check what the possible drugNames are:
+### Tissue Type
+  We extracted methylation data and drug response data. Now we need to check the tissue type of the aliquot associated with each methylation file.  
+  
 ```scala
-//following from last example
+"Drugs and Methylation" should "find aliquot information for files" in {
+  import co.insilica.gdcSpark.transformers.AliquotTransformer
+  import co.insilica.functional._ //used for scalaZ .|> pipe
 
+  implicit val executionContext = scala.concurrent.ExecutionContext.Implicits.global
+  implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
+  implicit val gdcContext = co.insilica.gdc.GDCContext.default
+
+  import sparkSession.implicits._
+
+  sparkSession
+    .sparkContext
+    .parallelize( List( //list of aliquot ids for methylation files (see above table)
+      "a4ac969d-0698-432f-9e0c-44e6232815ff",
+      "247b89d7-05c2-49ca-8f96-08786b03a511",
+      "bea6a21c-a9ce-464d-b4fa-4a93afdc18f6"))
+    .toDF("aliquotId")
+    .|>{ AliquotTransformer(aliquotColumn = "aliquotId").transform }
+    .select("aliquotId",AliquotTransformer.columns.sampleType)
+    .show()
+}
 ```
+This code prints 
 
-| drugName | count |
-|----------------------|---------------|
-| asdf | asdf |
+| aliquotId | sampleType |
+|-----------|------------|
+| a4ac969d-0698-432... |Solid Tissue Normal|
+|bea6a21c-a9ce-464...|Primary Tumor |
+|247b89d7-05c2-49c...|Primary Tumor|
+
 
 ### Appendix Drug Data Elements
 * route_of_administrations
