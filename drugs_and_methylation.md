@@ -110,53 +110,52 @@ Next we find patient treatments and responses. You could stop here to apply thes
 ###Finding Patient Treatments
   The `CaseClinicalTransformer` can extract clinical supplement data for each **caseId**.  We provide the code below, but there is a more complete discussion in {add link to other section |todo}.
   
-  ```scala
-  "Patient drug data" should "derive from methylation case files" in {
-    import co.insilica.functional._ //used for |> which is the scalaZ pipe
-    import co.insilica.gdcSpark.transformers.clinical.CaseClinicalTransformer //extracts clinical supplement data
+```scala
+"Drugs and Methylation" should "find drug names and responses from caseIds" in {
+  import co.insilica.functional._ //used for |> which is the scalaZ pipe
+  import co.insilica.gdcSpark.transformers.clinical.CaseClinicalTransformer //extracts clinical supplement data
 
-    implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
-    implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
-    implicit val gdcContext = co.insilica.gdc.GDCContext.legacy //legacy api
+  implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
+  implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
+  implicit val gdcContext = co.insilica.gdc.GDCContext.legacy //legacy api
 
-    import sparkSession.implicits._ //allows rdd.toDF()
+  import sparkSession.implicits._ //allows rdd.toDF()
 
-    //files derived from last test "Methylation data" should "be downloadable from GDC"
-    List("abaf757b-f79f-40bd-96e3-e2c0f63061f0",
-      "f31c21b6-0f7f-435b-9e24-97c909755c36",
-      "75dbc8fb-4db8-4764-824c-eccf3a223884"
-    )
-    .|>{ caseList : List[String] => //transform the above list into a single column DataFrame
-      sparkSession.sparkContext.parallelize(caseList).toDF("caseId")
+  //files derived from last test "Methylation data" should "be downloadable from GDC"
+  List("abaf757b-f79f-40bd-96e3-e2c0f63061f0",
+    "f31c21b6-0f7f-435b-9e24-97c909755c36",
+    "75dbc8fb-4db8-4764-824c-eccf3a223884")
+    .|>{ sparkSession.sparkContext.parallelize(_).toDF("caseId") } //transform list into a single column Dataset
+    .|>{ CaseClinicalTransformer().withCaseId("caseId").transform } //extract clinical supplement data from cases
+    .withColumnRenamed("drugs@drug@drug_name@2975232","drugnames") //rename cde names to something more legible
+    .withColumnRenamed("drugs@drug@measure_of_response@2857291","responses")
+    .select( "caseId","drugnames","responses" ) //select just the columns with drugnames and drugresponses
+    .|> { df => //drugNames / responses stored in arrays. Make a new row for each.
+      import org.apache.spark.sql.functions.{udf, explode}
+      //Create a udf for zipping drugnames and response names (which are in arrays)
+      val zipUDF = udf { (col1: Seq[String], col2: Seq[String]) => col1.zip(col2) }
+      val nameUDF = udf{ row : org.apache.spark.sql.Row => row.getAs[String](0) }
+      val responseUDF = udf{ row : org.apache.spark.sql.Row => row.getAs[String](1) }
+      df
+        //Start by zipping drugnames with responses and then making a row for each pair
+        .withColumn("drugname_response", explode(zipUDF(df("drugnames"), df("responses"))))
+        .withColumn("drugname", nameUDF($"drugname_response")) //extract drugname from drug_response pairs
+        .withColumn("response", responseUDF($"drugname_response")) //extract response from drug_response pairs
+        .drop("drugname_response","drugnames","responses")
     }
-    .|> { caseDF: org.apache.spark.sql.DataFrame => //extract clinical supplement data from cases
-      CaseClinicalTransformer()
-        .withCaseId("caseId")
-        .transform(caseDF)
-    }
-    .select( //select just the columns with drugnames and drugresponses
-      "caseId",
-      "drugs@drug@drug_name@2975232", //drugs are embedded under the 'drugs' field in clinical supplements
-      "drugs@drug@measure_of_response@2857291"
-    )
-    .flatMap{ (row: org.apache.spark.sql.Row) => //drugNames / responses stored in arrays. Make a new row for each.
-      val caseId : String = row.getAs[String](0)
-      val drugNames = row.getAs[mutable.WrappedArray[String]]("drugs@drug@drug_name@2975232")
-      val responses = row.getAs[mutable.WrappedArray[String]]("drugs@drug@measure_of_response@2857291")
-      drugNames.zip(responses).map{ case (name,response) => CaseDrugResponse(caseId,name,response) }
-    }
-    .|>{ df => df.where(df("response").isNotNull) } //filter out those rows where patient response wasn't recorded.
-    .show(truncate=false)
-  }
-  ```
+  .show(truncate=false)
+}
+```
   <center style="color:#800000">folding out drug use and response for patients </center>
   This code results in a drug response table.
   
-| caseId | caseDrugName | caseResponse | fileId | entityType | entityId |
-|----------------------|-------------|-------------------|----------------------|------------|----------------------|
-| ac0d7a82-82cb-4ae... | Taxol | Complete Response | 44d4a138-b76e-489... | aliquot | dc48f578-193c-474... |
-| ac0d7a82-82cb-4ae... | Carboplatin | Complete Response | 44d4a138-b76e-489... | aliquot | dc48f578-193c-474... |
-| 23f438bd-1dbb-4d4... | Adriamycin | Stable Disease | a1e710d7-6ec1-430... | aliquot | 14c87534-87eb-472... |
+| caseId | drugname | response |
+|--------|----------|----------|
+|f31c21b6-0f7f-435b-9e24-97c909755c36|Arimidex|null                        |
+|75dbc8fb-4db8-4764-824c-eccf3a223884|Temodar |Stable Disease              |
+|75dbc8fb-4db8-4764-824c-eccf3a223884|CCNU    |Stable Disease              |
+|75dbc8fb-4db8-4764-824c-eccf3a223884|Temodar |Clinical Progressive Disease|
+
 <center style="color:#800000">drug responses for cases with methylation data </center>
 In the above example we chose `"drugs@drug@drug_name@2975232"` and `"drugs@drug@measure_of_response@2857291"` to create our drug response table. You can recall the structure of these column names from our section on parsing clinical supplements. {link section | TODO}.  There are other drug common data elements which we list at the bottom of the page [Appendix Drug Data Elements](#Appendix Drug Data elements).
 
@@ -193,6 +192,14 @@ This code prints
 | a4ac969d-0698-432... |Solid Tissue Normal|
 |bea6a21c-a9ce-464...|Primary Tumor |
 |247b89d7-05c2-49c...|Primary Tumor|
+
+### Bringing it all together
+  We can find methylation files, patient treatment data and tissue information.  Lets see if we can do it all at once.  Then we will build a spark task and submit it to a cluster.
+  
+  ```scala 
+  "Drugs and Methylation" should "find methylation, treatment, and tissue information" in {
+  }
+  ```
 
 
 ### Appendix Drug Data Elements
