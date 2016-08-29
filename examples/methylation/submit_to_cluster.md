@@ -13,7 +13,8 @@ Analysis of the resulting dataset gives us relationships between drugs, epigenet
 
 To show cluster analyses we will start with simple tasks and work our way up to more complex:
 
-1. Count the number methylation files on GDC
+1. Count number methylation files on GDC
 2. What is the distribution of drugnames over cases with methylation data?
 3. Pick the most common drug.  How does methylation status relate to patient response for that drug?
-4.  
+
+## Counting Methylation Files
