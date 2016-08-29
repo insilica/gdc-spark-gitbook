@@ -5,7 +5,7 @@
   3. Extract drugnames and responses for each case from clinical supplements
   4. Put it all in a Dataset
 
-Analysis of the resulting dataset gives us relationships between drugs, epigenetics and responses.  Alas, the scale of the data is too large for quick computation on a standalone spark cluster.  Insilica's client for the GDC-API can operate on worker nodes in a spark cluster. This means that we can perform similar analyses at scale while relying on the Genomic Data Commons to store the bulk of the data. 
+Analysis of the resulting dataset gives us relationships between drugs, epigenetics and responses.  Alas, the scale of the data is too large for quick computation on a standalone spark cluster.  Insilica's client for the GDC-API can operate on worker nodes in a spark cluster. This means that we can perform analyses at scale while relying on the Genomic Data Commons to store the bulk of the data. 
 
 [![Foo](https://spark.apache.org/docs/1.1.1/img/cluster-overview.png)](https://spark.apache.org/docs/1.1.1/img/cluster-overview.png) 
 
