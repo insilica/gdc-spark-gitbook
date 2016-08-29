@@ -249,8 +249,7 @@ This code prints
 |cf8de69a-e1ab-403...|cg00000236| 0.832|f02b66f4-3f20-443...|Primary Tumor|[[Taxol,Complete Response],..
 |cf8de69a-e1ab-403...|cg00000289| 0.785|f02b66f4-3f20-443...|Primary Tumor|[[Taxol,Complete Response],..
 
-Now we can start doing some real analyses. Some questions we can start to answer:
-1. Which
+Now that we understand the basics with these examples, we can start digging into some slightly bigger data.  To do that, we'll need to learn how to submit these jobs to a spark cluster.
 
 
 ### Appendix Drug Data Elements
