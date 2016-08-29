@@ -92,12 +92,12 @@ Now that we have file identifiers we can build a large spark `Dataset` of all th
 
 This code creates the dataset below:
 
-|fileId|composite_element_ref|beta_value|gene_symbol|chromosome|genomic_coordinate|
+|fileId|composite_element_ref|beta_value|
 |---------------------------------------------|
-|4e19c3...|cg00000029|0.435|RBL2|16|53468112
-|4e19c3...|cg00000108|0.903|C3orf35|3|37459206
-|4e19c3...|cg00000109|0.69| |3|171916037
-|4e19c3...|cg00000165|NA|VDAC3|8|91194674
+|4e19c3...|cg00000029|0.435|
+|4e19c3...|cg00000108|0.903|
+|4e19c3...|cg00000109|0.69|
+|4e19c3...|cg00000165|NA|
 This dataset matches our structure expectations from the inspected methylation file. 
 
 We demonstrated how to:
@@ -129,18 +129,11 @@ Next we find patient treatments and responses. You could stop here to apply thes
     .withColumnRenamed("drugs@drug@drug_name@2975232","drugnames") //rename cde names to something more legible
     .withColumnRenamed("drugs@drug@measure_of_response@2857291","responses")
     .select( "caseId","drugnames","responses" ) //select just the columns with drugnames and drugresponses
-    .|> { df => //drugNames / responses stored in arrays. Make a new row for each.
-      import org.apache.spark.sql.functions.{udf, explode}
-      //Create a udf for zipping drugnames and response names (which are in arrays)
-      val zipUDF = udf { (col1: Seq[String], col2: Seq[String]) => col1.zip(col2) }
-      val nameUDF = udf{ row : org.apache.spark.sql.Row => row.getAs[String](0) }
-      val responseUDF = udf{ row : org.apache.spark.sql.Row => row.getAs[String](1) }
+    .|> { df => //drugNames / responses stored in arrays with equal orders. zip them up
+      val zipUDF = org.apache.spark.sql.functions.udf{ (col1: Seq[String], col2: Seq[String]) => col1.zip(col2) }
       df
-        //Start by zipping drugnames with responses and then making a row for each pair
-        .withColumn("drugname_response", explode(zipUDF(df("drugnames"), df("responses"))))
-        .withColumn("drugname", nameUDF($"drugname_response")) //extract drugname from drug_response pairs
-        .withColumn("response", responseUDF($"drugname_response")) //extract response from drug_response pairs
-        .drop("drugname_response","drugnames","responses")
+        .withColumn("drugname_response", zipUDF(df("drugnames"), df("responses")))
+        .drop("drugname_response")
     }
   .show(truncate=false)
 }
@@ -148,12 +141,11 @@ Next we find patient treatments and responses. You could stop here to apply thes
   <center style="color:#800000">folding out drug use and response for patients </center>
   This code results in a drug response table.
   
-| caseId | drugname | response |
-|--------|----------|----------|
-|f31c21b6-0f7f-435b-9e24-97c909755c36|Arimidex|null                        |
-|75dbc8fb-4db8-4764-824c-eccf3a223884|Temodar |Stable Disease              |
-|75dbc8fb-4db8-4764-824c-eccf3a223884|CCNU    |Stable Disease              |
-|75dbc8fb-4db8-4764-824c-eccf3a223884|Temodar |Clinical Progressive Disease|
+|caseId|drugname_response|
+|------|---------|
+|f31c21b6-0f7f-435b-9e24-97c909755c36|[[Arimidex,null]]|
+|abaf757b-f79f-40bd-96e3-e2c0f63061f0|[]|
+|75dbc8fb-4db8-4764-824c-eccf3a223884|[[Temodar,Stable Disease],[CCNU,Stable Disease], [Temodar,Clinical Progressive Disease]]|
 
 <center style="color:#800000">drug responses for cases with methylation data </center>+
 In the above example we chose `"drugs@drug@drug_name@2975232"` and `"drugs@drug@measure_of_response@2857291"` to create our drug response table. You can recall the structure of these column names from our section on parsing clinical supplements. {link section | TODO}.  There are other drug common data elements which we list at the bottom of the page [Appendix Drug Data Elements](#Appendix Drug Data elements).
@@ -193,10 +185,71 @@ This code prints
 ### Bringing it all together
   We can find methylation files, patient treatment data and tissue information.  Lets see if we can do it all at once.  Then we will build a spark task and submit it to a cluster.
   
-  ```scala 
-  "Drugs and Methylation" should "find methylation, treatment, and tissue information" in {
-  }
-  ```
+```scala 
+"Drugs and Methylation" should "find methylation, treatment, and tissue information" in {
+
+  import co.insilica.gdc.query.{Filter,Query,Operators}
+  import co.insilica.gdcSpark.transformers.{AliquotTransformer,FileMethylationTransformer}
+  import co.insilica.gdcSpark.transformers.clinical.CaseClinicalTransformer
+  import co.insilica.gdcSpark.builders.CaseFileEntityBuilder
+  import co.insilica.functional._ //used for scalaZ .|> pipe
+
+  implicit val executionContext = scala.concurrent.ExecutionContext.Implicits.global
+  implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
+  implicit val gdcContext = co.insilica.gdc.GDCContext.legacy
+
+  import sparkSession.implicits._
+
+  //query will find all methylation files that are open access
+  Query()
+    .withFilter(Filter(Operators.eq, "platform", "Illumina Human Methylation 450")) //select illumina 450k data
+    .withFilter(Filter(Operators.eq, "access", "open")) //only use open access data
+    .|>{ CaseFileEntityBuilder() //find all fileIds and aliquotIds associated with cases fitting query
+      .withQuery(_) //apply query
+      .withLimit(10) //only look at 10 cases
+      .build() //build the dataset
+    }
+    .transform{ AliquotTransformer()
+      .withAliquotIdColumn(CaseFileEntityBuilder.columns.entityId)
+      .transform
+    }
+    .transform{ CaseClinicalTransformer().withCaseId("caseId").transform }
+    .withColumnRenamed("drugs@drug@drug_name@2975232","drugnames") //rename cde names to something more legible
+    .withColumnRenamed("drugs@drug@measure_of_response@2857291","responses")
+    .transform { df => //drugNames / responses stored in arrays. Make a new row for each.
+      import org.apache.spark.sql.functions.{udf, explode}
+      //Create a udf for zipping drugnames and response names (which are in arrays)
+      val zipUDF = udf { (col1: Seq[String], col2: Seq[String]) => col1.zip(col2) }
+      df
+        .withColumn("drugname_response", zipUDF($"drugnames", $"responses"))
+        .drop("drugnames","responses")
+    }
+    .transform{ df => //drop all unnecessary columns
+      import CaseFileEntityBuilder.columns.{fileId,caseId}
+      val keepColumns = Seq(fileId, caseId, AliquotTransformer.columns.sampleType,"drugname", "response")
+      df.drop((df.columns.toSet[String] -- keepColumns).toSeq :_*)
+    }
+    .transform{ FileMethylationTransformer()
+      .withFileIdColumn(CaseFileEntityBuilder.columns.fileId)
+      .withCachePath("/home/thomas/mnt/ext/data/clinicaltrials/borg/methylationfiles")
+      .transform
+    }
+    .show(20)
+}
+```
+  This code builds our final dataset:
+  
+|fileId|composite_element_ref|beta_value|caseId|sample_type|
+|------|------|---------------------|----------|-----------|
+|cf8de69a-e1ab-403...|cg00000029| 0.583|f02b66f4-3f20-443...|Primary Tumor|
+|cf8de69a-e1ab-403...|cg00000108|  null|f02b66f4-3f20-443...|Primary Tumor|
+|cf8de69a-e1ab-403...|cg00000109|  null|f02b66f4-3f20-443...|Primary Tumor|
+|cf8de69a-e1ab-403...|cg00000165| 0.185|f02b66f4-3f20-443...|Primary Tumor|
+|cf8de69a-e1ab-403...|cg00000236| 0.832|f02b66f4-3f20-443...|Primary Tumor|
+|cf8de69a-e1ab-403...|cg00000289| 0.785|f02b66f4-3f20-443...|Primary Tumor|
+
+Now we can start doing some real analyses. Some questions we can start to answer:
+1. Which
 
 
 ### Appendix Drug Data Elements
