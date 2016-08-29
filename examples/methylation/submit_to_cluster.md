@@ -25,7 +25,7 @@ To show cluster analyses we will start with simple tasks and work our way up to 
 
 ###Simple Application
 ```scala
-object{
+object countingMethylationFiles extends App{
 
 }
 ```
