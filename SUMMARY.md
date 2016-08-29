@@ -12,6 +12,7 @@
 * examples
   * [Tumor Similarity](2_tumor_similarity/README.md)
   * [Relative Tumor Distance](2_tumor_similarity/relative_distance.md)
-  * [Drugs and Methylation](/examples/methylation/drugs_and_methylation.md)
+  * Drugs and Methylation
+    * [Standalone Tests]((/examples/methylation/drugs_and_methylation.md)
     * [Submit to the cluster](/examples/methylation/submit_to_cluster.md)
 
