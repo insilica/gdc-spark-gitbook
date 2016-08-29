@@ -18,3 +18,7 @@ To show cluster analyses we will start with simple tasks and work our way up to 
 3. Pick the most common drug.  How does methylation status relate to patient response for that drug?
 
 ## Counting Methylation Files
+  This is a simple task which doesn't need the use of a spark cluster. Despite it's ease, this is a good example to show how to build and submit a job to a spark cluster.  
+  
+###Build.sbt
+  To 
