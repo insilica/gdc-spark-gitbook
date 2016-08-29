@@ -22,3 +22,10 @@ To show cluster analyses we will start with simple tasks and work our way up to 
   
 ###Build.sbt
   To 
+
+###Simple Application
+```scala
+object{
+
+}
+```
