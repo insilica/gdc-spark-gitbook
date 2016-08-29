@@ -194,6 +194,7 @@ This code prints
   import co.insilica.gdcSpark.builders.CaseFileEntityBuilder
   import co.insilica.functional._ //used for scalaZ .|> pipe
 
+  import org.apache.spark.sql.functions.{udf,size}
   implicit val executionContext = scala.concurrent.ExecutionContext.Implicits.global
   implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
   implicit val gdcContext = co.insilica.gdc.GDCContext.legacy
@@ -216,17 +217,17 @@ This code prints
     .transform{ CaseClinicalTransformer().withCaseId("caseId").transform }
     .withColumnRenamed("drugs@drug@drug_name@2975232","drugnames") //rename cde names to something more legible
     .withColumnRenamed("drugs@drug@measure_of_response@2857291","responses")
-    .transform { df => //drugNames / responses stored in arrays. Make a new row for each.
-      import org.apache.spark.sql.functions.{udf, explode}
+    .filter{ size($"drugnames") > 0 } //filter out instances without any drug-response information
+    .transform { df => //drugnames and responses are stored in arrays with equal order
       //Create a udf for zipping drugnames and response names (which are in arrays)
-      val zipUDF = udf { (col1: Seq[String], col2: Seq[String]) => col1.zip(col2) }
+      val zipUDF = org.apache.spark.sql.functions.udf { (col1: Seq[String], col2: Seq[String]) => col1.zip(col2) }
       df
         .withColumn("drugname_response", zipUDF($"drugnames", $"responses"))
         .drop("drugnames","responses")
     }
     .transform{ df => //drop all unnecessary columns
       import CaseFileEntityBuilder.columns.{fileId,caseId}
-      val keepColumns = Seq(fileId, caseId, AliquotTransformer.columns.sampleType,"drugname", "response")
+      val keepColumns = Seq(fileId, caseId, AliquotTransformer.columns.sampleType,"drugname_response")
       df.drop((df.columns.toSet[String] -- keepColumns).toSeq :_*)
     }
     .transform{ FileMethylationTransformer()
@@ -239,14 +240,14 @@ This code prints
 ```
   This code builds our final dataset:
   
-|fileId|composite_element_ref|beta_value|caseId|sample_type|
-|------|------|---------------------|----------|-----------|
-|cf8de69a-e1ab-403...|cg00000029| 0.583|f02b66f4-3f20-443...|Primary Tumor|
-|cf8de69a-e1ab-403...|cg00000108|  null|f02b66f4-3f20-443...|Primary Tumor|
-|cf8de69a-e1ab-403...|cg00000109|  null|f02b66f4-3f20-443...|Primary Tumor|
-|cf8de69a-e1ab-403...|cg00000165| 0.185|f02b66f4-3f20-443...|Primary Tumor|
-|cf8de69a-e1ab-403...|cg00000236| 0.832|f02b66f4-3f20-443...|Primary Tumor|
-|cf8de69a-e1ab-403...|cg00000289| 0.785|f02b66f4-3f20-443...|Primary Tumor|
+|fileId|composite_element_ref|beta_value|caseId|sample_type|drugname_response|
+|------|------|---------------------|----------|-----------|-----------------|
+|cf8de69a-e1ab-403...|cg00000029| 0.583|f02b66f4-3f20-443...|Primary Tumor|[[Taxol,Complete Response],..
+|cf8de69a-e1ab-403...|cg00000108|  null|f02b66f4-3f20-443...|Primary Tumor|[[Taxol,Complete Response],..
+|cf8de69a-e1ab-403...|cg00000109|  null|f02b66f4-3f20-443...|Primary Tumor|[[Taxol,Complete Response],..
+|cf8de69a-e1ab-403...|cg00000165| 0.185|f02b66f4-3f20-443...|Primary Tumor|[[Taxol,Complete Response],..
+|cf8de69a-e1ab-403...|cg00000236| 0.832|f02b66f4-3f20-443...|Primary Tumor|[[Taxol,Complete Response],..
+|cf8de69a-e1ab-403...|cg00000289| 0.785|f02b66f4-3f20-443...|Primary Tumor|[[Taxol,Complete Response],..
 
 Now we can start doing some real analyses. Some questions we can start to answer:
 1. Which
