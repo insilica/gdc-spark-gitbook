@@ -13,5 +13,5 @@
   * [Tumor Similarity](2_tumor_similarity/README.md)
   * [Relative Tumor Distance](2_tumor_similarity/relative_distance.md)
   * [Drugs and Methylation](drugs_and_methylation.md)
-    * (Submit to the cluster)[methylation/submit_to_cluster.md]
+    * [Submit to the cluster](/examples/methylation/submit_to_cluster.md)
 
