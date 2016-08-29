@@ -1,4 +1,4 @@
-# Submit To the Cluster
+# Submit to the Cluster
   In the [last section](/examples/methylation/drugs_and_methylation.md) we demonstrated how to get:
   1. Case ids, file ids and tissue data for all Illumina 450k files on the **legacy** gdc-api
   2. Extract beta values for illumina **composite ref elements** {add explanation link | todo}
@@ -10,3 +10,10 @@ Analysis of the resulting dataset gives us relationships between drugs, epigenet
 [![Foo](https://spark.apache.org/docs/1.1.1/img/cluster-overview.png)](https://spark.apache.org/docs/1.1.1/img/cluster-overview.png) 
 
 {can I actually use this image? | todo}
+
+To show cluster analyses we will start with simple tasks and work our way up to more complex:
+
+1. Count the number methylation files on GDC
+2. What is the distribution of drugnames over cases with methylation data?
+3. Pick the most common drug.  How does methylation status relate to patient response for that drug?
+4.  
