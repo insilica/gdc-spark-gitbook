@@ -1,4 +1,4 @@
-# co.insilica.gdcSpark
+# A GDC-Spark Interface
   We use spark to build models on gdc data. `co.insilica.gdcSpark` provides some basic utilities to get started with gdc analyses. 
 
 ## Getting Started
