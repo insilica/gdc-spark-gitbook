@@ -15,4 +15,7 @@
   * Drugs and Methylation
     * [Standalone Tests](/examples/methylation/drugs_and_methylation.md)
     * [Submit to the cluster](/examples/methylation/submit_to_cluster.md)
+  * Hypothesis Generation
+    * [Introduction](/examples/hypothesis/introduction.md)
+    * [BORG - Bioinformatics Orphan Gene Rescue Graphical Models](/examples/hypothesis/borg.md)
 
