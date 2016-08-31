@@ -126,3 +126,4 @@ Note  the sampleType of **Primary Tumor** for the first example in the table.  I
 }
 //next example starts here...
 ```
+This code allows us to relate each caseId to a tumor stage at diagnosis.  
