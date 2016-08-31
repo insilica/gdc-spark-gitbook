@@ -9,7 +9,7 @@
   3. **Derive** biological entity importance for predicting clinical target 
   4. **Filter** by current knowledge of biological entities
 
-In this example we perform these steps by:
+In this example we perform these steps for finding genes in colorectal cancer:
 
 1. **Collect** RNA-Seq biospecimen data for patients with Colorectal cancer
 2. **Group** patients according to tumor stage
@@ -45,7 +45,45 @@ class BORG extends FlatSpec{
 
     dataset.show(truncate=false)
   }
+  //next examples begin here...
 ```
-This code results in a dataset of `CaseFileEntity` objects. Each file has a case (with a **uuid** or universally unique identifier).  RNA-Seq experiments use aliquots. Aliquots are either **normal tissue** or **primary tumor** tissue taken from patients. The resulting table is shown below:
+This code results in a dataset of `CaseFileEntity` objects. Each file has a case (with a **uuid** or universally unique identifier).  
+
+### Finding Aliquot Information
+RNA-Seq experiments use aliquots. Aliquots are either **normal tissue** or **primary tumor** tissue taken from patients. The resulting table is shown below:
 
 |caseId|fileId|entityType|entityId|
+|------|------|----------|--------|
+|c0b8c55c-b993-481d-aeea-9ebfa64ee20e|1a7ab72c-ccbe-4ffe-b43d-d8570cb62c0b|aliquot   |c30ce88d-5dff-4503-b090-01b4b6aa0b80|
+|565e2726-4942-4726-89d3-c5e3797f7204|046af5c1-b645-4338-be64-a8f2e08a9f2e|aliquot   |b8290920-9642-4137-ad13-88590a6694e8|
+
+The `AliquotTransformer` transforms aliquotIds into tissue data:
+
+```scala
+//...previous example starts
+  "BORG" should "finding aliquot information" in {
+
+    val aliquotIds : RDD[Row] = sparkEnvironment
+      .sparkSession
+      .sparkContext
+      .parallelize( List(
+        Row("ae0b0540-fcb6-4c9e-8835-2cb24933a01f"),
+        Row("52c17edc-35f9-484c-949d-62694cfc797a"),
+        Row("f9410d08-1525-4bf7-9c7c-939a2abe60ae")))
+
+    val schema = StructType(List(StructField("aliquotId",StringType,nullable=false)))
+    val aliquotDS = sparkEnvironment.sparkSession.createDataFrame(aliquotIds,schema)
+
+    AliquotTransformer(aliquotColumn = "aliquotId")
+      .transform(aliquotDS)
+      .show()
+  }
+//next example starts here...
+```
+This code gives us the below table:
+
+|aliquotId|sampleId|sampleType|sample_createdDate|portionId|portionCreatedDate|aliquotCreatedDate|
+|---------|---------|---------|---------|---------|---------|---------|---------|
+|f9410d08-1525-4bf...|b481fc53-5b7e-4e2...|**Primary Tumor**|2016-05-02T14:29:...|3ea9927f-1280-419...|2016-05-02T14:29:...|2016-05-02T14:29:...|
+
+Note  the sampleType of **Primary Tumor** for the first example in the table.  In this example we're interested in relating genes to tumor stage. This means we should focus on biospecimens of **Primary Tumor** rather than **Normal** tissue.
