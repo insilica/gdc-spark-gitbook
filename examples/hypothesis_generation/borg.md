@@ -21,7 +21,6 @@ In [Building the Table](#Building the Table) we go through these steps and show 
 ???
 
 ## Building The Table
-### Collect Patient RNA-SEQ data
   co.insilica.gdcSpark provides the `CaseFileEntityBuilder` for building a table of case-file-aliquots. We document our progress through this example in excerpts from [bitbucket.BORGTest]({provide link to bitbucket BORG test|todo}). Below the builder collects rna-seq data for patients with colorectal cancer:
     
 ```scala
@@ -62,7 +61,7 @@ class BORG extends FlatSpec{
 ```
 This code results in a dataset of `CaseFileEntity` objects. Each file has a case (with a **uuid** or universally unique identifier).  
 
-#### Finding Aliquot Information
+### Finding Aliquot Information
 RNA-Seq experiments use aliquots. Aliquots are either **normal tissue** or **primary tumor** tissue taken from patients. The resulting table is shown below:
 
 |caseId|fileId|entityType|entityId|
@@ -101,7 +100,7 @@ This code gives us the below table:
 
 Note  the sampleType of **Primary Tumor** for the first example in the table.  In this example we're interested in relating genes to tumor stage. This means we should focus on biospecimens of **Primary Tumor** rather than **Normal** tissue.
 
-#### Grouping Aliquots by Tumor Stage
+### Grouping Aliquots by Tumor Stage
   To generate hypotheses we need a target.  The literature for cancer models targets diverse metrics for cancer aggression.  Some researchers focus on metastatic potential, tumor size, survival time, and others combine targets. To keep things simple we will focus on tumor stage:
   
 ```scala
@@ -127,3 +126,11 @@ Note  the sampleType of **Primary Tumor** for the first example in the table.  I
 //next example starts here...
 ```
 This code allows us to relate each caseId to a tumor stage at diagnosis.  
+
+|caseId|tumor_stage|
+|--------------------|-----------|
+|c113808a-773f-417...|    Stage I|
+|7a481097-14a3-491...|   Stage II|
+|64bd568d-0509-48f...|    Stage I|
+
+### Gene publication counts
