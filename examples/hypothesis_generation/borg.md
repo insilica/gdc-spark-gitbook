@@ -4,8 +4,8 @@
 ## Blueprint
   Borg finds biological entities that are promising for clinical research via a simple blueprint:
   
-  1. **Collect** data on biological entities for patients
-  2. **Group** patients according to one or more clinical targets
+  1. **Collect** experimental data on biological entities for patients
+  2. **Group** experimental data according to one or more clinical targets
   3. **Derive** biological entity importance for predicting clinical target 
   4. **Filter** by current knowledge of biological entities
 
@@ -20,13 +20,21 @@ In this example we perform these steps for finding genes in colorectal cancer:
   co.insilica.gdcSpark provides the `CaseFileEntityBuilder` for building a table of case-file-aliquots. We document our progress through this example in excerpts from [bitbucket.BORGTest]({provide link to bitbucket BORG test|todo}). Below the builder collects rna-seq data for patients with colorectal cancer:
     
 ```scala
+import co.insilica.functional._ //provides implicit |> function on all objects
+
+import co.insilica.gdc.query.{Query,Filter,Operators}
+import co.insilica.gdcSpark.builders.{CaseFileEntityBuilder,CaseFileEntity}
+import co.insilica.gdcSpark.transformers.AliquotTransformer
+
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.{Row,Dataset}
+import org.apache.spark.sql.types.{StringType, StructField, StructType}
+
 class BORG extends FlatSpec{
 
-  import co.insilica.gdc.query.{Query,Filter,Operators}
-  import co.insilica.gdcSpark.builders.{CaseFileEntityBuilder,CaseFileEntity}
-
   implicit val sparkEnvironment = co.insilica.spark.SparkEnvironment.local
-  implicit val gdc = co.insilica.gdc.GDCContext.default
+  import sparkEnvironment.sparkSession.implicits._
+  implicit val gdc = co.insilica.gdc.GDCContext.default  
 
   "BORG" should "collect patient rna-seq data" in {
     //build a query for 'Colon Adenocarcinoma' RNA-Seq files that are open access
@@ -87,3 +95,29 @@ This code gives us the below table:
 |f9410d08-1525-4bf...|b481fc53-5b7e-4e2...|**Primary Tumor**|2016-05-02T14:29:...|3ea9927f-1280-419...|2016-05-02T14:29:...|2016-05-02T14:29:...|
 
 Note  the sampleType of **Primary Tumor** for the first example in the table.  In this example we're interested in relating genes to tumor stage. This means we should focus on biospecimens of **Primary Tumor** rather than **Normal** tissue.
+
+### Grouping Aliquots by Tumor Stage
+  To generate hypotheses we need a target.  The literature for cancer models targets diverse metrics for cancer aggression.  Some researchers focus on metastatic potential, tumor size, survival time, and others combine targets. To keep things simple we will focus on tumor stage:
+  
+```scala
+//...previous example ends here
+"BORG" should "group aliquots by tumor stage" in {
+
+  val caseIds : org.apache.spark.sql.DataFrame = sparkEnvironment
+    .sparkSession
+    .sparkContext
+    .parallelize(
+      List(
+        "c113808a-773f-4179-82d6-9083518404b5",
+        "7a481097-14a3-4916-9632-d899c25fd284",
+        "64bd568d-0509-48fe-8d0a-aef2a85d5c57"
+      )
+    ).toDF("caseId")
+
+  co.insilica.gdcSpark.transformers.clinical.CaseClinicalTransformer()
+    .withCaseId("caseId")
+    .transform(caseIds)
+    .show(truncate=false)
+}
+//next example starts here...
+```
