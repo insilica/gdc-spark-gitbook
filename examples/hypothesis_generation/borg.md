@@ -15,8 +15,13 @@ In this example we perform these steps for finding genes in colorectal cancer:
 2. **Group** patients according to tumor stage
 3. **Derive** genetic importance for predicting tumor stage
 4. **Filter** out genes with many existing publications
-  
-## Collect Patient RNA-SEQ data
+
+In [Building the Table](#Building the Table) we go through these steps and show how to derive the below table.  In the next chapter we describe how to use this table to create a ranked list of hypothesis genes.
+
+???
+
+## Building The Table
+### Collect Patient RNA-SEQ data
   co.insilica.gdcSpark provides the `CaseFileEntityBuilder` for building a table of case-file-aliquots. We document our progress through this example in excerpts from [bitbucket.BORGTest]({provide link to bitbucket BORG test|todo}). Below the builder collects rna-seq data for patients with colorectal cancer:
     
 ```scala
@@ -57,7 +62,7 @@ class BORG extends FlatSpec{
 ```
 This code results in a dataset of `CaseFileEntity` objects. Each file has a case (with a **uuid** or universally unique identifier).  
 
-### Finding Aliquot Information
+#### Finding Aliquot Information
 RNA-Seq experiments use aliquots. Aliquots are either **normal tissue** or **primary tumor** tissue taken from patients. The resulting table is shown below:
 
 |caseId|fileId|entityType|entityId|
@@ -96,7 +101,7 @@ This code gives us the below table:
 
 Note  the sampleType of **Primary Tumor** for the first example in the table.  In this example we're interested in relating genes to tumor stage. This means we should focus on biospecimens of **Primary Tumor** rather than **Normal** tissue.
 
-### Grouping Aliquots by Tumor Stage
+#### Grouping Aliquots by Tumor Stage
   To generate hypotheses we need a target.  The literature for cancer models targets diverse metrics for cancer aggression.  Some researchers focus on metastatic potential, tumor size, survival time, and others combine targets. To keep things simple we will focus on tumor stage:
   
 ```scala
