@@ -196,52 +196,69 @@ Counts for ensembl gene publications provide us with a filtering criteria.  We c
   We can now stitch together all the components needed to run a BORG process:
   
   ```scala
-    "BORG" should "build the gdc table" in {
-    import CaseFileEntityBuilder.{columns => CFEB} //we'll be using these column names
+"BORG" should "build the gdc table" in {
+  import CaseFileEntityBuilder.{columns => CFEB} //we'll use these column names
 
-    Query()  //The query is our entry point.  It tells us what we'll be getting from gdc
-      .withFilter { Filter.and(
-        Filter(Operators.eq, key="cases.project.disease_type", "Colon Adenocarcinoma"),
-        Filter(Operators.eq, key="experimental_strategy", "RNA-Seq"),
-        Filter(Operators.eq, key="access", "open")
-      )}
-      .|> { CaseFileEntityBuilder() //download/links caseIds,fileIds,entityIds (aliquots here)
-        .withQuery(_)
-        .withLimit(10) //limit to make this test go quicker
+  Query()  //The query is our entry point.  It tells us what to get from gdc
+    .withFilter { Filter.and(
+      Filter(Operators.eq, key="cases.project.disease_type", "Colon Adenocarcinoma"),
+      Filter(Operators.eq, key="experimental_strategy", "RNA-Seq"),
+      Filter(Operators.eq, key="access", "open")
+    )}
+    .|> { CaseFileEntityBuilder() //download/links caseIds,fileIds,entityIds (aliquots here)
+      .withQuery(_)
+      .withLimit(10) //limit to make this test go quicker
+      .build()
+    }
+    .transform{ AliquotTransformer() // get that aliquot info!
+      .withAliquotIdColumn(CFEB.entityId)
+      .transform
+    }
+    .|>{ df => CaseClinicalTransformer() //get tumor stage info.
+      .withCaseId(CFEB.caseId)
+      .transform(df)
+      .|> { tumorDF => tumorDF.select(tumorDF(CFEB.caseId), //Select the tumor stage data (which is in an array) here.
+        functions.explode($"stage_event@pathologic_stage@3203222").as("tumor_stage"))
+        .join(df, CFEB.caseId) //join back with input
+      }
+    }
+    .|>{ df => FileRNATransformer() //stitch in the RNA-SEQ data
+      .withFileId(CFEB.fileId)
+      .transform(df)
+      .withColumn("root_ensembl", $"ensembl_id".substr(0,15)) //first 15 characters are the root gene id
+    }.|> { df => //build gene2pubmed and join on 'root_ensembl'
+      import Gene2PubmedBuilder.{columns => g2p}
+      Gene2PubmedBuilder
         .build()
-      }
-      .transform{ AliquotTransformer() // get that aliquot info!
-        .withAliquotIdColumn(CFEB.entityId)
-        .transform
-      }
-      .|>{ df => CaseClinicalTransformer() //get tumor stage info.
-        .withCaseId(CFEB.caseId)
-        .transform(df)
-        .|> { tumorDF => tumorDF.select(tumorDF(CFEB.caseId), //Select the tumor stage data (which is in an array) here.
-          functions.explode($"stage_event@pathologic_stage@3203222").as("tumor_stage"))
-          .join(df, CFEB.caseId) //join back with input
-        }
-      }
-      .|>{ df => FileRNATransformer() //stitch in the RNA-SEQ data
-        .withFileId(CFEB.fileId)
-        .transform(df)
-        .withColumn("root_ensembl", $"ensembl_id".substr(0,15)) //first 15 characters are the root gene id
-      }.|> { df => //build gene2pubmed and join on 'root_ensembl'
-        import Gene2PubmedBuilder.{columns => g2p}
-        Gene2PubmedBuilder
-          .build()
-          .|>{ g2pDF => g2pDF.filter( g2pDF(g2p.ensembl_gene).startsWith("ENSG") ) } //select human genes
-          .groupBy(g2p.ensembl_gene)
-          .agg(functions.count(g2p.pmid).as("publication_count"))
-          .withColumnRenamed(g2p.ensembl_gene,"root_ensembl")
-          .join(df,"root_ensembl")
-      }
-      .|> { df => //select caseId,entityId,tumor_stage,root_ensembl,expression,publicationCount
-        import FileRNATransformer.{columns => FRT}
-        df.select(CFEB.caseId, CFEB.entityId, "tumor_stage","root_ensembl",FRT.ensemblId,FRT.expression,"publication_count")
-      }
-      .show(10)
-  }
+        .|>{ g2pDF => g2pDF.filter( g2pDF(g2p.ensembl_gene).startsWith("ENSG") ) } //select human genes
+        .groupBy(g2p.ensembl_gene)
+        .agg(functions.count(g2p.pmid).as("publication_count"))
+        .withColumnRenamed(g2p.ensembl_gene,"root_ensembl")
+        .|> { g2pDF => g2pDF.join(df,
+            usingColumns = Seq("root_ensembl"),
+            joinType = "right_outer")
+        }.na.fill(0.0,Seq("publication_count")) //set 0 publications if count is null
+    }
+    .|> { df => //select caseId,entityId,tumor_stage,root_ensembl,expression,publicationCount
+      import FileRNATransformer.{columns => FRT}
+      df.sort("publication_count")
+        .select(
+          CFEB.entityId,
+          "tumor_stage",
+          "root_ensembl",
+          FRT.ensemblId,
+          FRT.expression,
+          "publication_count"
+        )
+    }.|>{ df => //report a few things
+      df.show(10) //show!
+      df.select(CFEB.entityId,"tumor_stage")
+        .distinct()
+        .groupBy("tumor_stage") //number of cases with each tumor stage
+        .agg(functions.count(CFEB.entityId))
+        .show(truncate = false)
+    }
+}
   ```
   
   The reporting block in this code prints the requested table:
@@ -258,4 +275,6 @@ And shows us the number of aliquots for each tumor_stage:
 |tumor_stage|count|
 |-----------|-----|
 
-From this we can see that there are some genes with 0 publications.  
+From this we can see that there are some genes with 0 publications.  We now have all the information we need to complete the BORG pipeline. All we need is some method to derive gene **importance** from its relationship to tumor_stage. 
+
+###Deriving Importance
