@@ -258,4 +258,4 @@ And shows us the number of aliquots for each tumor_stage:
 |tumor_stage|count|
 |-----------|-----|
 
-From this we can see that there are many genes with 0 publications.  
+From this we can see that there are at least some genes with 0 publications.  
