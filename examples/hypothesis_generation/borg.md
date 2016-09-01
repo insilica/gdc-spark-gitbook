@@ -140,7 +140,7 @@ This code allows us to relate each caseId to a tumor stage at diagnosis.
 "BORG" should "get gene publication counts" in {
   Gene2PubmedBuilder.build().show(3)
 }
-//...next example starts here
+//...next code starts here
 ```
 This simple code prints the table:
 
