@@ -270,7 +270,7 @@ Counts for ensembl gene publications provide us with a filtering criteria.  We c
 |9c737eba-552c-495...|Stage IIIB|ENSG00000020219|ENSG00000020219.9|0.0|0
 
 
-From this we can see that there are some genes with 0 publications.  We now have all the information we need to complete the BORG pipeline. All we need is some method to derive gene **importance** from its relationship to tumor_stage. Alas, this next step can't be performed on a standalone cluster.  In the next section [
+From this we can see that there are some genes with 0 publications.  We now have all the information we need to complete the BORG pipeline. All we need is some method to derive gene **importance** from its relationship to tumor_stage. Alas, this next step is difficult on a standalone cluster.  In the next section [
 
 ###Deriving Importance
   The easiest way to derive importance is by univariate correlation.  This means we will look for the pearson correlation of each genetic variant count with the clinical target.  Of course clinical target is not a numeric value, so lets fix that.
