@@ -133,4 +133,11 @@ This code allows us to relate each caseId to a tumor stage at diagnosis.
 |7a481097-14a3-491...|   Stage II|
 |64bd568d-0509-48f...|    Stage I|
 
-### Gene publication counts
+### Get Gene Publication Counts
+  To 'rescue' orphan genes we need a definition of 'orphan'.  Here we define an orphan gene to be any gene that has less than 10 publications. The National Library of Medicine provides a useful [FTP repository](ftp://ftp.ncbi.nlm.nih.gov/gene/DATA) with a map of genes to publications. `Gene2PubmedBuilder` allows us to find publications for individual genes:
+  
+```scala
+
+```
+This simple code prints the table:
+http://compbio.ucdenver.edu/hunter/
