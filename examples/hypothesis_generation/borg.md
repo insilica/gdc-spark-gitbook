@@ -278,4 +278,4 @@ And shows us the number of aliquots for each tumor_stage:
 From this we can see that there are some genes with 0 publications.  We now have all the information we need to complete the BORG pipeline. All we need is some method to derive gene **importance** from its relationship to tumor_stage. 
 
 ###Deriving Importance
-The easiest way to derive importance is by univariate correlation.  This means we will look for the pearson correlation of each genetic variant count with the clinical target.
+  The easiest way to derive importance is by univariate correlation.  This means we will look for the pearson correlation of each genetic variant count with the clinical target.
