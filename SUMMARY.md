@@ -18,4 +18,5 @@
    * Hypothesis Generation
        * [Introduction](examples/hypothesis_generation/introduction.md)
        * [BORG - Bioinformatics Orphan Gene Rescue Graphical Models](examples/hypothesis_generation/borg.md)
+       * [Submit to the cluster](examples/hypothesis_generation/submit_to_cluster)
 
