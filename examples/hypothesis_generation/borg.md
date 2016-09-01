@@ -18,7 +18,7 @@ In this example we perform these steps for finding genes in colorectal cancer:
 
 In [Building the Table](#Building the Table) we go through these steps and show how to derive the below table.  In the next chapter we describe how to use this table to create a ranked list of hypothesis genes.
 
-???
+######GDCTable
 
 ## Building The Table
   co.insilica.gdcSpark provides the `CaseFileEntityBuilder` for building a table of case-file-aliquots. We document our progress through this example in excerpts from [bitbucket.BORGTest]({provide link to bitbucket BORG test|todo}). Below the builder collects rna-seq data for patients with colorectal cancer:
@@ -75,17 +75,19 @@ The `AliquotTransformer` transforms aliquotIds into tissue data:
 //...previous example starts
   "BORG" should "finding aliquot information" in {
 
-    val aliquotIds : DataFrame = sparkEnvironment
+    val aliquotIds : RDD[Row] = sparkEnvironment
       .sparkSession
       .sparkContext
       .parallelize( List(
-        "ae0b0540-fcb6-4c9e-8835-2cb24933a01f",
-        "52c17edc-35f9-484c-949d-62694cfc797a",
-        "f9410d08-1525-4bf7-9c7c-939a2abe60ae"))
-      .toDF("aliquotId")
+        Row("ae0b0540-fcb6-4c9e-8835-2cb24933a01f"),
+        Row("52c17edc-35f9-484c-949d-62694cfc797a"),
+        Row("f9410d08-1525-4bf7-9c7c-939a2abe60ae")))
+
+    val schema = StructType(List(StructField("aliquotId",StringType,nullable=false)))
+    val aliquotDS = sparkEnvironment.sparkSession.createDataFrame(aliquotIds,schema)
 
     AliquotTransformer(aliquotColumn = "aliquotId")
-      .transform(aliquotIds)
+      .transform(aliquotDS)
       .show()
   }
 //next example starts here...
