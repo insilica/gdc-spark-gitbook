@@ -244,11 +244,18 @@ Counts for ensembl gene publications provide us with a filtering criteria.  We c
   }
   ```
   
-  The reporting block in this code prints:
+  The reporting block in this code prints the requested table:
   
 |entityId|tumor_stage|root_ensembl|ensembl_id|expression|publication_count|
 |--------|-----------|------------|----------|----------|-----------------|
 |99cb42da-b846-446...|Stage IIB|ENSG00000162888|ENSG00000162888.4|22.0|0|
 |99cb42da-b846-446...|Stage IIB|ENSG00000176268|ENSG00000176268.5|168.0|0|
 |9c737eba-552c-495...|Stage IIIB|ENSG00000162888|ENSG00000162888.4|3182.42|0|
-|9c737eba-552c-495...|Stage IIIB|ENSG00000020219|ENSG00000020219.9|0.0|0|
+|9c737eba-552c-495...|Stage IIIB|ENSG00000020219|ENSG00000020219.9|0.0|0
+
+And shows us the number of aliquots for each tumor_stage:
+
+|tumor_stage|count|
+|-----------|-----|
+
+From this we can see that there are many genes with 0 publications.  
