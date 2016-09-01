@@ -75,19 +75,17 @@ The `AliquotTransformer` transforms aliquotIds into tissue data:
 //...previous example starts
   "BORG" should "finding aliquot information" in {
 
-    val aliquotIds : RDD[Row] = sparkEnvironment
+    val aliquotIds : DataFrame = sparkEnvironment
       .sparkSession
       .sparkContext
       .parallelize( List(
-        Row("ae0b0540-fcb6-4c9e-8835-2cb24933a01f"),
-        Row("52c17edc-35f9-484c-949d-62694cfc797a"),
-        Row("f9410d08-1525-4bf7-9c7c-939a2abe60ae")))
-
-    val schema = StructType(List(StructField("aliquotId",StringType,nullable=false)))
-    val aliquotDS = sparkEnvironment.sparkSession.createDataFrame(aliquotIds,schema)
+        "ae0b0540-fcb6-4c9e-8835-2cb24933a01f",
+        "52c17edc-35f9-484c-949d-62694cfc797a",
+        "f9410d08-1525-4bf7-9c7c-939a2abe60ae"))
+      .toDF("aliquotId")
 
     AliquotTransformer(aliquotColumn = "aliquotId")
-      .transform(aliquotDS)
+      .transform(aliquotIds)
       .show()
   }
 //next example starts here...
