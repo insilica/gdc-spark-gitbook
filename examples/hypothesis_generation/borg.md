@@ -167,4 +167,29 @@ and
 Counts for ensembl gene publications provide us with a filtering criteria.  We can select those genes that have a low publication count.
 
 ### Get RNA-SEQ Data
-  To determine gene importance we need to characterize genes in relation to the target (tumor stage in this case). RNA-SEQ allows us to characterize genes by sequencing counts in a biospecimen. 
+  To determine gene importance we need to characterize genes in relation to the target (tumor stage in this case). RNA-SEQ experiments count gene transcripts in a biospecimen.  These gene transcript counts characterize the genetic expression - biological sample relationship. The below code illustrates how to get this data:
+  
+```scala
+"BORG" should "get RNA-SEQ data" in {
+  List("1a7ab72c-ccbe-4ffe-b43d-d8570cb62c0b","046af5c1-b645-4338-be64-a8f2e08a9f2e")
+    .|>{ sparkEnvironment.sparkSession.sparkContext.parallelize(_)}
+    .toDF("fileId")
+    .|> { df => EntityRNATransformer()
+      .withFileId(CaseFileEntityBuilder.columns.fileId)
+      .transform(df)
+      .show(10)
+    }
+}
+```
+This code results in the table:
+
+|              fileId|       ensembl_id|   expression|
+|--------------------|-----------------|-------------|
+|046af5c1-b645-433...|ENSG00000164182.9| 255335.26804|
+|046af5c1-b645-433...|ENSG00000123364.4|          0.0|
+|046af5c1-b645-433...|ENSG00000082068.7|70393.4578711|
+
+In this table we can see that all ensembl_ids start with **ENSG** which means they are homo-sapien genes.  Ensembl provides information on every identifier (see [ENSG00000164182.9](http://useast.ensembl.org/Homo_sapiens/Gene/Splice?db=core;g=ENSG00000164182;r=5:60945129-61153037;t=ENST00000296597) with HUGO identifier **NDUFAF2**). The page also informs us that NDUFAF2 has 4 splice variants.  The suffix in ENSG00000164182**.9**  identifies a protein coding splice variant.
+
+### Put it together
+  To build the table in 
