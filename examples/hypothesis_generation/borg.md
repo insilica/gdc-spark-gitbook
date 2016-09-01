@@ -192,4 +192,7 @@ This code results in the table:
 In this table we can see that all ensembl_ids start with **ENSG** which means they are homo-sapien genes.  Ensembl provides information on every identifier (see [ENSG00000164182.9](http://useast.ensembl.org/Homo_sapiens/Gene/Splice?db=core;g=ENSG00000164182;r=5:60945129-61153037;t=ENST00000296597) with HUGO identifier **NDUFAF2**). The page also informs us that NDUFAF2 has 4 splice variants.  The suffix in ENSG00000164182**.9**  identifies a protein coding splice variant.
 
 ### Put it together
-  To build the table in 
+  We can now stitch together all the components needed to run a BORG process:
+  
+  ```scala
+  ```
