@@ -250,14 +250,7 @@ Counts for ensembl gene publications provide us with a filtering criteria.  We c
           FRT.expression,
           "publication_count"
         )
-    }.|>{ df => //report a few things
-      df.show(10) //show!
-      df.select(CFEB.entityId,"tumor_stage")
-        .distinct()
-        .groupBy("tumor_stage") //number of cases with each tumor stage
-        .agg(functions.count(CFEB.entityId))
-        .show(truncate = false)
-    }
+    }.show(10)
 }
   ```
   
@@ -270,10 +263,6 @@ Counts for ensembl gene publications provide us with a filtering criteria.  We c
 |9c737eba-552c-495...|Stage IIIB|ENSG00000162888|ENSG00000162888.4|3182.42|0|
 |9c737eba-552c-495...|Stage IIIB|ENSG00000020219|ENSG00000020219.9|0.0|0
 
-And shows us the number of aliquots for each tumor_stage:
-
-|tumor_stage|count|
-|-----------|-----|
 
 From this we can see that there are some genes with 0 publications.  We now have all the information we need to complete the BORG pipeline. All we need is some method to derive gene **importance** from its relationship to tumor_stage. 
 
