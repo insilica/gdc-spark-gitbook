@@ -138,14 +138,33 @@ This code allows us to relate each caseId to a tumor stage at diagnosis.
   
 ```scala
 "BORG" should "get gene publication counts" in {
-  Gene2PubmedBuilder.build().show(3)
+  val ds = Gene2PubmedBuilder.build()
+  import Gene2PubmedBuilder.{columns => g2p}
+  ds.select(g2p.ensembl_gene,g2p.pmid).show(3)
+
+  ds.groupBy(Gene2PubmedBuilder.columns.ensembl_gene)
+    .agg(functions.count(Gene2PubmedBuilder.columns.ensembl_gene).as("count"))
+    .show(5)
 }
 //...next code starts here
 ```
-This simple code prints the table:
+This simple code prints the tables:
 
-|GeneID|tax_id|PubMed_ID|tax_id|Ensembl_gene|RNA_nucleotide_accession_version|Ensembl_rna|protein_accession_version|Ensembl_protein|
-|---------|------|---------|------|------------------|--------------------------------|------------------|-------------------------|------------------|
-|100000104|  7955| 12477932|  7955|ENSDARG00000062467|                  NM_001089448.1|ENSDART00000142081|           NP_001082917.1|ENSDARP00000120240|
-|100001340|  7955| 12618376|  7955|ENSDARG00000055731|                  NM_001127520.1|ENSDART00000143697|           NP_001120992.1|ENSDARP00000120497|
-|100002371|  7955| 12477932|  7955|ENSDARG00000056281|                  NM_001105584.1|ENSDART00000098590|           NP_001099054.1|ENSDARP00000089361|
+|Ensembl_gene|PubMed_ID|
+|------------------|---------|
+|ENSDARG00000062467| 12477932|
+|ENSDARG00000055731| 12618376|
+|ENSDARG00000056281| 12477932|
+
+and 
+
+|      Ensembl_gene|count|
+|------------------|-----|
+|ENSFCAG00000028791|    1|
+|       FBgn0036474|   86|
+|ENSBTAG00000008238|    4|
+
+Counts for ensembl gene publications provide us with a filtering criteria.  We can select those genes that have a low publication count.
+
+### Get RNA-SEQ Data
+  To determine gene importance we need to characterize genes in relation to the target (tumor stage in this case). RNA-SEQ allows us to characterize genes by sequencing counts in a biospecimen. 
