@@ -196,4 +196,59 @@ Counts for ensembl gene publications provide us with a filtering criteria.  We c
   We can now stitch together all the components needed to run a BORG process:
   
   ```scala
+    "BORG" should "build the gdc table" in {
+    import CaseFileEntityBuilder.{columns => CFEB} //we'll be using these column names
+
+    Query()  //The query is our entry point.  It tells us what we'll be getting from gdc
+      .withFilter { Filter.and(
+        Filter(Operators.eq, key="cases.project.disease_type", "Colon Adenocarcinoma"),
+        Filter(Operators.eq, key="experimental_strategy", "RNA-Seq"),
+        Filter(Operators.eq, key="access", "open")
+      )}
+      .|> { CaseFileEntityBuilder() //download/links caseIds,fileIds,entityIds (aliquots here)
+        .withQuery(_)
+        .withLimit(10) //limit to make this test go quicker
+        .build()
+      }
+      .transform{ AliquotTransformer() // get that aliquot info!
+        .withAliquotIdColumn(CFEB.entityId)
+        .transform
+      }
+      .|>{ df => CaseClinicalTransformer() //get tumor stage info.
+        .withCaseId(CFEB.caseId)
+        .transform(df)
+        .|> { tumorDF => tumorDF.select(tumorDF(CFEB.caseId), //Select the tumor stage data (which is in an array) here.
+          functions.explode($"stage_event@pathologic_stage@3203222").as("tumor_stage"))
+          .join(df, CFEB.caseId) //join back with input
+        }
+      }
+      .|>{ df => FileRNATransformer() //stitch in the RNA-SEQ data
+        .withFileId(CFEB.fileId)
+        .transform(df)
+        .withColumn("root_ensembl", $"ensembl_id".substr(0,15)) //first 15 characters are the root gene id
+      }.|> { df => //build gene2pubmed and join on 'root_ensembl'
+        import Gene2PubmedBuilder.{columns => g2p}
+        Gene2PubmedBuilder
+          .build()
+          .|>{ g2pDF => g2pDF.filter( g2pDF(g2p.ensembl_gene).startsWith("ENSG") ) } //select human genes
+          .groupBy(g2p.ensembl_gene)
+          .agg(functions.count(g2p.pmid).as("publication_count"))
+          .withColumnRenamed(g2p.ensembl_gene,"root_ensembl")
+          .join(df,"root_ensembl")
+      }
+      .|> { df => //select caseId,entityId,tumor_stage,root_ensembl,expression,publicationCount
+        import FileRNATransformer.{columns => FRT}
+        df.select(CFEB.caseId, CFEB.entityId, "tumor_stage","root_ensembl",FRT.ensemblId,FRT.expression,"publication_count")
+      }
+      .show(10)
+  }
   ```
+  
+  The reporting block in this code prints:
+  
+|entityId|tumor_stage|root_ensembl|ensembl_id|expression|publication_count|
+|--------|-----------|------------|----------|----------|-----------------|
+|99cb42da-b846-446...|Stage IIB|ENSG00000162888|ENSG00000162888.4|22.0|0|
+|99cb42da-b846-446...|Stage IIB|ENSG00000176268|ENSG00000176268.5|168.0|0|
+|9c737eba-552c-495...|Stage IIIB|ENSG00000162888|ENSG00000162888.4|3182.42|0|
+|9c737eba-552c-495...|Stage IIIB|ENSG00000020219|ENSG00000020219.9|0.0|0|
