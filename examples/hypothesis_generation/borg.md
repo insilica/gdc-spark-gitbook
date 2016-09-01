@@ -21,8 +21,7 @@ In [Building the Table](#Building the Table) we go through these steps and show 
 ######GDCTable
 
 ## Building The Table
-  co.insilica.gdcSpark provides the `CaseFileEntityBuilder` for building a table of case-file-aliquots. We document our progress through this example in excerpts from [bitbucket.BORGTest]({provide link to bitbucket BORG test|todo}). Below the builder collects rna-seq data for patients with colorectal cancer:
-    
+  In this section we present code that shows each part of the GDCTable building process.  [A bitbucket repository]({provide link to bitbucket BORG test|todo}) stores the test file we present here. Before we get started lets set up the test:
 ```scala
 import co.insilica.functional._ //provides implicit |> function on all objects
 
@@ -39,25 +38,32 @@ class BORG extends FlatSpec{
   implicit val sparkEnvironment = co.insilica.spark.SparkEnvironment.local
   import sparkEnvironment.sparkSession.implicits._
   implicit val gdc = co.insilica.gdc.GDCContext.default  
-
-  "BORG" should "collect patient rna-seq data" in {
-    //build a query for 'Colon Adenocarcinoma' RNA-Seq files that are open access
-    val query = Query().withFilter {
-      Filter.and(
-        Filter(Operators.eq, key="cases.project.disease_type", "Colon Adenocarcinoma"),
-        Filter(Operators.eq, key="experimental_strategy", "RNA-Seq"),
-        Filter(Operators.eq, key="access", "open")
-      )
-    }
-    val dataset : org.apache.spark.sql.Dataset[CaseFileEntity] = {
-      CaseFileEntityBuilder(query)
-        .withLimit(10)
-        .build()
-    }
-
-    dataset.show(truncate=false)
+  
+  //tests begin here...
+```
+  
+  co.insilica.gdcSpark provides the `CaseFileEntityBuilder` for building a table of case-file-aliquots. We document our progress through this example in excerpts from . Below the builder collects rna-seq data for patients with colorectal cancer:
+    
+```scala
+//setup code before here
+"BORG" should "collect patient rna-seq data" in {
+  //build a query for 'Colon Adenocarcinoma' RNA-Seq files that are open access
+  val query = Query().withFilter {
+    Filter.and(
+      Filter(Operators.eq, key="cases.project.disease_type", "Colon Adenocarcinoma"),
+      Filter(Operators.eq, key="experimental_strategy", "RNA-Seq"),
+      Filter(Operators.eq, key="access", "open")
+    )
   }
-  //next examples begin here...
+  val dataset : org.apache.spark.sql.Dataset[CaseFileEntity] = {
+    CaseFileEntityBuilder(query)
+      .withLimit(10)
+      .build()
+  }
+
+  dataset.show(truncate=false)
+}
+//next examples begin here...
 ```
 This code results in a dataset of `CaseFileEntity` objects. Each file has a case (with a **uuid** or universally unique identifier).  
 
@@ -267,4 +273,7 @@ Counts for ensembl gene publications provide us with a filtering criteria.  We c
 From this we can see that there are some genes with 0 publications.  We now have all the information we need to complete the BORG pipeline. All we need is some method to derive gene **importance** from its relationship to tumor_stage. 
 
 ###Deriving Importance
-  The easiest way to derive importance is by univariate correlation.  This means we will look for the pearson correlation of each genetic variant count with the clinical target.  Of course clinical target is not a numeric value, so lets fix that:
+  The easiest way to derive importance is by univariate correlation.  This means we will look for the pearson correlation of each genetic variant count with the clinical target.  Of course clinical target is not a numeric value, so lets fix that.
+  
+  1. Look up tumor_stage values
+  2. 
