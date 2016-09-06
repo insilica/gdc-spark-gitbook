@@ -11,6 +11,9 @@
 
 In this section we derive spark `Dataset`s for each of these categories and then join them together.  We build and save these datasets on a spark cluster with a hadoop file system.  The final product is one large spark `Dataset` that combines all feature categories. 
 
+##DatasetBuilder
+Insilica uses a simple trait to 
+
 ##Deriving Importance
   The easiest way to derive importance is by univariate correlation.  This means we will look for the pearson correlation of each genetic variant count with the clinical target.  Of course clinical target is not a numeric value, so lets fix that.
   
