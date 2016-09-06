@@ -79,23 +79,19 @@ The `AliquotTransformer` transforms aliquotIds into tissue data:
 
 ```scala
 //...previous example starts
-  "BORG" should "finding aliquot information" in {
+"BORG" should "finding aliquot information" in {
 
-    val aliquotIds : RDD[Row] = sparkEnvironment
-      .sparkSession
-      .sparkContext
-      .parallelize( List(
-        Row("ae0b0540-fcb6-4c9e-8835-2cb24933a01f"),
-        Row("52c17edc-35f9-484c-949d-62694cfc797a"),
-        Row("f9410d08-1525-4bf7-9c7c-939a2abe60ae")))
+  val aliquotIds : DataFrame = sparkEnvironment.sparkSession.sparkContext
+    .parallelize( List(
+      "ae0b0540-fcb6-4c9e-8835-2cb24933a01f",
+      "52c17edc-35f9-484c-949d-62694cfc797a",
+      "f9410d08-1525-4bf7-9c7c-939a2abe60ae"))
+    .toDF("aliquotId")
 
-    val schema = StructType(List(StructField("aliquotId",StringType,nullable=false)))
-    val aliquotDS = sparkEnvironment.sparkSession.createDataFrame(aliquotIds,schema)
-
-    AliquotTransformer(aliquotColumn = "aliquotId")
-      .transform(aliquotDS)
-      .show()
-  }
+  AliquotTransformer(aliquotColumn = "aliquotId")
+    .transform(aliquotIds)
+    .show()
+}
 //next example starts here...
 ```
 This code gives us the below table:
@@ -106,28 +102,22 @@ This code gives us the below table:
 
 Note  the sampleType of **Primary Tumor** for the first example in the table.  In this example we're interested in relating genes to tumor stage. This means we should focus on biospecimens of **Primary Tumor** rather than **Normal** tissue.
 
-### Grouping Aliquots by Tumor Stage
+### Grouping Cases by Tumor Stage
   To generate hypotheses we need a target.  The literature for cancer models targets diverse metrics for cancer aggression.  Some researchers focus on metastatic potential, tumor size, survival time, and others combine targets. To keep things simple we will focus on tumor stage:
   
 ```scala
 //...previous example ends here
-"BORG" should "group aliquots by tumor stage" in {
+"BORG" should "group cases by tumor stage" in {
 
-  val caseIds : org.apache.spark.sql.DataFrame = sparkEnvironment
-    .sparkSession
-    .sparkContext
-    .parallelize(
-      List(
-        "c113808a-773f-4179-82d6-9083518404b5",
-        "7a481097-14a3-4916-9632-d899c25fd284",
-        "64bd568d-0509-48fe-8d0a-aef2a85d5c57"
-      )
-    ).toDF("caseId")
+  val caseIds : DataFrame = sparkEnvironment.sparkSession.sparkContext.parallelize(
+    List("c113808a-773f-4179-82d6-9083518404b5","7a481097-14a3-4916-9632-d899c25fd284")
+  ).toDF("caseId")
 
-  co.insilica.gdcSpark.transformers.clinical.CaseClinicalTransformer()
+  CaseClinicalTransformer()
     .withCaseId("caseId")
     .transform(caseIds)
-    .show(truncate=false)
+    .select($"caseId",functions.explode($"stage_event@pathologic_stage@3203222").as("tumor_stage"))
+    .show()
 }
 //next example starts here...
 ```
