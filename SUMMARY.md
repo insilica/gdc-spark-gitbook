@@ -11,13 +11,14 @@
    * [co.insilica.gdc-spark](1_gdc/3_gdc-spark.md)
 
 ### Examples
-   * [Tumor Similarity](2_tumor_similarity/README.md)
-   * [Relative Tumor Distance](2_tumor_similarity/relative_distance.md)
-   * Drugs and Methylation
-       * [Standalone Tests](examples/methylation/drugs_and_methylation.md)
-       * [Submit to the cluster](examples/methylation/submit_to_cluster.md)
-   * Hypothesis Generation
-       * [Introduction](examples/hypothesis_generation/introduction.md)
-       * [BORG - Bioinformatics Orphan Gene Rescue Graphical Models](examples/hypothesis_generation/borg.md)
-       * [Submit to the cluster](examples/hypothesis_generation/submit_to_the_cluster.md)
+  * [Tumor Aggression](examples/tumor_aggresion.md)
+  * [Tumor Similarity](2_tumor_similarity/README.md)
+  * [Relative Tumor Distance](2_tumor_similarity/relative_distance.md)
+  * Drugs and Methylation
+     * [Standalone Tests](examples/methylation/drugs_and_methylation.md)
+     * [Submit to the cluster](examples/methylation/submit_to_cluster.md)
+  * Hypothesis Generation
+     * [Introduction](examples/hypothesis_generation/introduction.md)
+     * [BORG - Bioinformatics Orphan Gene Rescue Graphical Models](examples/hypothesis_generation/borg.md)
+     * [Submit to the cluster](examples/hypothesis_generation/submit_to_the_cluster.md)
 
