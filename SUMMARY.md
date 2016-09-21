@@ -9,7 +9,8 @@
 * co.insilica.gdc
    * [co.insilica.gdc-core](1_gdc/2_a_client.md)
    * [co.insilica.gdc-spark](1_gdc/3_gdc-spark.md)
-* [examples](examples)
+
+### Examples
    * [Tumor Similarity](2_tumor_similarity/README.md)
    * [Relative Tumor Distance](2_tumor_similarity/relative_distance.md)
    * Drugs and Methylation
