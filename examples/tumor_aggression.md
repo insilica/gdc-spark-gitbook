@@ -16,4 +16,11 @@
 
 Analysis of cancer data frequently targets cancer aggression.  Researchers seek to find genes, drugs, or other factors capable of changing cancer outcomes.  These analyses simplify when we reduce cancer aggression metrics to a single numeric metric. 
 
-There are two high level approaches to measuring cancer aggression.  The simpler approach is **feature reduction** which defines a single aggression value for each tumor.  
+There are two high level approaches to measuring univariate cancer aggression.  Univariate aggression is either measured on a per-case or on a per-feature basis. 
+
+## Per case tumor aggression 
+  Per-case univariate aggression is conceptually simpler than per-biological feature.  In this model algorithms combine different prognostic features into a single numeric feature.  For example, a **feature reduction** could combine tumor stage and lymphatic invasion. The resulting global metric loses information, but is easier to analyze. Ultimately per case tumor aggression enables us to label a tumor as 'very aggressive' or 'not aggressive.'  
+
+
+## Per feature tumor aggression
+  Per-feature tumor aggression determines whether a given biological observation (or feature) is indicative of cancer aggression.  
