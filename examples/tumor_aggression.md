@@ -23,7 +23,7 @@ There are two high level approaches to measuring univariate cancer aggression.  
   
   Ultimately per case tumor aggression enables us to label a tumor as 'very aggressive' or 'not aggressive.'  We show in the below examples how principal component analysis can derive a per-case tumor aggression metric.  
   
-  | tumor stage | lymphatic invasion | distance metastasis | **tumor aggression** |
+  | tumor stage | lymphatic invasion | distant metastasis | **tumor aggression** |
   |-------------|-------------|-------------|-------------|
   | IV | True | True | 1.0 |
   | III | True | True | 0.8 |
