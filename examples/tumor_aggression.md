@@ -45,10 +45,15 @@ The [cancer regulome](explorer.cancerregulome.org) uses per feature tumor aggres
 ## Pros and Cons
 
 ## Coding examples
-  In these examples we use a toy dataset for cancer aggression as derived below:
+  In these examples we use a toy data set for cancer aggression as derived below:
   
   ```scala
+  
   ```
+  
+  
+  | stage | lymphatic invasion | distant_metastasis | vascular_invasion | metastasis | percent_positive_lymph_nodes|
+  |-------------|-------------|-------------|-------------|
   
 ### Per Case
 ```scala
