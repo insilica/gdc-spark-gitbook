@@ -31,7 +31,11 @@ There are two high level approaches to measuring univariate cancer aggression.  
   <center>Per case tumor aggression derived from tumor stage, lymphatic invasion, and distance metastasis observations.  Note that aggression metrics are not necessarily normalized between 0 and 1.</center>  
 
 ## Per feature tumor aggression
-  Per-feature tumor aggression determines whether a given biological observation (or feature) is indicative of cancer aggression.  For example, the lack of expression of tumor suppressor gene P53 would  indicate a more aggressive tumor.  Per feature tumor aggression correlates a biological observation with a clinical endpoint.   In this example we:
+  Per-feature tumor aggression determines whether a given biological observation (or feature) is indicative of cancer aggression.  For example, the lack of expression of tumor suppressor gene P53 would  indicate a more aggressive tumor.  
+  
+  Per feature tumor aggression correlates a biological observation with each clinical endpoint.  These correlations are then combined into a single confidence value.  A biological feature that highly correlates with many clinical endpoints is concered an 'aggressive' feature.  In our P53 example we:
 
-1. Identify a biological expression type (expression of P53)
-2. 
+1. Identify a biological feature type (expression of P53)
+2. Identify prognostic endpoints (eg. tumor stage and lymphatic invasion)
+3. Correlate the biological feature with each prognostic endpoint
+4. Fuse the correlation values in 3 to form a single per feature tumor aggression metric
