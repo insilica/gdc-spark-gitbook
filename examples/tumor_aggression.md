@@ -44,6 +44,7 @@ The [cancer regulome](explorer.cancerregulome.org) uses per feature tumor aggres
 
 ## Pros and Cons
 
+## Mathematical Examples
 ## Coding examples
   In these examples we use a toy data set for cancer aggression.  TCGA clinical supplements define prognostic outcomes.  The [Clinical Supplements](./1_gdc/clinical_supplements.md) section describes how co.insilica.gdcSpark converts TCGA clinical supplements into spark `Dataset`s. Prognostic outcomes are derived below:
   
