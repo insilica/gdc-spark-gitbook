@@ -39,3 +39,5 @@ There are two high level approaches to measuring univariate cancer aggression.  
 2. Identify prognostic endpoints (eg. tumor stage and lymphatic invasion)
 3. Correlate the biological feature with each prognostic endpoint
 4. Fuse the correlation values in 3 to form a single per feature tumor aggression metric
+
+The [cancer regulome](explorer.cancerregulome.org) uses per feature tumor aggression.  The regulome pipeline correlates genetic features with 6 prognostic outcomes. 
