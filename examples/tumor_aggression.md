@@ -16,3 +16,4 @@
 
 Analysis of cancer data frequently targets cancer aggression.  Researchers seek to find genes, drugs, or other factors capable of changing cancer outcomes.  These analyses simplify when we reduce cancer aggression metrics to a single numeric metric. 
 
+There are two high level approaches to measuring cancer aggression.  The simpler approach is **feature reduction** which defines a single aggression value for each tumor.  
