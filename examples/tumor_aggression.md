@@ -18,7 +18,7 @@ Analysis of cancer data frequently targets cancer aggression.  Researchers seek 
 
 There are two high level approaches to measuring univariate cancer aggression.  Univariate aggression is either measured on a per-case or on a per-feature basis. 
 
-## Per case tumor aggression 
+## Per Case tumor aggression 
   Per-case univariate aggression is conceptually simpler than per-biological feature.  Algorithms combine different prognostic endpoints into a single numeric endpoint.  For example, a **feature reduction** algorithm could combine tumor stage and lymphatic invasion. The resulting global metric loses information, but is easier to analyze. 
   
   Ultimately per case tumor aggression enables us to label a tumor as 'very aggressive' or 'not aggressive.'  We show in the below examples how principal component analysis can derive a per-case tumor aggression metric.  
@@ -30,7 +30,7 @@ There are two high level approaches to measuring univariate cancer aggression.  
   | I | False | False | 0.0 | 
   <center>Per case tumor aggression derived from tumor stage, lymphatic invasion, and distance metastasis observations.  Note that aggression metrics are not necessarily normalized between 0 and 1.</center>  
 
-## Per feature tumor aggression
+## Per Feature tumor aggression
   Per-feature tumor aggression determines whether a given biological observation (or feature) is indicative of cancer aggression.  For example, the lack of expression of tumor suppressor gene P53 would  indicate a more aggressive tumor.  
   
   Per feature tumor aggression correlates a biological observation with each clinical endpoint.  These correlations are then combined into a single confidence value.  A biological feature that highly correlates with many clinical endpoints is concered an 'aggressive' feature.  In our P53 example we:
@@ -41,3 +41,15 @@ There are two high level approaches to measuring univariate cancer aggression.  
 4. Fuse the correlation values in 3 to form a single per feature tumor aggression metric
 
 The [cancer regulome](explorer.cancerregulome.org) uses per feature tumor aggression.  The cancer regulome correlates genetic features with 6 prognostic outcomes. These correlations are then "fused" via [Fishers Combined Statistic](https://en.wikipedia.org/wiki/Fisher%27s_method). Note that prognostic outcomes are highly correlated. The cancer regulome accounts for non-independence with more statistical methods.
+
+## Pros and Cons
+
+## Coding examples
+  In these examples we use a toy dataset for cancer aggression as derived below:
+  
+  ```scala
+  ```
+  
+### Per Case
+```scala
+```
