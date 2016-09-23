@@ -19,7 +19,9 @@ Analysis of cancer data frequently targets cancer aggression.  Researchers seek 
 There are two high level approaches to measuring univariate cancer aggression.  Univariate aggression is either measured on a per-case or on a per-feature basis. 
 
 ## Per case tumor aggression 
-  Per-case univariate aggression is conceptually simpler than per-biological feature.  In this model algorithms combine different prognostic features into a single numeric feature.  For example, a **feature reduction** algorithm could combine tumor stage and lymphatic invasion. The resulting global metric loses information, but is easier to analyze. Ultimately per case tumor aggression enables us to label a tumor as 'very aggressive' or 'not aggressive.'  We show in the below examples how principal component analysis can derive a per-case tumor aggression metric.  
+  Per-case univariate aggression is conceptually simpler than per-biological feature.  Algorithms combine different prognostic endpoints into a single numeric endpoint.  For example, a **feature reduction** algorithm could combine tumor stage and lymphatic invasion. The resulting global metric loses information, but is easier to analyze. 
+  
+  Ultimately per case tumor aggression enables us to label a tumor as 'very aggressive' or 'not aggressive.'  We show in the below examples how principal component analysis can derive a per-case tumor aggression metric.  
   
   | tumor stage | lymphatic invasion | distance metastasis | **tumor aggression** |
   |-------------|-------------|-------------|-------------|
