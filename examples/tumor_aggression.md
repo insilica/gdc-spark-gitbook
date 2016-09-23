@@ -1,5 +1,5 @@
 # Tumor Aggression
-  Cancer aggression describes cancer lethality, metastasis, growth velocity, and other prognostic features.  Aggression metrics include categorical, numeric and boolean features:
+  Cancer aggression describes cancer lethality, metastasis, growth velocity, and other prognostic endpoints.  Aggression metrics include categorical, numeric and boolean endpoints:
   
   1. **Tumor Stage:**  
   Categorical with least aggressive (1) to most aggressive (4).  Based on tumor location, size, lymph node involvement and distant metastasis (see [cancerstaging.org](https://cancerstaging.org/references-tools/Pages/What-is-Cancer-Staging.aspx)).
@@ -19,7 +19,7 @@ Analysis of cancer data frequently targets cancer aggression.  Researchers seek 
 There are two high level approaches to measuring univariate cancer aggression.  Univariate aggression is either measured on a per-case or on a per-feature basis. 
 
 ## Per case tumor aggression 
-  Per-case univariate aggression is conceptually simpler than per-biological feature.  In this model algorithms combine different prognostic features into a single numeric feature.  For example, a **feature reduction** could combine tumor stage and lymphatic invasion. The resulting global metric loses information, but is easier to analyze. Ultimately per case tumor aggression enables us to label a tumor as 'very aggressive' or 'not aggressive.'  We show in the below examples how principal component analysis can derive a per-case tumor aggression metric.  
+  Per-case univariate aggression is conceptually simpler than per-biological feature.  In this model algorithms combine different prognostic features into a single numeric feature.  For example, a **feature reduction** algorithm could combine tumor stage and lymphatic invasion. The resulting global metric loses information, but is easier to analyze. Ultimately per case tumor aggression enables us to label a tumor as 'very aggressive' or 'not aggressive.'  We show in the below examples how principal component analysis can derive a per-case tumor aggression metric.  
   
   | tumor stage | lymphatic invasion | distance metastasis | **tumor aggression** |
   |-------------|-------------|-------------|-------------|
@@ -29,4 +29,7 @@ There are two high level approaches to measuring univariate cancer aggression.  
   <center>Per case tumor aggression derived from tumor stage, lymphatic invasion, and distance metastasis observations.  Note that aggression metrics are not necessarily normalized between 0 and 1.</center>  
 
 ## Per feature tumor aggression
-  Per-feature tumor aggression determines whether a given biological observation (or feature) is indicative of cancer aggression.  
+  Per-feature tumor aggression determines whether a given biological observation (or feature) is indicative of cancer aggression.  For example, the lack of expression of tumor suppressor gene P53 would  indicate a more aggressive tumor.  Per feature tumor aggression correlates a biological observation with a clinical endpoint.   In this example we:
+
+1. Identify a biological expression type (expression of P53)
+2. 
