@@ -54,6 +54,9 @@ The [cancer regulome](explorer.cancerregulome.org) uses per feature tumor aggres
   
   | stage | lymphatic invasion | distant_metastasis | vascular_invasion | metastasis | percent_positive_lymph_nodes|
   |-------------|-------------|-------------|-------------|
+  | IV | True | True | False | True | 58% |
+  | III | False | True | False | True | 42% |
+  | II | True | True | True | False | 0% |
   
 ### Per Case
 ```scala
