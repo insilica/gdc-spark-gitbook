@@ -72,6 +72,8 @@ class Tumor_Aggression extends FlatSpec{
         this.vascular_invasion, this.lymphovascular_invasion, this.tumor_stage, this.metastasis)
     }
     
+    //columns 
+    
     def build() : Dataset[_] = {
       val query = Query()  //The query is our entry point.  It tells us what to get from gdc
         .withFilter { Filter.and(
@@ -84,6 +86,7 @@ class Tumor_Aggression extends FlatSpec{
     
   }
   ```
+  TODO come back and finish all of this!
   
   
   | stage | lymphatic invasion | distant_metastasis | vascular_invasion | metastasis | percent_positive_lymph_nodes|
