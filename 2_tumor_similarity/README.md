@@ -82,7 +82,14 @@ We now have gene variant expression data for 10 aliquots.  This expression data 
 We end our discussion of similarity metrics here but encourage the reader to read further.
 
 ## Pulling it together
-  We discussed how to build tumor fingerprints and how to calculate cosine similarity. The below example calculates aliquot-aliquot cosine similarity using fingerprints generated in {link this| todo}.
+  In the above sections we describe how to build a dataset containing rna-seq data for aliquots akin to:
+  
+  |aliquot_id|ensembl_id|fpkm|
+  |----------|----------|----|
+  |111-111-1|ENSG0001|3.2|
+  |111-111-1|ENSG0002|5.0|
+  |222-222-2|ENSG0001|3.2|
+  |222-222-2|ENSG0002|5.0|
 
 ```scala
   "RNA Datasets" should "allow tumor tumor similarity" in {
