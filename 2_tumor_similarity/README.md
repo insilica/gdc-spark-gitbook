@@ -63,7 +63,7 @@ This builder generates a table akin to Table 1. Entity_ids are tumor samples, en
 Table 1 represents a "long-form" dataset. For similarity purposes we would prefer to associate a 'fingerprint' vector with each aliquot. To do so we use the `SparseVectorAgg` aggregation function.  
 
 ###Sparse Vector Aggregation
-  To collect a sparse vector for each aliquot we create a **user defined aggregation function** or **UDAF** called `SparseVectorAgg`.  This aggregation function associates a sparse vector with each value in a grouped column:
+  To collect a sparse vector for each aliquot we create a **user defined aggregation function** or **UDAF** called `SparseVectorAgg`.  This aggregation function associates a sparse vector with each value in a grouped column.  We are going to re-use this dataset so we create it in a `DatasetBuilder`:
 
 ```scala
   "Tumor Similarity" should "build a sparse vector for each aliquot" in{
@@ -71,7 +71,7 @@ Table 1 represents a "long-form" dataset. For similarity purposes we would prefe
     val sampleRNA = SampleDataset.loadOrBuild() //load the sample dataset
 
     //build a map of entity_ids to a long identifier
-    val entityIdxMap : Map[String,Long] = sampleRNA.select(SD.ensembl_id)
+    val geneIdxMap : Map[String,Long] = sampleRNA.select(SD.ensembl_id)
       .distinct() //select distinct genes
       .rdd
       .zipWithIndex //associate a number with each gene
@@ -79,13 +79,17 @@ Table 1 represents a "long-form" dataset. For similarity purposes we would prefe
       .collect() //collect onto driver
       .toMap //build a map
 
-    val sva = new SparseVectorAgg(entityIdxMap) //initialize the sparse vector aggregator
+    val sva = new SparseVectorAgg(geneIdxMap) //initialize the sparse vector aggregator
 
-    //aggregate a new dataset
+    //aggregate sparse vectors for each aliquot
     sampleRNA
       .groupBy(SD.entity_id)
       .agg(sva(sampleRNA(SD.ensembl_id),sampleRNA(SD.fpkm)).as("ensembl_fingerprint"))
-      .show()
+      .show() //show the results
+
+    //print the first entry in the geneMap
+    val idxGeneMap = geneIdxMap.map{x => (x._2,x._1)}
+    print(s"gene map has size: ${geneIdxMap.size} the first value is ${idxGeneMap(0)}")
   }
 ```
 
@@ -105,7 +109,12 @@ These results show us that the aliquot 8af61a8a-17b0... has an **fpkm** value fo
 ###Coordinate Matrix
   Linear algebra is pervasive in bioinformatics.  It finds uses in feature generation/reduction (Principle Component Analysis, Singular Value Decomposition) and similarity analysis.  However, bioinformatics matrices can get very large. Wherever possible it is ideal to store matrices in a sparse and distributed manner.
   
-  Spark's coordinate matrices let us store sparse distributed data.  A `CoordinateMatrix` is really just a wrapper around an `RDD` filled with `MatrixEntry` values.  A `MatrixEntry` tells us the *value* associated with a given *row* and *column*.  If we do not have a `MatrixEntry` then the value is a default value, usually 0, for the given row and column.  It is relatively simple to 
+  Spark's coordinate matrices let us store sparse distributed data.  A `CoordinateMatrix` is really just a wrapper around an `RDD` filled with `MatrixEntry` values.  A `MatrixEntry` tells us the *value* associated with a given *row* and *column*.  If a row/column does not have a `MatrixEntry` then the value, usually 0, is a default value.  
+  
+  Since we are going to re-use this distributed matrix we create a dataset-builder for it:
+  
+  ```scala
+  ```
 
 To achieve this goal we will create a new `DatasetBuilder` that modifies the `SampleDataset` dataset builder. First we ne
 ```scala
