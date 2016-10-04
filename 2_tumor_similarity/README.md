@@ -60,7 +60,35 @@ This builder generates a table akin to Table 1. Entity_ids are tumor samples, en
 }
 ```
 
-Table 1 represents a "long-form" dataset. For similarity purposes we would prefer to associate a 'fingerprint' vector with each aliquot:
+Table 1 represents a "long-form" dataset. For similarity purposes we would prefer to associate a 'fingerprint' vector with each aliquot. To achieve this goal we will create a new `DatasetBuilder` that modifies the `SampleDataset` dataset builder.
+```scala
+  object FingerprintDataset extends DatasetBuilder{
+    override def name: String = "Tumor_Similarity.FingerprintDataset"
+
+    //import columns from sample dataset to guarantee namespace agreement
+    import SampleDataset.{columns => SD}
+
+    //define column namespace for easy reference
+    object columns{
+      val entity_id = SD.entity_id
+      val fingerprint = "fingerprint"
+      def apply() = List(entity_id,fingerprint)
+    }
+
+  //we define this in the next section
+  override protected def build()(implicit se: SparkEnvironment): Dataset[_] = ???
+}
+```
+This fingerprint vector may contain ensembl_ids for which there were zero reads.  We can represent a vector with zero-reads more compactly as a sparse-vector.  
+
+###Sparse Vector Aggregation
+  To collect a sparse vector for each aliquot we create a **user defined aggregation function** or **UDAF** called `SparseVectorAgg`.  This aggregation function requires reference to a map from feature names to a `Long` identifier. The feature `Long` identifier tells the aggregation function where to place the feature in the vector.  In our example we will treat features as the aliquot_ids.  
+  
+```scala
+```
+  <center> Initialize a sparse vector aggregation for each aliquot </center>
+  
+  the length of the vector to associate with each aliquot.  This length is equal to the number of genes in our dataset:
 
 ```scala
 
