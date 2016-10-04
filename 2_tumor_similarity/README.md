@@ -59,7 +59,14 @@ This builder generates a table akin to Table 1. Entity_ids are tumor samples, en
     .show()
 }
 ```
-We can quickly reload this dataset from file via:
+
+Table 1 represents a "long-form" dataset. For similarity purposes we would prefer to associate a 'fingerprint' vector with each aliquot:
+
+```scala
+
+```
+
+We can reload this dataset from file via:
 ```scala
 "Tumor Similarity" should "load sample dataset" in {
   SampleDataset
