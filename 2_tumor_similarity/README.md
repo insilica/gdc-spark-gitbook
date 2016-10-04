@@ -69,8 +69,14 @@ Table 1 represents a "long-form" dataset. For similarity purposes we would prefe
   object TumorSimilarityBuilder extends DatasetBuilder{
 
     override def name: String = "Tumor_Similarity_Builder"
+    import SampleDataset.{columns=>SD} //import sampledataset column namespace
 
-    import SampleDataset.{columns=>SD}
+    //define and import TumorSimilarityBuilder column namespace
+    object columns{
+      val ensembl_id = SD.ensembl_id
+      val ensembl_fp = "ensembl_fingerprint"
+    }
+    import columns._
 
     //build a map to define each gene index in the aggregated sparse vectors
     def buildGeneIdxMap() : Map[String,Long] = {
@@ -85,18 +91,21 @@ Table 1 represents a "long-form" dataset. For similarity purposes we would prefe
     }
 
     override protected def build()(implicit se: SparkEnvironment): Dataset[_] = {
-
       val sampleRNA = SampleDataset.loadOrBuild() //load the sample dataset
       val geneIdxMap : Map[String,Long] = buildGeneIdxMap()
       val sva = new SparseVectorAgg(geneIdxMap) //initialize the sparse vector aggregator
       sampleRNA //aggregate sparse vectors for each aliquot
         .groupBy(SD.entity_id)
-        .agg(sva(sampleRNA(SD.ensembl_id),sampleRNA(SD.fpkm)).as("ensembl_fingerprint"))
+        .agg(sva(sampleRNA(SD.ensembl_id),sampleRNA(SD.fpkm)).as(ensembl_fp))
     }
 
     def aliquotGeneMatrix() : CoordinateMatrix = ??? //next section
   }
+```
 
+Note the line `val sva = new SparseVectorAgg(geneIdxMap)` requires reference to a map from gene ensembl_ids to a number.  This map tells SparseVectorAgg where to put each feature in the aggregated vector.  
+
+```scala
   "Tumor Similarity" should "build a sparse vector for each aliquot" in{
     TumorSimilarityBuilder
       .loadOrBuild()
@@ -108,8 +117,6 @@ Table 1 represents a "long-form" dataset. For similarity purposes we would prefe
   }
 ```
 
-You will note the line `val sva = new SparseVectorAgg(entityIdxMap)` requires reference to a map from gene ensembl_ids to a number.  This map tells SparseVectorAgg where to put each feature in the aggregated vector.  
-
 This test results in:
 
 |entity_id|ensembl_fingerprint|
@@ -117,9 +124,9 @@ This test results in:
 |8af61a8a-17b0-402...|(60488,[54852,171...|
 |ba2ba71d-2d57-415...|(60488,[18433,108...|
 |17d328ce-367a-47c...|(60488,[30724,180...|
-```gene map has size 60488. the first value is ...```
+```gene map has size: 60488 the first value is ENSG00000212206.1```
 
-These results show us that the aliquot 8af61a8a-17b0... has an **fpkm** value for of 54852.  To start working with similarity approaches we will want to build a `Matrix`
+These results show us that the aliquot `8af61a8a-17b0...` has an **fpkm** value for of `54852`.  To start working with similarity approaches we will want to build a `Matrix`
 
 ###Coordinate Matrix
   Linear algebra is pervasive in bioinformatics.  It finds uses in feature generation/reduction (Principle Component Analysis, Singular Value Decomposition) and similarity analysis.  However, bioinformatics matrices can get very large. Wherever possible it is ideal to store matrices in a sparse and distributed manner.
