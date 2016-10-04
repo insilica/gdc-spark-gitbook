@@ -1,4 +1,4 @@
-# RNA-Sequencing and Sample Similarity
+# Tumor Similarity
   Tumor similarity is an important method to enable data exploration and model creation. Similarity models rely on two components **fingerprinting** and **similarity metric**
   
   ## Tumor Fingerprinting
@@ -92,7 +92,7 @@ We end our discussion of similarity metrics here but encourage the reader to rea
   |222-222-2|ENSG0002|5.0|
   <center> Long-form dataset for rna-seq files from the genomic data commons</center>
 
-We can transform these kinds of datasets into a 'wide form.' Wide form datasets enable easier calculation 
+To start performing similarity analyses we need to build a feature matrix.  In this matrix each row represents an ensembl_id and each column an aliquot_id.  Cell values are the FPKM values for each aliquot-ensembl identifier pair.  
 
 ```scala
   "RNA Datasets" should "allow tumor tumor similarity" in {
