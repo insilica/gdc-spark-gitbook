@@ -60,7 +60,54 @@ This builder generates a table akin to Table 1. Entity_ids are tumor samples, en
 }
 ```
 
-Table 1 represents a "long-form" dataset. For similarity purposes we would prefer to associate a 'fingerprint' vector with each aliquot. To achieve this goal we will create a new `DatasetBuilder` that modifies the `SampleDataset` dataset builder.
+Table 1 represents a "long-form" dataset. For similarity purposes we would prefer to associate a 'fingerprint' vector with each aliquot. To do so we use the `SparseVectorAgg` aggregation function.  
+
+###Sparse Vector Aggregation
+  To collect a sparse vector for each aliquot we create a **user defined aggregation function** or **UDAF** called `SparseVectorAgg`.  This aggregation function associates a sparse vector with each value in a grouped column:
+
+```scala
+  "Tumor Similarity" should "build a sparse vector for each aliquot" in{
+    import SampleDataset.{columns=>SD}
+    val sampleRNA = SampleDataset.loadOrBuild() //load the sample dataset
+
+    //build a map of entity_ids to a long identifier
+    val entityIdxMap : Map[String,Long] = sampleRNA.select(SD.ensembl_id)
+      .distinct() //select distinct genes
+      .rdd
+      .zipWithIndex //associate a number with each gene
+      .map{ case (Row(entity:String),idx:Long) => (entity,idx) }
+      .collect() //collect onto driver
+      .toMap //build a map
+
+    val sva = new SparseVectorAgg(entityIdxMap) //initialize the sparse vector aggregator
+
+    //aggregate a new dataset
+    sampleRNA
+      .groupBy(SD.entity_id)
+      .agg(sva(sampleRNA(SD.ensembl_id),sampleRNA(SD.fpkm)).as("ensembl_fingerprint"))
+      .show()
+  }
+```
+
+You will note the line `val sva = new SparseVectorAgg(entityIdxMap)` requires reference to a map from gene ensembl_ids to a number.  This map tells SparseVectorAgg where to put each feature in the aggregated vector.  
+
+This test results in:
+
+|entity_id|ensembl_fingerprint|
+|---------|-------------------|
+|8af61a8a-17b0-402...|(60488,[54852,171...|
+|ba2ba71d-2d57-415...|(60488,[18433,108...|
+|17d328ce-367a-47c...|(60488,[30724,180...|
+```gene map has size 60488. the first value is ...```
+
+These results show us that the aliquot 8af61a8a-17b0... has an **fpkm** value for of 54852.  To start working with similarity approaches we will want to build a `Matrix`
+
+###Coordinate Matrix
+  Linear algebra is pervasive in bioinformatics.  It finds uses in feature generation/reduction (Principle Component Analysis, Singular Value Decomposition) and similarity analysis.  However, bioinformatics matrices can get very large. Wherever possible it is ideal to store matrices in a sparse and distributed manner.
+  
+  Spark's coordinate matrices let us store sparse distributed data.  A `CoordinateMatrix` is really just a wrapper around an `RDD` filled with `MatrixEntry` values.  A `MatrixEntry` tells us the *value* associated with a given *row* and *column*.  If we do not have a `MatrixEntry` then the value is a default value, usually 0, for the given row and column.  It is relatively simple to 
+
+To achieve this goal we will create a new `DatasetBuilder` that modifies the `SampleDataset` dataset builder. First we ne
 ```scala
   object FingerprintDataset extends DatasetBuilder{
     override def name: String = "Tumor_Similarity.FingerprintDataset"
@@ -79,12 +126,17 @@ Table 1 represents a "long-form" dataset. For similarity purposes we would prefe
   override protected def build()(implicit se: SparkEnvironment): Dataset[_] = ???
 }
 ```
+<center>Fingerprint Dataset Builder</center>
+
 This fingerprint vector may contain ensembl_ids for which there were zero reads.  We can represent a vector with zero-reads more compactly as a sparse-vector.  
 
-###Sparse Vector Aggregation
-  To collect a sparse vector for each aliquot we create a **user defined aggregation function** or **UDAF** called `SparseVectorAgg`.  This aggregation function requires reference to a map from feature names to a `Long` identifier. The feature `Long` identifier tells the aggregation function where to place the feature in the vector.  In our example we will treat features as the aliquot_ids.  
+
+  requires reference to a map from feature names to an identifier. This map tells the aggregator where to place each feature in the vector.  
+
   
 ```scala
+//implementation of build function for FingerprintDataset
+def build()
 ```
   <center> Initialize a sparse vector aggregation for each aliquot </center>
   
