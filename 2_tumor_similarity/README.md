@@ -1,5 +1,5 @@
 # Tumor Similarity
-  Tumor similarity is an important method to enable data exploration and model creation. Similarity models rely on two components **fingerprinting** and **similarity metric**
+  Tumor similarity is an important method to enable data exploration and model creation. Similarity models rely on two components **fingerprints** and **similarity metrics**. 
   
   ## Tumor Fingerprinting
  **Tumor fingerprinting** is the creation of numeric vectors from tumor samples. Biological assays exist to measure diverse tumor and normal tissue features.  Here we will focus on rna-sequencing as a method to estimate protein expression.
@@ -13,7 +13,7 @@
 
 The below code shows how to build an RNA Dataset like the above for ten tumor aliquots:
 ```scala
-"RNA Datasets" should "build from gdc-core" in {
+"Tumor Similarity" should "build from gdc-core" in {
   import co.insilica.gdc.query.{Filter, Operators, Query}
   import co.insilica.gdcSpark.builders.{CaseFileEntityBuilder,CaseFileEntity}
   import co.insilica.gdcSpark.transformers.rna.EntityRNATransformer
