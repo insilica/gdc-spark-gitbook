@@ -99,7 +99,7 @@ Table 1 represents a "long-form" dataset. For similarity purposes we would prefe
         .agg(sva(sampleRNA(SD.ensembl_id),sampleRNA(SD.fpkm)).as(ensembl_fp))
     }
 
-    def aliquotGeneMatrix() : CoordinateMatrix = ??? //next section
+    def buildAliquotGeneMatrix() : CoordinateMatrix  = ??? //next section
   }
 ```
 
@@ -117,7 +117,7 @@ Note the line `val sva = new SparseVectorAgg(geneIdxMap)` requires reference to 
   }
 ```
 
-This test results in:
+This test gives:
 
 |entity_id|ensembl_fingerprint|
 |---------|-------------------|
@@ -126,18 +126,60 @@ This test results in:
 |17d328ce-367a-47c...|(60488,[30724,180...|
 ```gene map has size: 60488 the first value is ENSG00000212206.1```
 
-These results show us that the aliquot `8af61a8a-17b0...` has an **fpkm** value for of `54852`.  To start working with similarity approaches we will want to build a `Matrix`
+These results show us that the aliquot `8af61a8a-17b0...` has an **fpkm** value for of `54852` for [ENSG00000212206.1](http://useast.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000212206;r=17:8329583-8329719;t=ENST00000390904) which happens to be a small nucleolar rna.  To start working with similarity approaches we will want to build a `Matrix`. In the next section we complete the `TumorSimilarityBuilder`.
 
 ###Coordinate Matrix
   Linear algebra is pervasive in bioinformatics.  It finds uses in feature generation/reduction (Principle Component Analysis, Singular Value Decomposition) and similarity analysis.  However, bioinformatics matrices can get very large. Wherever possible it is ideal to store matrices in a sparse and distributed manner.
   
   Spark's coordinate matrices let us store sparse distributed data.  A `CoordinateMatrix` is really just a wrapper around an `RDD` filled with `MatrixEntry` values.  A `MatrixEntry` tells us the *value* associated with a given *row* and *column*.  If a row/column does not have a `MatrixEntry` then the value, usually 0, is a default value.  
   
-  Since we are going to re-use this distributed matrix we create a dataset-builder for it:
+  We complete the `def buildAliquotGeneMatrix() : CoordinateMatrix` function defined in `TumorSimilarityBuilder` below:
   
   ```scala
-  ```
+  object TumorSimilarityBuilder extends DatasetBuilder{
+  
+  //... see previous example for other code in object
+  
+    /**
+      * build a map from aliquotIds to index
+      * This allows us to find the aliquot represented by each row in the coordinate matrix.
+      */    
+    def buildAliquotIdxMap() : Map[String,Long] = {
+      val sampleRNA = SampleDataset.loadOrBuild() //load the sample dataset
+      sampleRNA.select(SD.entity_id)
+        .rdd
+        .zipWithIndex //associate a number with each gene
+        .map{ case (Row(entity:String),idx:Long) => (entity,idx) }
+        .collect() //collect onto driver
+        .toMap //build a map
+    }
+    
+    /**
+      * Returns a coordinate matrix where:
+      * rows: aliquot_ids 
+      * columns: ensembl_ids
+      * values: fpkm for an aliquot_ensembl identifier pair
+      */
+    def buildAliquotGeneMatrix() : CoordinateMatrix = {
+      val matrixEntries : RDD[MatrixEntry] = this
+        .loadOrBuild()
+        .rdd
+        .zipWithIndex
+        .flatMap{ case (Row(entity:String,ensembl_fingerprint:SparseVector),i) =>
+            ensembl_fingerprint.indices.map{ j => MatrixEntry(i,j,ensembl_fingerprint(j))}
+        }
 
+      new CoordinateMatrix(matrixEntries)
+    }
+  }
+  ```
+  <center> Demonstrate how to build a sparse distributed matrix `CoordinateMatrix` </center>
+
+Now that we can build sparse distributed matrices, we can do some similarity calculations.  Fortunately, spark provides a built in similarity function.  This function operates on rows, so we need to transpose our matrix first:
+
+```scala
+
+```
 To achieve this goal we will create a new `DatasetBuilder` that modifies the `SampleDataset` dataset builder. First we ne
 ```scala
   object FingerprintDataset extends DatasetBuilder{
