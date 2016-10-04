@@ -22,12 +22,43 @@ class Tumor_Similarity extends FlatSpec{
 | -- | -- | -- | -- | -- |
 | c30ce88d-5dff-450... | ENSG00000200842.1 | 0.0 | 
 | c30ce88d-5dff-450... | ENSG00000240097.1 | 0.23133 | 
+<center>Table 1 </center>
 
-
-The below code shows how to build an RNA Dataset like the above for ten tumor aliquots:
+For our example we will create a `DatasetBuilder` that builds a ten sample spark `Dataset`:
 ```scala
 //Build a 10 sample dataset
+object SampleDataset extends DatasetBuilder{
 
+  override def name: String = "Tumor_Similarity.Dataset"
+
+  override protected def build()(implicit se: SparkEnvironment): Dataset[_] = {
+
+    val query = Query().withFilter {
+      Filter.and(
+        Filter(Operators.eq, key="experimental_strategy", value="RNA-Seq"),
+        Filter(Operators.eq, key="access", value="open")
+      )
+    }
+
+    CaseFileEntityBuilder(query) //enumerates case, file and aliquot ids
+      .withLimit(10) //limits to 10 examples
+      .build()
+      .transform{ FileRNATransformer() //transforms into rna-seq data
+        .withFileId(CaseFileEntityBuilder.columns.fileId)
+        .transform
+      }.select(columns.entity_id,columns.ensembl_id,columns.fpkm)
+  }
+}
+```
+This builder generates a table akin to Table 1. Entity_ids are tumor samples, ensembl_id identifies genes and fpkm quantifies expression.  To build and store this dataset we write a test:
+
+```scala
+"Tumor Similarity" should "build a simple dataset" in {
+  SampleDataset
+    .buildThenCache(org.apache.spark.sql.SaveMode.Overwrite)
+    .show()
+}
+```
 
   //build a query for open access RNA-Seq files
   val query = Query().withFilter {
