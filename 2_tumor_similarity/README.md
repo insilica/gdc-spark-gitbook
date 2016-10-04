@@ -59,6 +59,14 @@ This builder generates a table akin to Table 1. Entity_ids are tumor samples, en
     .show()
 }
 ```
+We can quickly reload this dataset from file via:
+```scala
+"Tumor Similarity" should "load sample dataset" in {
+  SampleDataset
+    .loadOrBuild()
+    .show()
+}
+```
 
   //build a query for open access RNA-Seq files
   val query = Query().withFilter {
