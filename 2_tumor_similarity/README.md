@@ -1,6 +1,18 @@
 # Tumor Similarity
   Tumor similarity is an important method to enable data exploration and model creation. Similarity models rely on two components **fingerprints** and **similarity metrics**. 
   
+  The code in this section is on bitbucket (TODO link) and makes up a FlatSpec class in scala:
+  
+  ```scala
+class Tumor_Similarity extends FlatSpec{
+  import co.insilica.gdc.query.{Filter, Operators, Query}
+  import co.insilica.gdcSpark.builders.{CaseFileEntityBuilder,CaseFileEntity}
+  import co.insilica.gdcSpark.transformers.rna.FileRNATransformer
+  import co.insilica.spark.udaf.SparseVectorAgg
+
+  //following examples start here...
+  ```
+  
   ## Tumor Fingerprinting
  **Tumor fingerprinting** is the creation of numeric vectors from tumor samples. Biological assays exist to measure diverse tumor and normal tissue features.  Here we will focus on rna-sequencing as a method to estimate protein expression.
   
@@ -11,17 +23,11 @@
 | c30ce88d-5dff-450... | ENSG00000200842.1 | 0.0 | 
 | c30ce88d-5dff-450... | ENSG00000240097.1 | 0.23133 | 
 
+
 The below code shows how to build an RNA Dataset like the above for ten tumor aliquots:
 ```scala
-"Tumor Similarity" should "build from gdc-core" in {
-  import co.insilica.gdc.query.{Filter, Operators, Query}
-  import co.insilica.gdcSpark.builders.{CaseFileEntityBuilder,CaseFileEntity}
-  import co.insilica.gdcSpark.transformers.rna.EntityRNATransformer
-  import org.json4s.JString
+//Build a 10 sample dataset
 
-  implicit val executionContex = scala.concurrent.ExecutionContext.Implicits.global
-  implicit val sparkSession = co.insilica.spark.SparkEnvironment.local.sparkSession
-  implicit val gdcContext = co.insilica.gdc.GDCContext.default
 
   //build a query for open access RNA-Seq files
   val query = Query().withFilter {
