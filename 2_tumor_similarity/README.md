@@ -81,7 +81,7 @@ We now have gene variant expression data for 10 aliquots.  This expression data 
 
 We end our discussion of similarity metrics here but encourage the reader to read further.
 
-## Pulling it together
+## A Pivot
   In the above sections we describe how to build a dataset containing rna-seq data for aliquots akin to:
   
   |aliquot_id|ensembl_id|fpkm|
@@ -90,6 +90,9 @@ We end our discussion of similarity metrics here but encourage the reader to rea
   |111-111-1|ENSG0002|5.0|
   |222-222-2|ENSG0001|3.2|
   |222-222-2|ENSG0002|5.0|
+  <center> Long-form dataset for rna-seq files from the genomic data commons</center>
+
+We can transform these kinds of datasets into a 'wide form.' Wide form datasets enable easier calculation 
 
 ```scala
   "RNA Datasets" should "allow tumor tumor similarity" in {
