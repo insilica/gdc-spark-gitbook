@@ -66,37 +66,37 @@ Table 1 represents a "long-form" dataset. For similarity purposes we would prefe
   To collect a sparse vector for each aliquot we create a **user defined aggregation function** or **UDAF** called `SparseVectorAgg`.  This aggregation function associates a sparse vector with each value in a grouped column.  We are going to re-use this dataset so we create it in a `DatasetBuilder`:
 
 ```scala
-  object TumorSimilarityBuilder extends DatasetBuilder{
-    override def name: String = "Tumor_Similarity_Builder"
-    import SampleDataset.{columns=>SD} //import sampledataset column namespace
-    object columns{
-      val ensembl_id = SD.ensembl_id
-      val ensembl_fp = "ensembl_fingerprint"
-    }
-    import columns._
-
-    //build a map to define each gene index in the aggregated sparse vectors
-    def buildGeneIdxMap() : Map[String,Long] = SampleDataset
-      .loadOrBuild() //load the sample dataset
-      .select(SD.ensembl_id)
-      .distinct() //select distinct genes
-      .rdd
-      .zipWithIndex //associate a number with each gene
-      .map{ case (Row(entity:String),idx:Long) => (entity,idx) }
-      .collect() //collect onto driver
-      .toMap //build a map
-   
-   override protected def build()(implicit se: SparkEnvironment): Dataset[_] = {
-      val sampleRNA = SampleDataset.loadOrBuild() //load the sample dataset
-      val geneIdxMap : Map[String,Long] = buildGeneIdxMap()
-      val sva = new SparseVectorAgg(geneIdxMap) //initialize the sparse vector aggregator
-      sampleRNA //aggregate sparse vectors for each aliquot
-        .groupBy(SD.entity_id)
-        .agg(sva(sampleRNA(SD.ensembl_id),sampleRNA(SD.fpkm)).as(ensembl_fp))
-        .sort(SD.entity_id)
-    }
-    def buildAliquotGeneMatrix() : CoordinateMatrix  = ??? //next section
+object TumorSimilarityBuilder extends DatasetBuilder{
+  override def name: String = "Tumor_Similarity_Builder"
+  import SampleDataset.{columns=>SD} //import sampledataset column namespace
+  object columns{
+    val ensembl_id = SD.ensembl_id
+    val ensembl_fp = "ensembl_fingerprint"
   }
+  import columns._
+
+  //build a map to define each gene index in the aggregated sparse vectors
+  def buildGeneIdxMap() : Map[String,Long] = SampleDataset
+    .loadOrBuild() //load the sample dataset
+    .select(SD.ensembl_id)
+    .distinct() //select distinct genes
+    .rdd
+    .zipWithIndex //associate a number with each gene
+    .map{ case (Row(entity:String),idx:Long) => (entity,idx) }
+    .collect() //collect onto driver
+    .toMap //build a map
+
+ override protected def build()(implicit se: SparkEnvironment): Dataset[_] = {
+    val sampleRNA = SampleDataset.loadOrBuild() //load the sample dataset
+    val geneIdxMap : Map[String,Long] = buildGeneIdxMap()
+    val sva = new SparseVectorAgg(geneIdxMap) //initialize the sparse vector aggregator
+    sampleRNA //aggregate sparse vectors for each aliquot
+      .groupBy(SD.entity_id)
+      .agg(sva(sampleRNA(SD.ensembl_id),sampleRNA(SD.fpkm)).as(ensembl_fp))
+      .sort(SD.entity_id)
+  }
+  def buildAliquotGeneMatrix() : CoordinateMatrix  = ??? //next section
+}
 ```
 
 Note the line `val sva = new SparseVectorAgg(geneIdxMap)` requires reference to a map from gene ensembl_ids to a number.  This map tells SparseVectorAgg where to put each feature in the aggregated vector.  
