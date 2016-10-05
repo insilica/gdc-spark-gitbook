@@ -199,4 +199,4 @@ Associated with cervical squamous cell carcinoma case [1636242c-12da-412e-a362-9
 2. **ba2ba71d-2d57-4154-a712-84a3ef19247d**:  
 Associated with skin cutaneous melanoma case [2e0f7da5-9078-4c7f-b074-565246529a83](https://gdc-portal.nci.nih.gov/cases/2e0f7da5-9078-4c7f-b074-565246529a83)
 
-This illustrates that additional steps are necessary before aliquot similarities are likely to be predictive of shared clinical or phenotypic features. 
+This illustrates that additional steps are necessary before aliquot similarities are likely to be predictive of shared clinical or phenotypic features. We go into those steps in [Advanced Tumor Similarity](/2_tumor_similarity/advanced.md)
