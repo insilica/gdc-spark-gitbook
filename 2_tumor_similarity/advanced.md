@@ -1,6 +1,8 @@
 # Advanced Tumor Similarity
   The [first section](/README.md) of this chapter illustrates the naivety of the basic approach to tumor similarity.  The highest ranked pair of tumors are not the same kind of cancer or even the same tissue type.  The next sections describe a variety of methods to improve rna-seq based tumor similarity.
   
+## Normalization
+  
   Spark uses cosine similarity to calculate vector - vector similarity:
   
   $$sim(A,B) = \dfrac{\|A \cdot B||}{||A||\times||B||}$$
