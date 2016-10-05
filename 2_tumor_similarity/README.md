@@ -165,11 +165,35 @@ These results show us that the aliquot `8af61a8a-17b0...` has an **fpkm** value 
   ```
   <center> Demonstrate how to build a sparse distributed matrix `CoordinateMatrix` </center>
 
-Now that we can build sparse distributed matrices, we can do some similarity calculations.  Fortunately, spark provides a built in similarity function.  This function operates on rows, so we need to transpose our matrix first:
+Now that we can build sparse distributed matrices, we can do some similarity calculations.  Fortunately, spark provides a built in similarity function.  This function operates on columns, so we need to transpose our matrix first:
 
 ```scala
+"Tumor Similarity" should "demonstrate aliquot-aliquot similarity" in {
+  val similarityMatrix = TumorSimilarityBuilder
+    .buildAliquotGeneMatrix()
+    .transpose() //aliquotGeneMatrix has genes in columns we want aliquots in columns
+    .toIndexedRowMatrix() // CoordinateMatrices cannot do similarity so we transform
+    .columnSimilarities() // build aliquot-aliquot similarity
 
+  //reverse the aliquotIdx map so we can map row indices to aliquots
+  val rowToAliquotMap = TumorSimilarityBuilder.buildAliquotIdxMap().map{ x => (x._2,x._1)}
+  val aliquotLookup = udf{ x : Long => rowToAliquotMap(x)}
+
+  similarityMatrix.entries.toDF("aliquot_i","aliquot_j","value")
+    .withColumn("aliquot_i",aliquotLookup($"aliquot_i")) //look up aliquot ids for 1st aliquot index
+    .withColumn("aliquot_j",aliquotLookup($"aliquot_j")) //look up aliquot ids for 2nd aliquot index
+    .sort($"value".desc)
+    .show(truncate=false)
+}
 ```
+This test prints:
+
+|aliquot_i|aliquot_j|similarity|
+|---------|---------|----------|
+|9ecc833d-b92d-474a-a981-d6e0c12292e0|ba2ba71d-2d57-4154-a712-84a3ef19247d|0.9907634886968388|
+|07215ddc-3201-5eac-ba1c-5e834b4bbf81|6deb1bf0-273a-47ba-9698-3d38ab05f02c|0.9495898788486178|
+|07215ddc-3201-5eac-ba1c-5e834b4bbf81|5cf30542-0745-4cd5-9193-14ef995218b9|0.9466598114076444|
+
 To achieve this goal we will create a new `DatasetBuilder` that modifies the `SampleDataset` dataset builder. First we ne
 ```scala
   object FingerprintDataset extends DatasetBuilder{
