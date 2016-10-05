@@ -196,21 +196,21 @@ This test prints:
 
 To achieve this goal we will create a new `DatasetBuilder` that modifies the `SampleDataset` dataset builder. First we ne
 ```scala
-  object FingerprintDataset extends DatasetBuilder{
-    override def name: String = "Tumor_Similarity.FingerprintDataset"
+object FingerprintDataset extends DatasetBuilder{
+  override def name: String = "Tumor_Similarity.FingerprintDataset"
 
-    //import columns from sample dataset to guarantee namespace agreement
-    import SampleDataset.{columns => SD}
+  //import columns from sample dataset to guarantee namespace agreement
+  import SampleDataset.{columns => SD}
 
-    //define column namespace for easy reference
-    object columns{
-      val entity_id = SD.entity_id
-      val fingerprint = "fingerprint"
-      def apply() = List(entity_id,fingerprint)
-    }
+  //define column namespace for easy reference
+  object columns{
+    val entity_id = SD.entity_id
+    val fingerprint = "fingerprint"
+    def apply() = List(entity_id,fingerprint)
+  }
 
-  //we define this in the next section
-  override protected def build()(implicit se: SparkEnvironment): Dataset[_] = ???
+//we define this in the next section
+override protected def build()(implicit se: SparkEnvironment): Dataset[_] = ???
 }
 ```
 <center>Fingerprint Dataset Builder</center>
