@@ -16,4 +16,4 @@
 ```
 
 ## Correcting for Normal Samples
-  Unsupervised machine learning methods do not fit models to a classification endpoint. Similarity methods fall under unsupervised machine learning.   
+  Unsupervised machine learning methods do not fit models to a classification endpoint. Similarity methods fall under unsupervised machine learning since they do not fit for a specific clinical or biological endpoint.  
