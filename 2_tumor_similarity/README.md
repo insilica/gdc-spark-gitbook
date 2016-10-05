@@ -102,15 +102,15 @@ object TumorSimilarityBuilder extends DatasetBuilder{
 Note the line `val sva = new SparseVectorAgg(geneIdxMap)` requires reference to a map from gene ensembl_ids to a number.  This map tells SparseVectorAgg where to put each feature in the aggregated vector.  
 
 ```scala
-  "Tumor Similarity" should "build a sparse vector for each aliquot" in{
-    TumorSimilarityBuilder
-      .loadOrBuild()
-      .show() //show the results
+"Tumor Similarity" should "build a sparse vector for each aliquot" in{
+  TumorSimilarityBuilder
+    .loadOrBuild()
+    .show() //show the results
 
-    //print the first entry in the geneMap
-    val idxGeneMap = TumorSimilarityBuilder.buildGeneIdxMap().map{x => (x._2,x._1)}
-    print(s"gene map has size: ${idxGeneMap.size} the first value is ${idxGeneMap(0)}")
-  }
+  //print the first entry in the geneMap
+  val idxGeneMap = TumorSimilarityBuilder.buildGeneIdxMap().map{x => (x._2,x._1)}
+  print(s"gene map has size: ${idxGeneMap.size} the first value is ${idxGeneMap(0)}")
+}
 ```
 
 This test gives:
@@ -122,7 +122,7 @@ This test gives:
 |17d328ce-367a-47c...|(60488,[30724,180...|
 ```gene map has size: 60488 the first value is ENSG00000212206.1```
 
-These results show us that the aliquot `8af61a8a-17b0...` has an **fpkm** value for of `54852` for [ENSG00000212206.1](http://useast.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000212206;r=17:8329583-8329719;t=ENST00000390904) which happens to be a small nucleolar rna.  To start working with similarity approaches we will want to build a `Matrix`. In the next section we complete the `TumorSimilarityBuilder`.
+These results show us a sparse vector for each entity_id. The 0th index gene in each sparse vector is [ENSG00000212206.1](http://useast.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000212206;r=17:8329583-8329719;t=ENST00000390904) which happens to be a small nucleolar rna.  To start working with similarity approaches we will want to build a `Matrix`. In the next section we complete the `TumorSimilarityBuilder`.
 
 ###Coordinate Matrix
   Linear algebra is pervasive in bioinformatics.  It finds uses in feature generation/reduction (Principle Component Analysis, Singular Value Decomposition) and similarity analysis.  However, bioinformatics matrices can get very large. Wherever possible it is ideal to store matrices in a sparse and distributed manner.
