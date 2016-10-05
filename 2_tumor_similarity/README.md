@@ -132,36 +132,36 @@ These results show us a sparse vector for each entity_id. The 0th index gene in 
   We complete the `def buildAliquotGeneMatrix() : CoordinateMatrix` function defined in `TumorSimilarityBuilder` below:
   
   ```scala
-  object TumorSimilarityBuilder extends DatasetBuilder{
-    // see previous example for other code in object  
-    /**
-      * build a map from aliquotIds to index
-      * This allows us to find the aliquot represented by each row in the coordinate matrix.
-      */
-    def buildAliquotIdxMap() : Map[String,Long] = SampleDataset
-      .loadOrBuild() //load the sample dataset
-      .select(SD.entity_id)
-      .distinct()
-      .sort(SD.entity_id)
+object TumorSimilarityBuilder extends DatasetBuilder{
+  // see previous example for other code in object  
+  /**
+    * build a map from aliquotIds to index
+    * This allows us to find the aliquot represented by each row in the coordinate matrix.
+    */
+  def buildAliquotIdxMap() : Map[String,Long] = SampleDataset
+    .loadOrBuild() //load the sample dataset
+    .select(SD.entity_id)
+    .distinct()
+    .sort(SD.entity_id)
+    .rdd
+    .zipWithIndex //associate a number with each gene
+    .map{ case (Row(entity:String),idx:Long) => (entity,idx) }
+    .collect() //collect onto driver
+    .toMap //build a map
+
+  /** makes coordinate matrix. rows = aliquot_ids, cols = ensembl_ids, values = fpkm */
+  def buildAliquotGeneMatrix() : CoordinateMatrix = {
+    val matrixEntries : RDD[MatrixEntry] = this
+      .loadOrBuild()
       .rdd
-      .zipWithIndex //associate a number with each gene
-      .map{ case (Row(entity:String),idx:Long) => (entity,idx) }
-      .collect() //collect onto driver
-      .toMap //build a map
-    
-    /** makes coordinate matrix. rows = aliquot_ids, cols = ensembl_ids, values = fpkm */
-    def buildAliquotGeneMatrix() : CoordinateMatrix = {
-      val matrixEntries : RDD[MatrixEntry] = this
-        .loadOrBuild()
-        .rdd
-        .zipWithIndex
-        .flatMap{ case (Row(entity:String,ensembl_fingerprint:SparseVector),i) =>
-            ensembl_fingerprint.toArray.zipWithIndex.filter{ _._1 != 0 }
-              .map{ case (value,j) => MatrixEntry(i,j,value)}
-        }
-      new CoordinateMatrix(matrixEntries)
-    }
+      .zipWithIndex
+      .flatMap{ case (Row(entity:String,ensembl_fingerprint:SparseVector),i) =>
+          ensembl_fingerprint.toArray.zipWithIndex.filter{ _._1 != 0 }
+            .map{ case (value,j) => MatrixEntry(i,j,value)}
+      }
+    new CoordinateMatrix(matrixEntries)
   }
+}
   ```
   <center> Demonstrate how to build a sparse distributed matrix `CoordinateMatrix` </center>
 
