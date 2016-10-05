@@ -7,3 +7,9 @@
   
   This method of similarity will bias towards dimensions with large values. To correct for this we can normalize our rna-seq matrix.
   
+```scala
+"Advanced Tumor Similarity" should "normalize rna-seq matrix" in {
+
+}
+```
+  
