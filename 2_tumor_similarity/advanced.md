@@ -5,5 +5,5 @@
   
   $$sim(A,B) = \dfrac{\|A \cdot B||}{||A||\times||B||}$$
   
-  This method of similarity will bias towards dimensions with large values. 
+  This method of similarity will bias towards dimensions with large values. To correct for this we can normalize our rna-seq matrix.
   
