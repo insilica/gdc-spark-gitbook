@@ -5,7 +5,7 @@
   
   Spark uses cosine similarity to calculate vector - vector similarity:
   
-  $$sim(A,B) = \dfrac{\|A \cdot B||}{||A||\times||B||}$$
+<center>  $$sim(A,B) = \dfrac{\|A \cdot B||}{||A||\times||B||}$$ </center>
   
   This method of similarity will bias towards dimensions with large values. To correct for this we can normalize our rna-seq matrix.
   
@@ -14,4 +14,5 @@
 
 }
 ```
-  
+
+## 
