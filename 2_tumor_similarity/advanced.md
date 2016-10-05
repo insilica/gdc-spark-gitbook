@@ -16,3 +16,4 @@
 ```
 
 ## Correcting for Normal Samples
+  Unsupervised machine learning methods do not fit models to a classification endpoint. They do not 
