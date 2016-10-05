@@ -67,11 +67,8 @@ Table 1 represents a "long-form" dataset. For similarity purposes we would prefe
 
 ```scala
   object TumorSimilarityBuilder extends DatasetBuilder{
-
     override def name: String = "Tumor_Similarity_Builder"
     import SampleDataset.{columns=>SD} //import sampledataset column namespace
-
-    //define and import TumorSimilarityBuilder column namespace
     object columns{
       val ensembl_id = SD.ensembl_id
       val ensembl_fp = "ensembl_fingerprint"
@@ -79,26 +76,25 @@ Table 1 represents a "long-form" dataset. For similarity purposes we would prefe
     import columns._
 
     //build a map to define each gene index in the aggregated sparse vectors
-    def buildGeneIdxMap() : Map[String,Long] = {
-      val sampleRNA = SampleDataset.loadOrBuild() //load the sample dataset
-      sampleRNA.select(SD.ensembl_id)
-        .distinct() //select distinct genes
-        .rdd
-        .zipWithIndex //associate a number with each gene
-        .map{ case (Row(entity:String),idx:Long) => (entity,idx) }
-        .collect() //collect onto driver
-        .toMap //build a map
-    }
-
-    override protected def build()(implicit se: SparkEnvironment): Dataset[_] = {
+    def buildGeneIdxMap() : Map[String,Long] = SampleDataset
+      .loadOrBuild() //load the sample dataset
+      .select(SD.ensembl_id)
+      .distinct() //select distinct genes
+      .rdd
+      .zipWithIndex //associate a number with each gene
+      .map{ case (Row(entity:String),idx:Long) => (entity,idx) }
+      .collect() //collect onto driver
+      .toMap //build a map
+   
+   override protected def build()(implicit se: SparkEnvironment): Dataset[_] = {
       val sampleRNA = SampleDataset.loadOrBuild() //load the sample dataset
       val geneIdxMap : Map[String,Long] = buildGeneIdxMap()
       val sva = new SparseVectorAgg(geneIdxMap) //initialize the sparse vector aggregator
       sampleRNA //aggregate sparse vectors for each aliquot
         .groupBy(SD.entity_id)
         .agg(sva(sampleRNA(SD.ensembl_id),sampleRNA(SD.fpkm)).as(ensembl_fp))
+        .sort(SD.entity_id)
     }
-
     def buildAliquotGeneMatrix() : CoordinateMatrix  = ??? //next section
   }
 ```
@@ -137,38 +133,32 @@ These results show us that the aliquot `8af61a8a-17b0...` has an **fpkm** value 
   
   ```scala
   object TumorSimilarityBuilder extends DatasetBuilder{
-  
-  //... see previous example for other code in object
-  
+    // see previous example for other code in object  
     /**
       * build a map from aliquotIds to index
       * This allows us to find the aliquot represented by each row in the coordinate matrix.
-      */    
-    def buildAliquotIdxMap() : Map[String,Long] = {
-      val sampleRNA = SampleDataset.loadOrBuild() //load the sample dataset
-      sampleRNA.select(SD.entity_id)
-        .rdd
-        .zipWithIndex //associate a number with each gene
-        .map{ case (Row(entity:String),idx:Long) => (entity,idx) }
-        .collect() //collect onto driver
-        .toMap //build a map
-    }
-    
-    /**
-      * Returns a coordinate matrix where:
-      * rows: aliquot_ids 
-      * columns: ensembl_ids
-      * values: fpkm for an aliquot_ensembl identifier pair
       */
+    def buildAliquotIdxMap() : Map[String,Long] = SampleDataset
+      .loadOrBuild() //load the sample dataset
+      .select(SD.entity_id)
+      .distinct()
+      .sort(SD.entity_id)
+      .rdd
+      .zipWithIndex //associate a number with each gene
+      .map{ case (Row(entity:String),idx:Long) => (entity,idx) }
+      .collect() //collect onto driver
+      .toMap //build a map
+    
+    /** makes coordinate matrix. rows = aliquot_ids, cols = ensembl_ids, values = fpkm */
     def buildAliquotGeneMatrix() : CoordinateMatrix = {
       val matrixEntries : RDD[MatrixEntry] = this
         .loadOrBuild()
         .rdd
         .zipWithIndex
         .flatMap{ case (Row(entity:String,ensembl_fingerprint:SparseVector),i) =>
-            ensembl_fingerprint.indices.map{ j => MatrixEntry(i,j,ensembl_fingerprint(j))}
+            ensembl_fingerprint.toArray.zipWithIndex.filter{ _._1 != 0 }
+              .map{ case (value,j) => MatrixEntry(i,j,value)}
         }
-
       new CoordinateMatrix(matrixEntries)
     }
   }
