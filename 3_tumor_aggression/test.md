@@ -5,12 +5,16 @@
 2. Per gene aggression: We will generate an aggresion value for each gene
 3. Per sample aggression: We will generate an aggression value for each sample.
 
-These tests use the following imports and exist within `co.insilica.booktests.TumorAggression.scala`: 
+The test structure is as below in `co.insilica.booktests.TumorAggression.scala`: 
 ```scala
 package co.insilica.booktests
+import co.insilica.gdcSpark.builders.CaseFileEntityBuilder
 import co.insilica.gdcSpark.transformers.clinical.CaseClinicalTransformer
 import co.insilica.spark.{DatasetBuilder, SparkEnvironment}
-import org.scalatest.FlatSpec
+import co.insilica.gdc.query.{Filter, Operators, Query}
+import org.apache.spark
+import org.apache.spark.sql.{DataFrame,Dataset}
+import org.apache.spark.sql.types.StructType
 
 class Tumor_Aggression extends FlatSpec{
   import co.insilica.gdc.query.{Filter, Operators, Query}
