@@ -78,7 +78,11 @@ object ClinicalOutcomes extends DatasetBuilder{
   }
 }
 ```
-This object breaks into two main parts. `object CommonDataElements` provides a namespace to generated dataset (see table below).  Common Data Elements are identifiers given to clinical and biological entities.  The [cde browser](https://cdebrowser.nci.nih.gov/CDEBrowser/) allows you to look up these common data elements.  We selected 7 common data elements as described in the [last section](README.md).  
+This object breaks into two main parts `CommonDataElements` and the `build` method. 
+
+`object CommonDataElements` provides a namespace to generated dataset (see table below).  Common Data Elements are identifiers given to clinical and biological entities.  The [cde browser](https://cdebrowser.nci.nih.gov/CDEBrowser/) allows you to look up these common data elements.  We selected 7 common data elements as described in the [last section](README.md).
+
+
   
   
   | stage | lymphatic invasion | distant_metastasis | vascular_invasion | metastasis | percent_positive_lymph_nodes|
