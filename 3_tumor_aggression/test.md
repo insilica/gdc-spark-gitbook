@@ -5,6 +5,10 @@
 2. Per gene aggression: We will generate an aggresion value for each gene
 3. Per sample aggression: We will generate an aggression value for each sample.
 
+These tests use the following imports and exist within `co.insilica.booktests.TumorAggression.scala`: 
+```scala
+
+```
 ## Build a dataset
     In these examples we use a toy data set for cancer aggression.  TCGA clinical supplements define clinical outcomes.  The [Clinical Supplements](./1_gdc/clinical_supplements.md) section describes how co.insilica.gdcSpark converts TCGA clinical supplements into spark `Dataset`s. Clinical outcomes are derived below:
   
