@@ -9,9 +9,8 @@
 * co.insilica.gdc
    * [co.insilica.gdc-core](1_gdc/2_a_client.md)
    * [co.insilica.gdc-spark](1_gdc/3_gdc-spark.md)
-* [Tumor Aggression](examples/tumor_aggression.md)
 * [Tumor Similarity](2_tumor_similarity/README.md)
-  * [advanced](2_tumor_similarity/advanced.md)
+   * [advanced](2_tumor_similarity/advanced.md)
 * Drugs and Methylation
    * [Standalone Tests](examples/methylation/drugs_and_methylation.md)
    * [Submit to the cluster](examples/methylation/submit_to_cluster.md)
