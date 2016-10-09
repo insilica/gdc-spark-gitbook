@@ -18,6 +18,7 @@ import org.apache.spark.sql.types.StructType
 
 class Tumor_Aggression extends org.scalatest.FlatSpec{
 
+  //ClinicalOutcomes build a toy dataset for this test
   object ClinicalOutcomes extends DatasetBuilder{...}
   "Tumor Aggression" should "preview ClinicalOutcomes dataset" in {...}
   
