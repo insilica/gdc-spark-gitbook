@@ -36,17 +36,17 @@ There are two high level approaches to measuring univariate cancer aggression.  
   Per feature tumor aggression correlates a biological observation with each clinical endpoint.  These correlations are then combined into a single confidence value.  A biological feature that highly correlates with many clinical endpoints is concered an 'aggressive' feature.  In our P53 example we:
 
 1. Identify a biological feature type (expression of P53)
-2. Identify prognostic endpoints (eg. tumor stage and lymphatic invasion)
-3. Correlate the biological feature with each prognostic endpoint
+2. Identify clinical endpoints (eg. tumor stage and lymphatic invasion)
+3. Correlate the biological feature with each clinical endpoint
 4. Fuse the correlation values in 3 to form a single per feature tumor aggression metric
 
-The [cancer regulome](explorer.cancerregulome.org) uses per feature tumor aggression.  The cancer regulome correlates genetic features with 6 prognostic outcomes. These correlations are then "fused" via [Fishers Combined Statistic](https://en.wikipedia.org/wiki/Fisher%27s_method). Note that prognostic outcomes are highly correlated. The cancer regulome accounts for non-independence with more statistical methods.
+The [cancer regulome](explorer.cancerregulome.org) uses per feature tumor aggression.  The cancer regulome correlates genetic features with 6 clinical outcomes. These correlations are then "fused" via [Fishers Combined Statistic](https://en.wikipedia.org/wiki/Fisher%27s_method). Note that clinical outcomes are highly correlated. The cancer regulome accounts for non-independence with more statistical methods.
 
 ## Pros and Cons
 
 ## Mathematical Examples
 ## Coding examples
-  In these examples we use a toy data set for cancer aggression.  TCGA clinical supplements define prognostic outcomes.  The [Clinical Supplements](./1_gdc/clinical_supplements.md) section describes how co.insilica.gdcSpark converts TCGA clinical supplements into spark `Dataset`s. Prognostic outcomes are derived below:
+  In these examples we use a toy data set for cancer aggression.  TCGA clinical supplements define clinical outcomes.  The [Clinical Supplements](./1_gdc/clinical_supplements.md) section describes how co.insilica.gdcSpark converts TCGA clinical supplements into spark `Dataset`s. Clinical outcomes are derived below:
   
   ```scala
 class Tumor_Aggression extends FlatSpec{
