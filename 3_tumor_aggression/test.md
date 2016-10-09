@@ -67,13 +67,14 @@ object ClinicalOutcomes extends DatasetBuilder{
         Filter(Operators.eq, key="access", "open"))
       }
 
-    CaseFileEntityBuilder()
-      .withQuery(query)
-      .withLimit(100)
-      .build()
-      .transform { df => new CaseClinicalTransformer()
+      CaseFileEntityBuilder()
+        .withQuery(query)
+        .withLimit(100)
+        .build()
+        .transform { CaseClinicalTransformer()
           .withCDEs(CommonDataElements())
-          .transform(df)
+          .transform
+        }
   }
 }
 ```
