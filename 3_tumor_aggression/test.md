@@ -8,7 +8,7 @@
 ## Build a dataset
     In these examples we use a toy data set for cancer aggression.  TCGA clinical supplements define clinical outcomes.  The [Clinical Supplements](./1_gdc/clinical_supplements.md) section describes how co.insilica.gdcSpark converts TCGA clinical supplements into spark `Dataset`s. Clinical outcomes are derived below:
   
-  ```scala
+```scala
 class Tumor_Aggression extends FlatSpec{
 
   import co.insilica.gdc.query.{Filter, Operators, Query}
