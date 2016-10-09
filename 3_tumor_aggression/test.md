@@ -22,11 +22,11 @@ class Tumor_Aggression extends org.scalatest.FlatSpec{
   "Tumor Aggression" should "preview ClinicalOutcomes dataset" in {...}
   
   //we implement a transformer that derives per-gene aggression from ClinicalOutcomes
-  object PerGeneAggressionTransformer extends spark.ml.Transformer{...}
+  object PerGeneAggressionTF extends spark.ml.Transformer{...}
   "Tumor Aggression" should "generate per-gene aggression" in {...}
 
   //we implement a transformer that dervies per-sample aggression from ClinicalOutcomes
-  object PerSampleAggressionTransformer extends spark.ml.Transformer{...}
+  object PerSampleAggressionTF extends spark.ml.Transformer{...}
   "Tumor Aggresion" should "generate per-sample aggression" in {...}
 
   }
