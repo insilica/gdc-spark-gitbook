@@ -45,9 +45,6 @@ object ClinicalOutcomes extends DatasetBuilder{
 
   override def name: String = "ClinicalOutcomes"
   
-  // CommonDataElements provides namespace for ClinicalOutcomes table
-  * 
-  **/
   object CommonDataElements{
     val lymph_node_examined = "lymph_node_examined_count@3"
     val lymph_nodes_positive_he = "number_of_lymphnodes_positive_by_he@3086388"
