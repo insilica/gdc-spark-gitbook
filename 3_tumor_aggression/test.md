@@ -33,7 +33,7 @@ class Tumor_Aggression extends org.scalatest.FlatSpec{
   }
 }
 ```
-This test class implements `ClinicalOutcomes` which generates our 'base' dataset. [asdf](../1_gdc/3_gdc-spark.md)
+This test class implements `ClinicalOutcomes` which generates our 'base' dataset. [GDC-Spark](../1_gdc/3_gdc-spark.md) describes `DatasetBuilder`s. In short, the dataset builder implements a `build` method and a `name` method.  These methods allow saving of the generated dataset in hadoop.
 
 ## Build a dataset
     In these examples we use a toy data set for cancer aggression.  TCGA clinical supplements define clinical outcomes.  The [Clinical Supplements](./1_gdc/clinical_supplements.md) section describes how co.insilica.gdcSpark converts TCGA clinical supplements into spark `Dataset`s. Clinical outcomes are derived below:
