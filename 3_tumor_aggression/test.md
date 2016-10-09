@@ -1,4 +1,4 @@
-# Tumor Aggression
+# Tumor Aggression Tests
   In this example we will go through all the steps to generate per-sample aggression and per-gene aggression. These steps involve:
 
 1. Build a dataset: We will need a dataset on which to define aggression
