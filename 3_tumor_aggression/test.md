@@ -1,4 +1,12 @@
-## Coding examples
+# Tumor Aggression
+  In this example we will go through all the steps to generate per-sample aggression and per-gene aggression. These steps involve:
+
+1. Build a dataset: We will need a dataset on which to define aggression
+2. Per gene aggression: We will generate an aggresion value for each gene
+3. Per sample aggression: We will generate an aggression value for each sample.
+
+## Build a dataset
+  
   In these examples we use a toy data set for cancer aggression.  TCGA clinical supplements define clinical outcomes.  The [Clinical Supplements](./1_gdc/clinical_supplements.md) section describes how co.insilica.gdcSpark converts TCGA clinical supplements into spark `Dataset`s. Clinical outcomes are derived below:
   
   ```scala
