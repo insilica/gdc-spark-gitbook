@@ -77,6 +77,9 @@ object ClinicalOutcomes extends DatasetBuilder{
       }
   }
 }
+"Tumor Aggression" should "preview ClinicalOutcomes dataset" in {
+  ClinicalOutcomes.loadOrBuild().show()
+}
 ```
 This object breaks into two main parts `CommonDataElements` and the `build` method. 
 
