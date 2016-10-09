@@ -33,7 +33,7 @@ class Tumor_Aggression extends org.scalatest.FlatSpec{
 ```
 This test class implements `ClinicalOutcomes` which generates our 'base' dataset. [GDC-Spark](../1_gdc/3_gdc-spark.md) describes `DatasetBuilder`s. In short, the dataset builder implements a `build` method and a `name` method.  These methods allow saving of the generated dataset in hadoop.
 
-The `PerGeneAggressionTF` and `PerSampleAggressionTF` and [spark.ml.Transformer](http://spark.apache.org/docs/latest/ml-features.html) objects transform the ClinicalOutcomes dataset.  
+The `PerGeneAggressionTF` and `PerSampleAggressionTF` and [spark.ml.Transformer](http://spark.apache.org/docs/latest/ml-features.html) objects transform the ClinicalOutcomes dataset. PerGeneAggressionTF creates a numeric aggression value for each gene.  PerSampleAggressionTF creates a numeric aggression value for each sample.
 
 
 
