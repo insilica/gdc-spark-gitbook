@@ -38,7 +38,7 @@ The `PerGeneAggressionTF` and `PerSampleAggressionTF` and [spark.ml.Transformer]
 
 
 ## Build a dataset
-    In these examples we use a toy data set for cancer aggression.  TCGA clinical supplements define clinical outcomes.  The [Clinical Supplements](./1_gdc/clinical_supplements.md) section describes how co.insilica.gdcSpark converts TCGA clinical supplements into spark `Dataset`s. Clinical outcomes are derived below:
+    In these examples we use a toy data set for cancer aggression.  TCGA clinical supplements define clinical outcomes.  The [Clinical Supplements](./1_gdc/clinical_supplements.md) section describes how co.insilica.gdcSpark converts TCGA clinical supplements into spark `Dataset`s. To build our dataset we implement `ClinicalOutcomes extends DatasetBuilder` and preview the result.
   
 ```scala
 class Tumor_Aggression extends FlatSpec{
