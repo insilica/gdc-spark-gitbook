@@ -38,7 +38,6 @@ The `PerGeneAggressionTF` and `PerSampleAggressionTF` and [spark.ml.Transformer]
 
 
 ## Build a dataset
-
    In these examples we use a toy data set for cancer aggression.  TCGA clinical supplements define clinical outcomes.  The [Clinical Supplements](./1_gdc/clinical_supplements.md) section describes how co.insilica.gdcSpark converts TCGA clinical supplements into spark `Dataset`s. To build our dataset we implement `ClinicalOutcomes extends DatasetBuilder` and preview the result.
   
 ```scala
@@ -59,6 +58,24 @@ object ClinicalOutcomes extends DatasetBuilder{
       this.lymph_nodes_positive_he, this.lymph_nodes_positive_ihc, this.lymph_node_examined,
       this.vascular_invasion, this.lymphovascular_invasion, this.tumor_stage, this.metastasis)
   }
+  
+  override def build()(implicit se : SparkEnvironment) : Dataset[_] = {
+    val query = Query()  //The query is our entry point.  It tells us what to get from gdc
+      .withFilter { Filter.and(
+        Filter(Operators.eq, key="cases.project.disease_type", "Colon Adenocarcinoma"),
+        Filter(Operators.eq, key="experimental_strategy", "RNA-Seq"),
+        Filter(Operators.eq, key="access", "open"))
+      }
+
+    CaseFileEntityBuilder()
+      .withQuery(query)
+      .withLimit(100)
+      .build()
+      .transform { df => new CaseClinicalTransformer()
+          .withCDEs(CommonDataElements())
+          .transform(df)
+  }
+}
 ```
   TODO come back and finish all of this!
   
