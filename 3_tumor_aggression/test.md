@@ -16,33 +16,24 @@ import org.apache.spark
 import org.apache.spark.sql.{DataFrame,Dataset}
 import org.apache.spark.sql.types.StructType
 
-class Tumor_Aggression extends FlatSpec{
-  import co.insilica.gdc.query.{Filter, Operators, Query}
-  import org.apache.spark.sql.Dataset
-  import co.insilica.gdcSpark.builders.CaseFileEntityBuilder
+class Tumor_Aggression extends org.scalatest.FlatSpec{
+
+  object ClinicalOutcomes extends DatasetBuilder{...}
   
-  object ClinicalOutcomes extends DatasetBuilder{ //shown below
+  "Tumor Aggression" should "preview ClinicalOutcomes dataset" in {...}
   
-  "Tumor Aggression" should "use ClinicalOutcomes dataset" in {
-    //we will preview the clinical outcomes dataset
+  //we implement a transformer that derives per-gene aggression from ClinicalOutcomes
+  object PerGeneAggressionTransformer extends spark.ml.Transformer{...}
+  "Tumor Aggression" should "generate per-gene aggression" in {...}
+
+  //we implement a transformer that dervies per-sample aggression from ClinicalOutcomes
+  object PerSampleAggressionTransformer extends spark.ml.Transformer{...}
+  "Tumor Aggresion" should "generate per-sample aggression" in {...}
+
   }
-  
-  object PerGeneAggressionTransformer extends Transformer{
-    //we implement a transformer that derives per-gene aggression from ClinicalOutcomes
-  }
-  
-  "Tumor Aggression" should "generate per-gene aggression" in {
-   //we preview per-gene aggression
-  }
-  
-  object PerSampleAggressionTransformer extends Transformer{
-    //we implement a transformer that dervies per-sample aggression from ClinicalOutcomes
-  }
-  
-  "Tumor Aggression" should 
 }
 ```
-As you can see we create `ClinicalOutcomes` which generates our 'base' dataset. 
+This test class implements `ClinicalOutcomes` which generates our 'base' dataset. [../1_gdc/ 
 
 ## Build a dataset
     In these examples we use a toy data set for cancer aggression.  TCGA clinical supplements define clinical outcomes.  The [Clinical Supplements](./1_gdc/clinical_supplements.md) section describes how co.insilica.gdcSpark converts TCGA clinical supplements into spark `Dataset`s. Clinical outcomes are derived below:
