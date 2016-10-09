@@ -19,7 +19,6 @@ import org.apache.spark.sql.types.StructType
 class Tumor_Aggression extends org.scalatest.FlatSpec{
 
   object ClinicalOutcomes extends DatasetBuilder{...}
-  
   "Tumor Aggression" should "preview ClinicalOutcomes dataset" in {...}
   
   //we implement a transformer that derives per-gene aggression from ClinicalOutcomes
@@ -34,6 +33,10 @@ class Tumor_Aggression extends org.scalatest.FlatSpec{
 }
 ```
 This test class implements `ClinicalOutcomes` which generates our 'base' dataset. [GDC-Spark](../1_gdc/3_gdc-spark.md) describes `DatasetBuilder`s. In short, the dataset builder implements a `build` method and a `name` method.  These methods allow saving of the generated dataset in hadoop.
+
+The `PerGeneAggressionTF` and `PerSampleAggressionTF` and [spark.ml.Transformer](http://spark.apache.org/docs/latest/ml-features.html) objects transform the ClinicalOutcomes dataset.  
+
+
 
 ## Build a dataset
     In these examples we use a toy data set for cancer aggression.  TCGA clinical supplements define clinical outcomes.  The [Clinical Supplements](./1_gdc/clinical_supplements.md) section describes how co.insilica.gdcSpark converts TCGA clinical supplements into spark `Dataset`s. Clinical outcomes are derived below:
