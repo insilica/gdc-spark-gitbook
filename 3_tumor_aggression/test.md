@@ -78,7 +78,7 @@ object ClinicalOutcomes extends DatasetBuilder{
   }
 }
 ```
-  TODO come back and finish all of this!
+This object breaks into two main parts. `object CommonDataElements` provides a namespace to generated dataset (see table below).  Common Data Elements are identifiers given to clinical and biological entities.  
   
   
   | stage | lymphatic invasion | distant_metastasis | vascular_invasion | metastasis | percent_positive_lymph_nodes|
