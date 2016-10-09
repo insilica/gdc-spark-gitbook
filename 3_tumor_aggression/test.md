@@ -13,7 +13,6 @@ import co.insilica.spark.{DatasetBuilder, SparkEnvironment}
 import org.scalatest.FlatSpec
 
 class Tumor_Aggression extends FlatSpec{
-
   import co.insilica.gdc.query.{Filter, Operators, Query}
   import org.apache.spark.sql.Dataset
   import co.insilica.gdcSpark.builders.CaseFileEntityBuilder
@@ -29,12 +28,14 @@ class Tumor_Aggression extends FlatSpec{
   }
   
   "Tumor Aggression" should "generate per-gene aggression" in {
-   //we will 
+   //we preview per-gene aggression
   }
   
   object PerSampleAggressionTransformer extends Transformer{
     //we implement a transformer that dervies per-sample aggression from ClinicalOutcomes
   }
+  
+  "Tumor Aggression" should 
 }
 ```
 ## Build a dataset
