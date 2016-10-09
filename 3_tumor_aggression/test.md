@@ -28,8 +28,6 @@ class Tumor_Aggression extends org.scalatest.FlatSpec{
   //we implement a transformer that dervies per-sample aggression from ClinicalOutcomes
   object PerSampleAggressionTF extends spark.ml.Transformer{...}
   "Tumor Aggresion" should "generate per-sample aggression" in {...}
-
-  }
 }
 ```
 This test class implements `ClinicalOutcomes` which generates our 'base' dataset. [GDC-Spark](../1_gdc/3_gdc-spark.md) describes `DatasetBuilder`s. In short, the dataset builder implements a `build` method and a `name` method.  These methods allow saving of the generated dataset in hadoop.
