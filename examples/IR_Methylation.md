@@ -5,3 +5,8 @@
   
   1. IR response information
   2. GSTP methylation information
+
+To collect IR response information we look for all Genomic Data Commons cases where the patient received IR.
+
+```scala
+```
