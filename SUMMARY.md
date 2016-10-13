@@ -20,8 +20,11 @@
 * Drugs and Methylation
    * [Standalone Tests](examples/methylation/drugs_and_methylation.md)
    * [Submit to the cluster](examples/methylation/submit_to_cluster.md)
+   
 * Hypothesis Generation
    * [Introduction](examples/hypothesis_generation/introduction.md)
    * [BORG - Bioinformatics Orphan Gene Rescue Graphical Models](examples/hypothesis_generation/borg.md)
    * [Submit to the cluster](examples/hypothesis_generation/submit_to_the_cluster.md)
 
+* Examples
+  * [Is interventional radiation modified by GSTP methylation?](examples/IR_Methylation.md)
