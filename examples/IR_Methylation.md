@@ -1,4 +1,4 @@
-# Is response to IR modified by GSTP methylation?
+# IR and GSTP Methylation
 
 ## Create a dataset
   We need a dataset to show a link between interventional radiation and GSTP methylation. This dataset needs a 2 critical values:
