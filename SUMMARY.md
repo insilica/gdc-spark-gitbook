@@ -27,4 +27,4 @@
    * [Submit to the cluster](examples/hypothesis_generation/submit_to_the_cluster.md)
 
 * Examples
-  * [Is interventional radiation modified by GSTP methylation?](examples/IR_Methylation.md)
+  * [IR and GSTP Methylation?](examples/IR_Methylation.md)
