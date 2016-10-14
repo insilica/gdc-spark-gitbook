@@ -6,7 +6,14 @@
   1. IR response information
   2. GSTP methylation information
 
-To collect IR response information we look for all Genomic Data Commons cases where the patient received IR.
+## IR Response Data
+  To collect IR response information we look for all Genomic Data Commons cases where the patient received IR:
 
 ```scala
 ```
+
+## GSTP Methylation Data
+  GSTP methylation data can be accessed through the Illumina 450k TCGA experiments:
+  
+  ```scala
+  ```
