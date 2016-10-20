@@ -7,11 +7,14 @@
   2. GSTP methylation information
 
 ## IR Response Data
-  To collect IR response information we look for all Genomic Data Commons cases where the patient received IR. We use `gdc-spark` to compile methylation data with response data.  The `DatasetBuilder` called `IRCases` builds this dataset and its code is given below in **Appendix - IRCases**
+  To collect IR response information we look for all Genomic Data Commons cases where the patient received IR. We use `gdc-spark` to compile methylation data with response data.  The `DatasetBuilder` called `IRCases` builds this dataset. Its code is given below in **Appendix - IRCases**.  The first few rows of this dataset are below:
 
-```scala
-
-```
+|fileId|cgref|beta_value|caseId|radiation_response|sampleType|
+|---------|----|-------|-----|------------------|-----------------|-------------------|
+|292...|cg...29|4.4|8cc1...|Complete...|Solid Tissue Normal|
+|292...|cg...108|26.1|8cc1...|Complete...|Solid Tissue Normal|
+|292...|cg...109|9.1|8cc1...|Complete...|Solid Tissue Normal|
+<center> IRCases dataset (truncated values and some columns left out)</center>
 
 ## GSTP Methylation Data
   GSTP methylation data can be accessed through the Illumina 450k TCGA experiments:
@@ -27,4 +30,74 @@
   #Appendix - IRCases
   IRCases builds the dataset shown in **IR Response Data**
   ```scala
+  object IRCases extends DatasetBuilder{
+
+  override def name: String = "IRCases"
+
+  object columns{
+    val cgref = FileMethylationTransformer.columns.compositeElementRef
+    val beta = FileMethylationTransformer.columns.beta
+    val radiation_response = "radiation_response"
+    val fileId = "fileId"
+  }
+
+  override def build()(implicit se: SparkEnvironment): Dataset[_] = {
+    import CaseFileEntityBuilder.{columns => CFEB}
+    import columns._
+    import se.sparkSession.implicits._
+
+    Query()
+      .withFilter(Filter(Operators.eq, "platform", "Illumina Human Methylation 450")) //select illumina 450k data
+      .withFilter(Filter(Operators.eq, "access", "open")) //only use open access data
+      .withFilter(Filter(Operators.eq, "data_format","TXT"))
+      .|> { query => CaseFileEntityBuilder()
+          .withQuery(query)
+          .withLegacy()
+          .withFields(List("data_format"))
+          .build()
+      }
+      .<|{ _.show(truncate = false) }
+      .transform{ df =>
+        println("transforming aliquots")
+        AliquotTransformer()
+        .withAliquotIdColumn(CFEB.entityId)
+        .transform(df)
+      }
+      .<|{ _.show()}
+      .transform{ df =>
+        println("getting clinical data")
+        CaseClinicalTransformer().withCaseId(CFEB.caseId).transform(df)
+      }
+      .withColumnRenamed("radiation_therapy@2005312","radiation_therapy")
+      .withColumnRenamed("radiation_therapy@3427615","radiation")
+      .withColumnRenamed("radiations@radiation@measure_of_response@2857291",
+        "radiation_response")
+      .|>{ df =>
+        println("columns renamed")
+        val firstUDF = functions.udf{ arr :Seq[String] => arr.headOption.orNull }
+        df.withColumn("radiation_response",firstUDF($"radiation_response"))
+      }
+      .transform{ df => //drop all unnecessary columns
+        println("dropping unnecessary columns")
+        import CaseFileEntityBuilder.columns.{fileId,caseId}
+        val keepColumns = Seq(fileId, caseId,
+          AliquotTransformer.columns.sampleType,
+          "radiation_therapy",
+          "radiation",
+          radiation_response
+        )
+        df.drop((df.columns.toSet[String] -- keepColumns).toSeq :_*)
+      }
+      .|>{ df =>
+        println("selecting radiation_therapy patients")
+        df.where(df("radiation_therapy")==="YES")
+      }
+      .transform{ df =>
+        println("building methylation")
+        FileMethylationTransformer()
+        .withFileIdColumn(CaseFileEntityBuilder.columns.fileId)
+        .transform(df)
+      }
+  }
+}
   ```
