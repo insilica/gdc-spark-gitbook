@@ -53,8 +53,13 @@ With both of these datasets we can select all the Illumina450k cgrefs associated
 ```
 Which yields a table of methylation data for GSTP1 with patient radiation response:
 
+|gene_coord|cgref|          beta_value|radiation_response|              fileId|         sampleType|
+|-------------|---------------------|--------------------|------------------|--------------------|-------------------|
+|     67107552|           cg02659086|0.02| Complete Response|2920cd97-aa05-4c5...|Solid Tissue Normal|
+|     67107847|           cg04920951|0.011| Complete Response|2920cd97-aa05-4c5...|Solid Tissue Normal|
 
-
+  From this table we can build box plots of methylation across radiation_response types:
+  
 ## GSTP Methylation Data
   GSTP methylation data can be accessed through the Illumina 450k TCGA experiments:
   
