@@ -7,7 +7,12 @@
   2. GSTP methylation information
 
 ## IR Response Data
-  To collect IR response information we look for all Genomic Data Commons cases where the patient received IR. We use `gdc-spark` to compile methylation data with response data.  The `DatasetBuilder` called `IRCases` builds this dataset. Its code is given below in **Appendix - IRCases**.  The first few rows of this dataset are below:
+  To collect IR response and methylation information we aggregate the below:
+  
+  1. Collect all GDC cases where the patient received IR. 
+  2. Collect all open access Illumina Human Methylation 450k for these cases.
+ 
+The `DatasetBuilder` called `IRCases` builds this dataset. Its code is given below in **Appendix - IRCases**.  The first rows of this dataset are below:
 
 |fileId|cgref|beta_value|caseId|radiation_response|sampleType|
 |---------|----|-------|-----|------------------|-----------------|-------------------|
