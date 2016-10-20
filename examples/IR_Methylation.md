@@ -21,7 +21,40 @@ The `DatasetBuilder` called `IRCases` builds this dataset. Its code is given bel
 |292...|cg...109|9.1|8cc1...|Complete...|Solid Tissue Normal|
 <center> IRCases dataset (truncated values and some columns left out)</center>
 
-**Cgref** above is short for **composite_element_ref** which is an identifier used by Illumina. **Cgref** identifies a **CG** base pair measured in the 450k array. Illumina annotates genomic location, associated genes and other information related to these cgrefs.  The annotation file, HumanMethylation450_15017482_v1-2.csv, is available at [the illumina ftp](ftp://webdata2:webdata2@ussd-ftp.illumina.com/downloads/ProductFiles/HumanMethylation450/).
+**Cgref** above is short for **composite_element_ref** which is an identifier used by Illumina. **Cgref** identifies a **CG** base pair measured in the 450k array. Illumina annotates genomic location, associated genes and other information related to these cgrefs.  The annotation file, HumanMethylation450_15017482_v1-2.csv, is available at [the illumina ftp](ftp://webdata2:webdata2@ussd-ftp.illumina.com/downloads/ProductFiles/HumanMethylation450/).  This dataset is available in `co.insilica.genetics.builders.IlluminaHuman450k` and when loaded gives:
+
+|    IlmnID|Chromosome_36|Coordinate_36|   UCSC_RefGene_Name|
+|----------|-------------|-------------|--------------------|
+|cg25610294|           14|     23847750|[LTB4R2, CIDEB, L...|
+|cg25611736|           14|    103700265|            [KIF26A]|
+|cg25611750|           14|    100825409|                  []|
+<center>co.insilica.genetics.builders.IlluminaHuman450k genomic location and associated genes</center>
+
+With both of these datasets we can select all the Illumina450k cgrefs associated with UCSC gene GSTP1:
+
+```scala
+  import IlluminaHuman450k.{columns => IH}
+  import IRCases.{columns => IR}
+  
+  val illumina = IlluminaHuman450k.loadOrBuild()
+  val cgrefList = illumina
+    .where(functions.array_contains(df(IH.UCSC_RefGene_Name),"GSTP1"))
+    .select(IH.IlmnID,IH.Coordinate_36)
+    .distinct()
+    .collect()
+    .map{ row => row.getAs[String](0)}
+    .toList
+ 
+ IRCases
+    .loadOrBuild()
+    .join(illumina, illumina(IH.IlmnID) === $"${IR.cgref}")
+    .where($"${IR.cgref}".isin(gstpElements:_*))
+    .where($"${IR.beta}".isNotNull)
+```
+Which yields a table of methylation data for GSTP1 with patient radiation response:
+
+
+
 ## GSTP Methylation Data
   GSTP methylation data can be accessed through the Illumina 450k TCGA experiments:
   
