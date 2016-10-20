@@ -16,6 +16,7 @@
 |292...|cg...109|9.1|8cc1...|Complete...|Solid Tissue Normal|
 <center> IRCases dataset (truncated values and some columns left out)</center>
 
+**cgref** above is short for **composite_element_ref**
 ## GSTP Methylation Data
   GSTP methylation data can be accessed through the Illumina 450k TCGA experiments:
   
