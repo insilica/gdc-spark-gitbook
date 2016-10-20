@@ -21,7 +21,7 @@ The `DatasetBuilder` called `IRCases` builds this dataset. Its code is given bel
 |292...|cg...109|9.1|8cc1...|Complete...|Solid Tissue Normal|
 <center> IRCases dataset (truncated values and some columns left out)</center>
 
-**cgref** above is short for **composite_element_ref**
+**Cgref** above is short for **composite_element_ref** which is an identifier used by Illumina.  Illumina keeps an annotation file providing information 
 ## GSTP Methylation Data
   GSTP methylation data can be accessed through the Illumina 450k TCGA experiments:
   
