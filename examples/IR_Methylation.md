@@ -74,7 +74,9 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   ![ucsc browser](../images/ucscGSTP1.png)
   <center>UCSC Browser visualiation of CGRef genomic locations. Red points are approximate CGREF locations</center>
   
-  While it is tempting to demonstrate methylation relationships purely on univariate CGREF methylation relationships with radiation response we should concede that methylation of a CG base pair is never in a vacuum.  
+  Since beta value cannot fall below 0 we use a log transformation to enable a closer to normal distribution of beta values.
+  
+  While it is tempting to demonstrate methylation relationships purely on univariate CGREF-methylation relationships with radiation-response, we should concede that methylation of a CG base pair is never in a vacuum.  To demonstrate 
   
   
   
