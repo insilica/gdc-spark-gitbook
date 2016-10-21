@@ -153,4 +153,4 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   
   Machine learned paper similarity can identify binary labels for papers.  First, algorithms and humans select articles for inclusion as described above.  Humans then label selected papers for the presence of specific molecular biomarkers.  Human and machine labelling enables extraction of molecular biomarkers from articles. 
   
-  In the last step, Humans manually classify the extracted molecular biomarkers as either gene, gene product, protein, or small molecule.
+  In the last step, Humans manually categorize the extracted molecular biomarkers.  The proposed categories include gene, gene product, protein, or small molecule.
