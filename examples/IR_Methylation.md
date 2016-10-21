@@ -83,7 +83,7 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   ![lines](../images/generalDistributionLines.png)
   <center>Log transformed methylation of CG pairs.  Each line represents one Illumina450k assay</center>
   
-  This graph demonstrates that methylation undergoes branching structures.  For instance, at genomic location 6710550 there appear to be two clusters of methylation levels.  This kind of clustering is lost in the earlier box plots.  Additionally both of these clusters seem to derive almost entirely from similar prior methylation levels.
+  This graph demonstrates that methylation undergoes branching structures.  For instance, at genomic location 6710550 there appear to be two clusters of methylation levels.  This kind of clustering is lost in the earlier box plots.  Additionally both of these clusters seem to derive almost entirely from similar methylation levels in the 5' direction.
   
   
 ## Tissue Relationships
