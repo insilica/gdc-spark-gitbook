@@ -60,6 +60,9 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
 
   From this table we can start graphing methylation relationships to sample types and radiation response.
   
+## Univariate Relationships
+  The simplest relationship to capture is a univariate relationship between a single cgref metylation and sample type or radiation response.
+  
   #Appendix - IRCases
   IRCases builds the dataset shown in **IR Response Data**
   ```scala
