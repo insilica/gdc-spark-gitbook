@@ -61,9 +61,14 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   From this table we can start graphing methylation relationships to sample types and radiation response.
   
 ## Global Relationships
-  Before identifying specific relationships between methylation and treatment/disease, we should set baselines. Baseline methylation is defined here as the level of methylation across all samples.
+  Before identifying specific relationships between methylation and treatment/disease, we should set baselines. Baseline methylation is defined here as the level of methylation across all samples. Methylation is measured by **beta value**:
+  
+  $$\beta = \dfrac{Methylated Intensity}{Unmethylated Intensity}$$
   
   First we want to know about the general distribution on each CGref:
+  
+  
+## Tissue Relationships
   
   
   #Appendix - IRCases
