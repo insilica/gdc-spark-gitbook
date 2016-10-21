@@ -151,4 +151,6 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   
   In Specific Aim I we will use our machine learning approach for systematic review to collect relevant papers.  A large corpus of papers relating to the Mesh Term Cancer forms the basis of aim 1. Human and machine labelling reduces this large corpus to a smaller 'Data Extraction' set. Humans label papers for the presence or absence of biomarker usage. The machine learning algorithm forms a large paper-paper similarity matrix. Human labeled biomarker articles and highly similar articles make up the 'Data Extraction' corpus.
   
-  Machine learned paper similarity can identify binary labels for papers.  First, algorithms and humans select articles for inclusion as described above.  Humans then label selected papers for the presence of specific molecular biomarkers.  Human and machine labelling enables extraction of molecular biomarkers from articles. Finally, humans manually classify biomarkers as either gene, gene product, protein, or small molecule.
+  Machine learned paper similarity can identify binary labels for papers.  First, algorithms and humans select articles for inclusion as described above.  Humans then label selected papers for the presence of specific molecular biomarkers.  Human and machine labelling enables extraction of molecular biomarkers from articles. 
+  
+  In the last step, Humans manually classify the extracted molecular biomarkers as either gene, gene product, protein, or small molecule.
