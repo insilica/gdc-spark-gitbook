@@ -80,6 +80,8 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   
   While it is tempting to demonstrate methylation relationships purely on univariate CGREF-methylation relationships with radiation-response, we should concede that methylation of a CG base pair is never in a vacuum.  Below each line corresponds to an illumina 450k assay on a single sample:
   
+  ![lines](../images/generalDistributionLines.png)
+  <center>Log transformed methylation of CG pairs.  Each line represents one Illumina450k assay</center>
   
   
   
