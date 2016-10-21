@@ -66,7 +66,8 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   $$\beta = \dfrac{Methylated Intensity}{Unmethylated Intensity}$$
   
   First we want to know about the general distribution on each CGref:
-  
+  ![alt text](../images/globalUnivariate.png)
+  <center> boxplot of beta values across all GSTP1 cgres </center>
   
 ## Tissue Relationships
   
