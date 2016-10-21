@@ -58,18 +58,7 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
 |     67107552|           cg02659086|0.02| Complete Response|2920cd97-aa05-4c5...|Solid Tissue Normal|
 |     67107847|           cg04920951|0.011| Complete Response|2920cd97-aa05-4c5...|Solid Tissue Normal|
 
-  From this table we can build box plots of methylation across radiation_response types:
-  
-## GSTP Methylation Data
-  GSTP methylation data can be accessed through the Illumina 450k TCGA experiments:
-  
-  ```scala
-  ```
-  
-  | | cg1 | cg2 | cg2 |
-  |-|-----|-----|-----|
-  |res1|----|----|----|
-  |res2
+  From this table we can start graphing methylation relationships to sample types and radiation response.
   
   #Appendix - IRCases
   IRCases builds the dataset shown in **IR Response Data**
@@ -144,13 +133,4 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
       }
   }
 }
-  ```
-  
-  
-  The literature on molecular biomarkers for tumor classification, treatment, and monitoring is large. To date there are no systematic reviews or attempts to catalog the main biomarkers used in clinical trials. Individual review of the existing literature is impossible due to its size and complexity. 
-  
-  In Specific Aim I we will use our machine learning approach for systematic review to collect relevant papers.  A large corpus of papers relating to the Mesh Term Cancer forms the basis of aim 1. Human and machine labelling reduces this large corpus to a smaller 'Data Extraction' set. Humans label papers for the presence or absence of biomarker usage. The machine learning algorithm forms a large paper-paper similarity matrix. Human labeled biomarker articles and highly similar articles make up the 'Data Extraction' corpus.
-  
-  Machine learned paper similarity can identify binary labels for papers.  First, algorithms and humans select articles for inclusion as described above.  Humans then label selected papers for the presence of specific molecular biomarkers.  Human and machine labelling enables extraction of molecular biomarkers from articles. 
-  
-  In the last step, Humans manually categorize the extracted molecular biomarkers.  The proposed categories include gene, gene product, protein, or small molecule.
+```
