@@ -71,6 +71,10 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   
   So it is clear that there are differing regions of methylation within cgrefs associated with GSTP1.  But where are all these genomic locations?  We paste the UCSC Genome Browser visualization of the CGREF genomic locations [chr11:67106166-67110550](https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg18&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=chr11%3A67106166-67110550&hgsid=551918241_4VXMGIhTqKseXUYgS5zXbD5XcTyv) below:
   
+  ![ucsc browser](../images/ucscGSTP1.png)
+  <center>UCSC Browser visualiation of CGRef genomic locations. Red points are approximate CGREF locations</center>
+  
+  While it is tempting to demonstrate methylation relationships purely on univariate CGREF methylation relationships with radiation response we should concede that methylation of a CG base pair is never in a vacuum.  
   
   
   
