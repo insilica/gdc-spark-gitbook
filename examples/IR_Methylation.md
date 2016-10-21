@@ -61,7 +61,9 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   From this table we can start graphing methylation relationships to sample types and radiation response.
   
 ## Global Relationships
-  Before identifying specific relationships between methylation and treatment/disease, we should set baselines. 
+  Before identifying specific relationships between methylation and treatment/disease, we should set baselines. Baseline methylation is defined here as the level of methylation across all samples.
+  
+  First we want to know about the general distribution of methylation over 
   
   #Appendix - IRCases
   IRCases builds the dataset shown in **IR Response Data**
