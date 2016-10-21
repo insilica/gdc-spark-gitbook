@@ -85,6 +85,11 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   
   This graph demonstrates that methylation undergoes branching structures.  For instance, at genomic location 6710550 there appear to be two clusters of methylation levels.  This kind of clustering is lost in the earlier box plots.  Additionally both of these clusters seem to derive almost entirely from similar methylation levels in the 5' direction.
   
+  It is difficult to see changes in methylation level in CG pairs with close genomic locations.  **67107067**, **67107075**, **67107087** are each within 20 base pairs and cannot be clearly discerned.  The below graph equispaces each cgref:
+  
+  ![equispaced lines](../images/equispacedGeneralDistributionLines.png)
+  <center>Log transformed methylation of CG pairs. Pairs are equispaced despite different relative distances.</center>
+  
   
 ## Tissue Relationships
   
