@@ -149,6 +149,6 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   
   The literature on molecular biomarkers for tumor classification, treatment, and monitoring is large. To date there are no systematic reviews or attempts to catalog the main biomarkers used in clinical trials. Individual review of the existing literature is impossible due to its size and complexity. 
   
-  In Specific Aim I we will use our machine learning approach for systematic review to collect relevant papers.  A large corpus of papers relating to the Mesh Term Cancer forms the basis of this aim.  
+  In Specific Aim I we will use our machine learning approach for systematic review to collect relevant papers.  A large corpus of papers relating to the Mesh Term Cancer forms the basis of aim I. Human reviewers will label articles for the presence or absence of biomarker usage in papers.  
   
   [INSERT DISCUSSION ABOUT BINARY CLASSIFICATION], and text-mining to identify and extract molecular biomarkers [INSERT DISCUSSION ABOUT KNOWLEDGE-MINING] and finally classify biomarkers as either gene, gene product, protein, or small molecule [MANUALLY OR MACHINE LEARNING or BOTH?].
