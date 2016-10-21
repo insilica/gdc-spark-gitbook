@@ -76,7 +76,11 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   
   Since beta value cannot fall below 0 we use a log transformation to enable a closer to normal distribution of beta values.
   
-  While it is tempting to demonstrate methylation relationships purely on univariate CGREF-methylation relationships with radiation-response, we should concede that methylation of a CG base pair is never in a vacuum.  To demonstrate 
+  ![log transform of methylation values](../images/logTransform.png)
+  
+  While it is tempting to demonstrate methylation relationships purely on univariate CGREF-methylation relationships with radiation-response, we should concede that methylation of a CG base pair is never in a vacuum.  Below each line corresponds to an illumina 450k assay on a single sample:
+  
+  
   
   
   
