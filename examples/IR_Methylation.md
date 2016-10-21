@@ -147,5 +147,5 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   ```
   
   
-  The literature on molecular biomarkers for tumor classification, treatment, and monitoring is large. and to date there are no systematic reviews or attempts to catalog the main biomarkers used in clinical trials, in part because the literature base is at this point too unwiedly for any individual to survey. Therefore, for Specific Aim I we will use our machine learning approach for systematic review
+  The literature on molecular biomarkers for tumor classification, treatment, and monitoring is large. To date there are no systematic reviews or attempts to catalog the main biomarkers used in clinical trials. in part because the literature base is at this point too unwiedly for any individual to survey. Therefore, for Specific Aim I we will use our machine learning approach for systematic review
 to collect relevant papers [INSERT DISCUSSION ABOUT BINARY CLASSIFICATION], and text-mining to identify and extract molecular biomarkers [INSERT DISCUSSION ABOUT KNOWLEDGE-MINING] and finally classify biomarkers as either gene, gene product, protein, or small molecule [MANUALLY OR MACHINE LEARNING or BOTH?].
