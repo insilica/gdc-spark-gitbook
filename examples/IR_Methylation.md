@@ -97,8 +97,12 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   Removing the non-fully measured experiments reveals much less branching. We use this dataset for the remaining analysis.
   
 ## Tissue Relationships
+  We interrogate tissue relationships to methylation by looking at individual cgref methylation as a function of sampleType and then overall methylation trends as a function of sample type.
+  
+  Below we see 
+![sample type boxplots](../images/sampleType_boxplots.png)
 
-
+![tissue relationships](../images/sampleType_lines.png)
 ## Radiation Response Relationships
   
   
