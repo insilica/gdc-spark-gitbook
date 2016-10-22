@@ -90,6 +90,7 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   ![equispaced lines](../images/equispacedGeneralDistributionLines.png)
   <center>Log transformed methylation of CG pairs. Pairs are equispaced despite different relative distances.</center>
   
+  Looking at this equispaced data makes it clear that many patients do not have methylation data for the 5' cgrefs.  It also seems that these left censored patients are somehow clustered differently.  For the following analyses we filter out patients that do no thave measurements for all cgrefs.
   
 ## Tissue Relationships
 
