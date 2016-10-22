@@ -92,9 +92,12 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   
   Looking at this equispaced data makes it clear that many patients do not have methylation data for the 5' cgrefs.  It also seems that these left censored patients are somehow clustered differently.  For the following analyses we filter out patients that do no thave measurements for all cgrefs:
   
+  ![filtered equispaced lines](../images/filteredGeneralLines.png)
   
+  Removing the non-fully measured experiments reveals much less branching. We use this dataset for the remaining analysis.
   
 ## Tissue Relationships
+
 
 ## Radiation Response Relationships
   
