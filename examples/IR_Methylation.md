@@ -105,7 +105,7 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
 ![tissue relationships](../images/sampleType_lines.png)
 ## Radiation Response Relationships
   To evaluate radiation_response we filter the sample type to only 'Primary Tumor.' 
-  
+
   ![radiation response lines](../images/radiation_response_lines.png)
   
   #Appendix - IRCases
