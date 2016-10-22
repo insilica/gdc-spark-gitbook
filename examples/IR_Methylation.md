@@ -109,7 +109,7 @@ Which yields a table of methylation data for GSTP1 with patient radiation respon
   ![radiation response boxplots](../images/radiation_response_box.png)
   
   This figure shows that the 'Stable Disease' radiation response seems 
-  
+   ![Lines stable disease](../images/lines_stable_disease.png)
   
   #Appendix - IRCases
   IRCases builds the dataset shown in **IR Response Data**
