@@ -29,6 +29,8 @@ There are two high level approaches to measuring univariate cancer aggression.  
   | III | True | True | 0.8 |
   | I | False | False | 0.0 | 
   <center>Per case tumor aggression derived from tumor stage, lymphatic invasion, and distance metastasis observations.  Note that aggression metrics are not necessarily normalized between 0 and 1.</center>  
+  
+  
 
 ## Per Feature tumor aggression
   Per-feature tumor aggression determines whether a given biological observation (or feature) is indicative of cancer aggression.  For example, the lack of expression of tumor suppressor gene P53 would  indicate a more aggressive tumor.  
