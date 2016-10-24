@@ -40,7 +40,7 @@ There are two high level approaches to measuring univariate cancer aggression.  
 3. Correlate the biological feature with each clinical endpoint
 4. Fuse the correlation values in 3 to form a single per feature tumor aggression metric
 
-The [cancer regulome](explorer.cancerregulome.org) uses per feature tumor aggression.  The cancer regulome correlates genetic features with 6 clinical outcomes. These correlations are then "fused" via [Fishers Combined Statistic](https://en.wikipedia.org/wiki/Fisher%27s_method). Note that clinical outcomes are highly correlated. The cancer regulome accounts for non-independence with more statistical methods.
+The [cancer regulome](explorer.cancerregulome.org) uses per feature tumor aggression. The [supplemental document pg 39](http://www.nature.com/nature/journal/v487/n7407/extref/nature11252-s1.pdf) describes their approach, which we attempt to replicate.  The cancer regulome correlates genetic features with 6 clinical outcomes. These correlations are then "fused" via [Fishers Combined Statistic](https://en.wikipedia.org/wiki/Fisher%27s_method). Note that clinical outcomes are highly correlated. The cancer regulome accounts for non-independence with more statistical methods.
 
 ## Pros and Cons
 
