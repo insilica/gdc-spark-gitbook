@@ -1,1 +1,2 @@
 # Clinical Supplements
+  The Genomic Data Commons hosts clinical supplements.  These supplements do not all have the same form.  Clinical supplements are specific to a patient and contain information on [common data elements](https://www.nlm.nih.gov/cde/).  
