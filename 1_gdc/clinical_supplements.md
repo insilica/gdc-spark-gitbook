@@ -7,3 +7,7 @@
   | TARGET  | XLSX                         | 8       | 1820
   
   Clinical supplements are specific to a patient and contain information on clinical outcomes.  TCGA identifies clinical outcome variables with numeric identifiers called [common data elements](https://www.nlm.nih.gov/cde/).  GDC contains data from the [TARGET](https://ocg.cancer.gov/programs/target) and [TCGA](https://cancergenome.nih.gov/) cancer projects.  
+  
+  In the case of TCGA, each clinical supplement is an xml file and references an individual patient. The below is an excerpt from one of these files:
+  
+  TARGET stores clinical data on groups of patients in each excel XLSX file. //TODO need to add more information on TARGET.  The below is an excerpt from one of these files:
