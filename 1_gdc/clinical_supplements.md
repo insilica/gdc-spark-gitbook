@@ -11,3 +11,7 @@
   In the case of TCGA, each clinical supplement is an xml file and references an individual patient. The below is an excerpt from one of these files:
   
   TARGET stores clinical data on groups of patients in each excel XLSX file. //TODO need to add more information on TARGET.  The below is an excerpt from one of these files:
+  
+  ##TCGA Clinical Supplements
+  
+  ##TARGET Clinical Supplements
