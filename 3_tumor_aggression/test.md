@@ -91,7 +91,6 @@ The `build` method works by providing a query to `CaseFileEntityBuilder` which i
 
 The resulting table is below:
   
-  
   | stage | lymphatic invasion | metastasis | vascular invasion | % pos. nodes| gene | fpkm |
   |-------------|-------------|-------------|----|
   | IV | True | True | False | 58% | ENSG... | 100
