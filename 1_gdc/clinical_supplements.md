@@ -6,4 +6,4 @@
   | TCGA    | BCR XML                      | 11160   | 11,160
   | TARGET  | XLSX                         | 8       | 1820
   
-  Clinical supplements are specific to a patient and contain information on clinical outcomes.  TCGA identifies clinical outcome variables with numeric identifiers called [common data elements](https://www.nlm.nih.gov/cde/).  GDC contains data from the TARGET 
+  Clinical supplements are specific to a patient and contain information on clinical outcomes.  TCGA identifies clinical outcome variables with numeric identifiers called [common data elements](https://www.nlm.nih.gov/cde/).  GDC contains data from the [TARGET](https://ocg.cancer.gov/programs/target) and [TCGA](https://cancergenome.nih.gov/) cancer projects.  
