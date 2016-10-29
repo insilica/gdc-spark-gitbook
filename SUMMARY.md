@@ -23,5 +23,4 @@
 * Examples
    * [IR and GSTP Methylation?](examples/IR_Methylation.md)
 * [Datasets](datasets.md)
-   * README.md
 
