@@ -13,6 +13,7 @@
    * [advanced](2_tumor_similarity/advanced.md)
 * [Tumor Aggression](3_tumor_aggression/README.md)
    * [The code](3_tumor_aggression/test.md)
+   * Cancer Regulome Replication
 * Drugs and Methylation
    * [Standalone Tests](examples/methylation/drugs_and_methylation.md)
    * [Submit to the cluster](examples/methylation/submit_to_cluster.md)
