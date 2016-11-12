@@ -8,18 +8,18 @@
 
 ## Categorical Endpoint Counts
 
-|         variable|       value|count| 
+|         Clinical Endpoint|       value|Cases with Value| 
 |-----------------|------------|-----|
-|      binaryStage| early stage|  183|
-|      binaryStage|  late stage|  142|
+|      binary tumor Stage| early stage|  183|
+|      binary tumor Stage|  late stage|  142|
 |     histological|non-mucinous|  286|
 |     histological|    mucinous|   39|
-|lymphaticInvasion|         YES|  129|
-|lymphaticInvasion|          NO|  196|
+|lymphatic Invasion|         YES|  129|
+|lymphatic Invasion|          NO|  196|
 |       metastasis|          M1|   56|
 |       metastasis|          M0|  269|
-| vascularInvasion|         YES|   84|
-| vascularInvasion|          NO|  241|
+| vascular Invasion|         YES|   84|
+| vascular Invasion|          NO|  241|
 
 ## Two Sample T-Test
 
