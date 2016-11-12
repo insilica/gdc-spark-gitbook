@@ -42,7 +42,7 @@
 
 
 ### Histologically mucinous vs non-mucinous
-![histological min max difference](../images/histological minmax.png)]
+![histological min max difference](../images/histological minmax.png)
 ### Binary Tumor Stage
 
 ### Metastasis
@@ -65,3 +65,4 @@
 
 ## Cancer Regulome - vs Fishers Combined
  Correlation is 72.5% but 43% on absolute values
+ ![histological min max difference](../images/insilica_v_regulome.png)
