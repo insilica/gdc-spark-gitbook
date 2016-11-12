@@ -1,7 +1,6 @@
 # Summary
 
-* [Developer Notes](README.md)
-* [Introduction](introduction.md)
+* [Introduction](README.md)
 * [GDC](1_gdc/0_gdc.md)
    * [Biospecimen supplements](1_gdc/1_biospecimen_supplements.md)
    * [Clinical supplements](1_gdc/clinical_supplements.md)
