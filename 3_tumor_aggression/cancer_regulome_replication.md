@@ -64,4 +64,4 @@
 ### Fishers Combined P-Value 
 
 ## Cancer Regulome - vs Fishers Combined
-
+ Correlation is 72.5% but 43% on absolute values
