@@ -66,4 +66,4 @@
 ## Cancer Regulome - vs Fishers Combined
  Correlation is 72.5% but 43% on absolute values
  ![gene aggression comparison](../images/insilica_v_regulome.png)
- asdf
+ 
