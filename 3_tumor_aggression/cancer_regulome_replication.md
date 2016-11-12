@@ -8,7 +8,7 @@
 
 ## Categorical Endpoint Counts
 
-|         variable|       value|count|
+|         variable|       value|count| 
 |-----------------|------------|-----|
 |      binaryStage| early stage|  183|
 |      binaryStage|  late stage|  142|
