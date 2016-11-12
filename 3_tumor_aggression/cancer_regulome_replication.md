@@ -42,7 +42,7 @@
 
 
 ### Histologically mucinous vs non-mucinous
-
+![histological min max difference](../images/histological minmax.png)]
 ### Binary Tumor Stage
 
 ### Metastasis
