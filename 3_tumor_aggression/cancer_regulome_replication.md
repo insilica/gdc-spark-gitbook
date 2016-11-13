@@ -25,20 +25,18 @@
 
 |target           |ensembl        |variable     |statistic|statistic_value     |
 |-----------------|---------------|-------------|---------|--------------------|
-|binaryStage      |ENSG00000214248|insignificant|t        |8.128193027125768E-6|
-|binaryStage      |ENSG00000103510|maximum      |t        |5.374607145498855   |
-|binaryStage      |ENSG00000104626|minimum      |t        |-6.1701089613902305 |
-|histological     |ENSG00000165272|maximum      |t        |7.994211474898419   |
-|histological     |ENSG00000135917|minimum      |t        |-8.313256114358273  |
-|lymphaticInvasion|ENSG00000172469|maximum      |t        |5.613226571614891   |
-|lymphaticInvasion|ENSG00000160951|minimum      |t        |-5.588819496996077  |
-|metastasis       |ENSG00000122547|maximum      |t        |5.02823349202346    |
-|metastasis       |ENSG00000002549|minimum      |t        |-6.063847096626741  |
-|percentPosLymph  |ENSG00000183117|insignificant|pearson  |1.93306326762824E-6 |
-|percentPosLymph  |ENSG00000261733|maximum      |pearson  |0.9968381869512126  |
-|percentPosLymph  |ENSG00000275335|minimum      |pearson  |-0.995254938533587  |
-|vascularInvasion |ENSG00000121940|maximum      |t        |4.686342882379625   |
-|vascularInvasion |ENSG00000147889|minimum      |t        |-4.403239861754864  |
+|binaryStage      |ENSG00000103510|maximum |t        |5.374607145498855  |
+|binaryStage      |ENSG00000104626|minimum |t        |-6.1701089613902305|
+|histological     |ENSG00000165272|maximum |t        |7.994211474898419  |
+|histological     |ENSG00000135917|minimum |t        |-8.313256114358273 |
+|lymphaticInvasion|ENSG00000172469|maximum |t        |5.613226571614891  |
+|lymphaticInvasion|ENSG00000160951|minimum |t        |-5.588819496996077 |
+|metastasis       |ENSG00000122547|maximum |t        |5.02823349202346   |
+|metastasis       |ENSG00000002549|minimum |t        |-6.063847096626741 |
+|percentPosLymph  |ENSG00000261733|maximum |pearson  |0.9968381869512126 |
+|percentPosLymph  |ENSG00000275335|minimum |pearson  |-0.995254938533587 |
+|vascularInvasion |ENSG00000121940|maximum |t        |4.686342882379625  |
+|vascularInvasion |ENSG00000147889|minimum |t        |-4.403239861754864 |
 
 
 ### Histologically mucinous vs non-mucinous
