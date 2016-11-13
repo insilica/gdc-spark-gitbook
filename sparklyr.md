@@ -13,8 +13,7 @@ We now have a spark context that we can use to perform spark tasks.  These examp
 # use 8 threads on a standalone spark context
 spark.master                     localhost[8]
 spark.driver.memory              5g
-#use a single node hadoop cluster (requires you to set up hadoop)
-spark.hadoop.fs.defaultFS        hdfs://localhost:9000/
 ```
 <center>spark.conf</center>
 
+Now lets load in the 'EnrichedOutcomes' table described in [Tumor Aggression](../3_tumor_aggression/README.md). 
