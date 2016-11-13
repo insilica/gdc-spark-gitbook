@@ -22,5 +22,6 @@
    * [Submit to the cluster](examples/hypothesis_generation/submit_to_the_cluster.md)
 * Examples
    * [IR and GSTP Methylation?](examples/IR_Methylation.md)
+   * sparklyr
 * [Datasets](5_datasets/README.md)
 
